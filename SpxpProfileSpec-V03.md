@@ -46,12 +46,12 @@ contains the following members:
 | gender | String | optional | Free text string specifying the gender of this profile. Clients should recognize the english text strings “female” and “male” and display localized text or icons. All other content can be displayed as-is. |
 | website | String | optional | URL of the profile’s website |
 | email | String | optional | Email address of this profile |
-| birthDayAndMonth | String | optional | String of the format “dd-mm” with “dd” being a numeric value 1-31 and mm being a numeric value 1-12 specifying the day and month of birth in the Gregorian calendar |
+| birthDayAndMonth | String | optional | String of the format “dd-mm” with “dd” being a numeric value 1-31 and “mm“ being a numeric value 1-12 specifying the day and month of birth in the Gregorian calendar |
 | birthYear | String | optional | String containing a positive numeric integer specifying the birth  year of this profile in the Gregorian calendar |
 | hometown | String | optional | Social profile URL of the profiles hometown |
 | location | String | optional | Social profile URL of the profiles current location |
 | coordinates | Object | optional | Object containing two members with numeric values “latitude” and “longitude” specifying the profiles current position in signed degrees format. <br/> Latitude ranges from -90 to +90 and longitude ranges from -180 to +180. |
-| profilePhoto | String <br/> Object | optional | Relative or absolute URL pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see 6) |
+| profilePhoto | String <br/> or <br/> Object | optional | Relative or absolute URL pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see 6) |
 | friendsEndpoint | String | optional | Relative or absolute URL pointing to the “friends endpoint” as specified in chapter 8 |
 | postsEndpoint | String | optional | Relative or absolute URL pointing to the “posts endpoint” as specified in chapter 9 |
 | keysEndpoint | String | optional | Relative or absolute URL pointing to the “keys endpoint” as specified in chapter 11.2 |
@@ -103,8 +103,8 @@ SPXP JSON data. In this case, the resource is described as JSON object with thes
 | iv | String | required | Initialisation Vector as defined by JWE |
 | url | String | required | Relative or absolute URL pointing to a resource containing the encrypted data |
 
-The data is encrypted according to RFC 7516 “JSON Web Encryption (JWE)”. The entire object is integrity protected via
-the document it is contained in.  
+The data is encrypted according to [RFC 7516 “JSON Web Encryption (JWE)”](https://tools.ietf.org/html/rfc7516). The
+entire object is integrity protected via the document it is contained in.  
 Example of a profile with an encrypted profile photo:
 ```json
 {
@@ -135,7 +135,7 @@ has the following members:
 
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
-| key | String <br/> Object | required | Contains either the key id (kid) of one of the profile signing keys as String or a certificate chain of an authorized signing key as defined in 7.2 |
+| key | String <br/> Object | required | Contains either the key id (“kid”) of one of the profile signing keys as String or a certificate chain of an authorized signing key as defined in 7.2 |
 | sig | String | required | Base64Url encoded Ed25519 signature |
 
 Example:
@@ -263,16 +263,16 @@ Depending on the “type”, additional members are defined as follows:
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
 | message | String | optional | Text message |
-| small | String <br/> Object | required | Absolute URL pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see 6) |
-| full | String <br/> Object | optional | Absolute URL pointing to a resource holding a high resolution image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted high resolution image resource. (see 6) |
+| small | String <br/> or <br/> Object | required | Absolute URL pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see 6) |
+| full | String <br/> or <br/> Object | optional | Absolute URL pointing to a resource holding a high resolution image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted high resolution image resource. (see 6) |
 | place | String | optional | Social Profile URL of a place linked to the photo |
 
 #### Type “video”:
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
 | message | String | optional | Text message |
-| preview | String <br/> Object | required | Absolute URL pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see 6) |
-| media | String <br/> Object | required | Absolute URL pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see 6) |
+| preview | String <br/> or <br/> Object | required | Absolute URL pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see 6) |
+| media | String <br/> or <br/> Object | required | Absolute URL pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see 6) |
 | place | String | optional | Social Profile URL of a place linked to the photo |
 
 #### Type “profile”:
@@ -380,9 +380,9 @@ The server returns two post items
 {
     "data" : [
         {
-            "seqts" : "2018-09-17T14:04:27.373", ...
+            "seqts" : "2018-09-17T14:04:27.373", "type": "..."
         }, {
-            "seqts" : "2018-09-15T12:35:47.735", ...
+            "seqts" : "2018-09-15T12:35:47.735", "type": "..."
         }
     ],
     "more" : true
@@ -398,9 +398,9 @@ The server then returns another two items
 {
     "data" : [
         {
-            "seqts" : "2018-09-13T10:06:17.484", ...
+            "seqts" : "2018-09-13T10:06:17.484", "type": "..."
         }, {
-            "seqts" : "2018-09-12T15:16:17.484", ...
+            "seqts" : "2018-09-12T15:16:17.484", "type": "..."
         }
     ],
     "more" : true
@@ -418,9 +418,9 @@ The server returns these items
 {
     "data" : [
         {
-            "seqts" : "2018-09-20T16:05:28.373", ...
+            "seqts" : "2018-09-20T16:05:28.373", "type": "..."
         }, {
-            "seqts" : "2018-09-19T15:45:37.735", ...
+            "seqts" : "2018-09-19T15:45:37.735", "type": "..."
         }
     ],
     "more" : true
@@ -436,7 +436,7 @@ And the server responds with
 {
     "data" : [
         {
-            "seqts" : "2018-09-18T09:06:17.484", ...
+            "seqts" : "2018-09-18T09:06:17.484", "type": "..."
         }
     ],
     "more" : false
@@ -549,7 +549,9 @@ _virtual groups_. Logically, there is no difference between both, other than tha
 end user when defining the audience of a new item.  
 Groups can have individual readers or other groups as members. A client could for example maintain the following
 hierarchy of groups and readers:
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX insert image
+
+![Key Groups](./KeyGroups.png)
+
 Each group is uniquely identified by a _group id_. This id should be generated randomly. A stream of _round keys_ is
 associated with each group. The key id of these round keys is generated by concatenating the group id with a dot and a
 random round id. In the example above, the publishing group “Friends” could have the following stream of keys:
@@ -572,6 +574,7 @@ In the example above, the social profile could maintain the following keys:
 | grp-virt0.key0 | key-alice |
 | grp-virt0.key1 | key-alice |
 | grp-virt0.key2 | key-alice |
+
 When a new post is created, the client of this profile would offer the groups “Friends”, “Close Friends” and “Family” as
 possible audience. If the user selects “Friends” as audience, the client would pick the most recent key of this group,
 “grp-friends.key2” in this example, and use it to encrypt the private data of this post.  
@@ -627,8 +630,10 @@ could look like this:
             "key1" : "...",
             "key2" : "..."
         },
-        "groupB" : { ... }
-    }
+        "groupB" : {
+            "key0" : "..."
+        }
+    },
     "groupA" : {
         "groupX" : {
             "key0" : "...",

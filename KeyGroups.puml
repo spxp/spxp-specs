@@ -1,0 +1,33 @@
+@startuml
+
+
+actor Alice
+actor Bob
+actor Charlie
+actor David
+
+skinparam rectangle {
+    RoundCorner<<virtual>> 25
+    BorderStyle<<virtual>> dashed
+}
+
+rectangle "Publishing Group "Friends"" as friends
+rectangle "Publishing Group "Family"" as family
+rectangle "Publishing Group "Close Friends"" as closefriends
+
+rectangle "Virtual Group "Virt0"" <<virtual>> as virt0
+rectangle "Virtual Group "Virt1"" <<virtual>> as virt1
+rectangle "Virtual Group "Virt2"" <<virtual>> as virt2
+
+closefriends --> friends : Member of
+family --> friends : Member of
+virt0 --> friends : Member of
+
+Alice --> virt0 : Member of
+virt1 --> closefriends : Memeber of
+virt2 --> closefriends : Memeber of
+Bob --> virt1 : Memeber of
+David --> virt2 : Memeber of
+Charlie --> family : Meember of
+
+@enduml
