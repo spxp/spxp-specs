@@ -31,7 +31,7 @@ contains the following members:
 | gender | String | optional | Free text string specifying the gender of this profile. Clients should recognize the english text strings “female” and “male” and display localized text or icons. All other content can be displayed as-is. |
 | website | String | optional | URL of the profile’s website |
 | email | String | optional | Email address of this profile |
-| birthDayAndMonth | String | optional | String of the format “dd-mm” with “dd” being a numeric value 1-31 and mm being a numeric value 1-12 specifying the day and month of birth in the Gregorian calendar |
+| birthDayAndMonth | String | optional | String of the format “dd-mm” with “dd” being a numeric value 1-31 and “mm“ being a numeric value 1-12 specifying the day and month of birth in the Gregorian calendar |
 | birthYear | String | optional | String containing a positive numeric integer specifying the birth  year of this profile in the Gregorian calendar |
 | hometown | String | optional | Social profile URL of the profiles hometown |
 | location | String | optional | Social profile URL of the profiles current location |
@@ -190,9 +190,9 @@ The server returns two post items
 {
     "data" : [
         {
-            "timestampUTC" : "2018-09-17T14:04:27.373", ...
+            "timestampUTC" : "2018-09-17T14:04:27.373", "type": "..."
         }, {
-            "timestampUTC" : "2018-09-15T12:35:47.735", ...
+            "timestampUTC" : "2018-09-15T12:35:47.735", "type": "..."
         }
     ],
     "more" : true
@@ -208,9 +208,9 @@ The server then returns another two items
 {
     "data" : [
         {
-            "timestampUTC" : "2018-09-13T10:06:17.484", ...
+            "timestampUTC" : "2018-09-13T10:06:17.484", "type": "..."
         }, {
-            "timestampUTC" : "2018-09-12T15:16:17.484", ...
+            "timestampUTC" : "2018-09-12T15:16:17.484", "type": "..."
         }
     ],
     "more" : true
@@ -228,9 +228,9 @@ The server returns these items
 {
     "data" : [
         {
-            "timestampUTC" : "2018-09-20T16:05:28.373", ...
+            "timestampUTC" : "2018-09-20T16:05:28.373", "type": "..."
         }, {
-            "timestampUTC" : "2018-09-19T15:45:37.735", ...
+            "timestampUTC" : "2018-09-19T15:45:37.735", "type": "..."
         }
     ],
     "more" : true
@@ -246,7 +246,7 @@ And the server responds with
 {
     "data" : [
         {
-            "timestampUTC" : "2018-09-18T09:06:17.484", ...
+            "timestampUTC" : "2018-09-18T09:06:17.484", "type": "..."
         }
     ],
     "more" : false
