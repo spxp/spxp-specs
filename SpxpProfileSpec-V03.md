@@ -9,17 +9,18 @@ Every social profile is uniquely identified by an asymmetric cryptographic key p
 identifier of a profile.  
 Although this protocol allows profiles without a signing key, using one is highly recommended.
 
-### 1.2 Profile URL
-Every social profile is addressed by a URL as defined in [RFC 1738 “Uniform Resource Locators
-(URL)”](https://tools.ietf.org/html/rfc1738). Every protocol client must support at least the scheme “https” and can
-choose to additionally support the scheme “http” and others.
+### 1.2 Profile URI
+Every social profile is addressed by an _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3).
+Every protocol client must support at least the scheme “https” and can choose to additionally support the scheme “http”
+and others.
 
 ### 1.3 Unique profile identification
-The cryptographic key takes precedence over the URL. Two profiles published under different URLs but using the same
+The cryptographic key takes precedence over the URI. Two profiles published under different URIs but using the same
 cryptographic key must be considered identical. And data signed with different cryptographic keys delivered by the same
-URL must be treated as different profiles.  
-If a profile client detects a change in the signing key used by the profile behind a URL, it has to warn the user and
-must not present the data signed by different keys as belonging to the same profile.
+URI must be treated as different profiles.  
+If a profile client detects a change in the signing key used by the profile behind a URI, it has to warn the user and
+must not present the data signed by different keys as belonging to the same profile.  
+*TODO: Announced key rotation and DNS backed identities*
 
 ## 2 Communication protocols
 Data is exchanged between participating clients and servers via HTTP, preferably over TLS (i.e. HTTPS). Clients and
@@ -27,42 +28,44 @@ servers are encouraged to use the latest versions of these protocols, e.g. HTTP/
 
 ## 3 Transport encoding of structured data
 Data is encoded as JSON according to [RFC 7519 “The JavaScript Object Notation (JSON) Data Interchange
-Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP “ContentType” to be
-“application/json” with no “charset” parameter. Clients must always use UTF-8 character encoding, irrespective of any
+Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP “Content-Type” header to
+be “application/json” with no “charset” parameter. Clients must always use UTF-8 character encoding, irrespective of any
 “charset” incorrectly sent by the server.
 
 ## 4 Protocol versioning
 This protocol uses [Semantic Versioning](https://semver.org/). This document specifies protocol version is “0.3”.
 
 ## 5 Social profile root document
-Protocol servers respond to requests for the social profile URL with the social profile root document. This JSON object
+Protocol servers respond to requests for the social profile URI with the social profile root document. This JSON object
 contains the following members:
 
-| Name | Type | Req/Opt | Description |
+| Name | Type | Mandatory | Description |
 |---|---|---|---|
-| ver | String | required | Version of the SPXProtocol exposed by this URL. <br/> This specification is defining version “0.3” |
+| ver | String | required | Version of the SPXProtocol exposed by this URI. <br/> This specification is defining version “0.3” |
 | name | String | required | The display name of this profile |
 | about | String | optional | Additional description of this profile |
 | gender | String | optional | Free text string specifying the gender of this profile. Clients should recognize the english text strings “female” and “male” and display localized text or icons. All other content can be displayed as-is. |
-| website | String | optional | URL of the profile’s website |
+| website | String | optional | URI of the profile’s website |
 | email | String | optional | Email address of this profile |
-| birthDayAndMonth | String | optional | String of the format “dd-mm” with “dd” being a numeric value 1-31 and “mm“ being a numeric value 1-12 specifying the day and month of birth in the Gregorian calendar |
-| birthYear | String | optional | String containing a positive numeric integer specifying the birth  year of this profile in the Gregorian calendar |
-| hometown | String | optional | Social profile URL of the profiles hometown |
-| location | String | optional | Social profile URL of the profiles current location |
-| coordinates | Object | optional | Object containing two members with numeric values “latitude” and “longitude” specifying the profiles current position in signed degrees format. <br/> Latitude ranges from -90 to +90 and longitude ranges from -180 to +180. |
-| profilePhoto | String <br/> or <br/> Object | optional | Relative or absolute URL pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see 6) |
-| friendsEndpoint | String | optional | Relative or absolute URL pointing to the “friends endpoint” as specified in chapter 8 |
-| postsEndpoint | String | optional | Relative or absolute URL pointing to the “posts endpoint” as specified in chapter 9 |
-| keysEndpoint | String | optional | Relative or absolute URL pointing to the “keys endpoint” as specified in chapter 11.2 |
-| publicKey | Object | optional | JSON object describing the public key of the profiles key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 algorithm specifier as defined in [RFC 8037 “CFRG Elliptic Curve Diffie-Hellman (ECDH) and Signatures in JSON Object Signing and Encryption (JOSE)”](https://tools.ietf.org/html/rfc8037). <br/> Must have a unique, random key id (“kid”) |
+| birthDayAndMonth | String | optional | String of the format “dd-mm” with “dd” being a numeric value 1-31 and “mm“ being a numeric value 1-12 specifying the day and month of birth of this profile in the Gregorian calendar |
+| birthYear | String | optional | String containing a positive numeric integer specifying the year of birth of this profile in the Gregorian calendar |
+| hometown | String | optional | Social profile URI of the profile's hometown |
+| location | String | optional | Social profile URI of the profile's current location |
+| coordinates | Object | optional | Object containing two members with numeric values “latitude” and “longitude” specifying the profiles current position in signed degrees format in the WGS84 geodetic system. <br/> Latitude ranges from -90 to +90 and longitude ranges from -180 to +180. |
+| profilePhoto | String <br/> or <br/> Object | optional | String containing a _URI Reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see [chapter 6](#6-encrypted-resources)) |
+| friendsEndpoint | String | optional | _URI Reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “friends endpoint” as specified in [chapter 8](#8-friends-endpoint) |
+| postsEndpoint | String | optional | _URI Reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “posts endpoint” as specified in [chapter 9](#9-posts-endpoint) |
+| keysEndpoint | String | optional | _URI Reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 11.2](#112-keys-endpoint) |
+| publicKey | Object | optional | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (“kid”) |
 | connect | Object | optional | Additional details for connection process, if and only if this object accepts connection requests as specified in chapter 13 |
-| private | Array | optional | Array of private data as specified in chapter 9 |
+| private | Array | optional | Array of private data as specified in [chapter 10](#10-private-data) |
+
+*TODO: Connection process and limitations for key ID*
 
 Example:
 ```json
 {
-    "ver" : "0.2",
+    "ver" : "0.3",
     "name" : "Crypto Alice",
     "about" : "I love cryptography.",
     "gender" : "female",
@@ -92,29 +95,27 @@ Example:
 ```
 
 ## 6 Encrypted resources
-External resources, like images and videos, can be stored encrypted with the decryption key being stored as part of the
-SPXP JSON data. In this case, the resource is described as JSON object with these members:
+External resources, like images and videos, can be encrypted with the decryption key being stored as a JSON object
+describing the resource. Encryption is performed with 256 bit AES in Galois/Counter Mode. The object holding the
+decryption information has these members:
 
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
-| k | String | required | Octet key as defined in JWE |
-| tag | String | required | Message authenticity tag as defined by JWE |
-| enc | String | required | Encoding as defined by JWE |
-| iv | String | required | Initialisation Vector as defined by JWE |
-| url | String | required | Relative or absolute URL pointing to a resource containing the encrypted data |
+| iv | String | required | Base64Url encoded random initialisation vector (96 bit) |
+| k | String | required | Base64Url encoded octet key (256 bit) |
+| tag | String | required | Base64Url encoded message authenticity tag (128 bit) |
+| uri | String | required | _URI Reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to a resource containing the encrypted data |
 
-The data is encrypted according to [RFC 7516 “JSON Web Encryption (JWE)”](https://tools.ietf.org/html/rfc7516). The
-entire object is integrity protected via the document it is contained in.  
+This object format is inspired by JWE, but not following this standard.  
 Example of a profile with an encrypted profile photo:
 ```json
 {
     "name" : "Crypto Alice",
     "profilePhoto": {
+        "iv": "7Y_F7cQWZA-PYoMn",
         "k": "qgWVB5SupcdvHARM60knXv8h6tI2unD3GjhsPRKvT_I",
         "tag": "lN19Pd0PrGmIWWp26NctcQ",
-        "enc": "A256GCM",
-        "iv": "7Y_F7cQWZA-PYoMn",
-        "url": "images_enc/alice.encrypted"
+        "uri": "images_enc/alice.encrypted"
     }
 }
 ```
@@ -127,21 +128,20 @@ authentic. A protocol client must not present any information to the user in the
 been signed by the announced profile key.
 
 ### 7.1 Signing JSON objects
-To sign an object, the “private” member field is removed, it is converted into
-[Canonical JSON](https://matrix.org/docs/spec/appendices#canonical-json), converted to a byte stream using UTF-8
-character encoding and then signed with the profile key pair (1.1) using the [Ed25519](http://ed25519.cr.yp.to/)
-signature algorithm. The resulting signature is then embedded into the JSON object as “signature” object. This object
-has the following members:
+To sign an object, the “private” member field is removed, it is converted into [Canonical JSON](#711-canonical-json),
+converted to a byte stream using UTF-8 character encoding and then signed with the profile key pair
+([1.1](#11-cryptographic-profile-key-pair)) using the [Ed25519](http://ed25519.cr.yp.to/) signature algorithm. The
+resulting signature is then embedded into the JSON object as “signature” object. This object has the following members:
 
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
-| key | String <br/> Object | required | Contains either the key id (“kid”) of one of the profile signing keys as String or a certificate chain of an authorized signing key as defined in 7.2 |
+| key | String <br/> Object | required | Contains either the key id (“kid”) of one of the profile signing keys as String or a certificate chain of an authorized signing key as defined in [chapter 7.2](#72-authorized-signing-keys) |
 | sig | String | required | Base64Url encoded Ed25519 signature |
 
 Example:
 ```json
 {
-    "ver" : "0.2",
+    "ver" : "0.3",
     "name" : "Crypto Alice",
     "about" : "I love cryptography.",
     "website" : "https://en.wikipedia.org/wiki/Alice_and_Bob",
@@ -160,18 +160,25 @@ Example:
 _NOTE: SIGNATURE NOT VALID IN THIS EXAMPLE_  
 The plaintext of each encrypted object in the “private” array must be signed individually before being encrypted.
 
+#### 7.1.1 Canonical JSON
+Canonical JSON is the shortest serialisation with lexicographically sorted members in objects. This means in particular:
+1. All insignificant whitespace outside of Strings is removed
+2. Members in objects are lexicographically sorted based on their key by unicode codepoint
+3. Escaping in strings is limited to ```\"```, ```\\```, ```\t```, ```\b```, ```\n```, ```\r```, ```\f``` and all codepoints less than 32 encoded by ```\u####``` 
+
 ### 7.2 Authorized signing keys
 A profile can authorize other keys to publish information as part of the profile. In this case, the profile issues a
-certificate that combines the authorized public key with a grant and a signature. This certificate is a JSON object with
-the following members:
+certificate that combines the authorized public key with a grant, and then signs this object. This certificate is a JSON
+object with the following members:
 
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
-| publicKey | Object | required | JSON object describing the public key of the authorized key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 algorithm specifier as defined in [RFC 8037 “CFRG Elliptic Curve Diffie-Hellman (ECDH) and Signatures in JSON Object Signing and Encryption (JOSE)”](https://tools.ietf.org/html/rfc8037) |
+| publicKey | Object | required | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (“kid”) |
 | grant | Array | required | Array of Strings identifying the operations that this key pair is allowed to perform |
 
-This certificate object must be signed as defined in 7.1. Since the key of this signature can be a certificate again, it
-is possible to chain multiple certificates. The end of this chain must be a valid profile key.  
+This certificate object must be signed as defined in [chapter 7.1](#71-signing-json-objects). Since the key of this
+signature can be a certificate again, it is possible to chain multiple certificates. The end of this chain must be a
+valid profile key.  
 
 Valid “grant” values are (case sensitive):
 
@@ -202,8 +209,8 @@ Example:
 ```
 
 ### 7.3 Self-signed profile key
-The profile root document (5) must be signed with the key listed as “publicKey” in the same document. It thus
-constitutes a self-signed certificate.  
+The profile root document must be signed with the key listed as “publicKey” in the same document. It thus constitutes a
+self-signed certificate.  
 Profile clients have to “lock in” on this key and only present data to the user that has been signed by this key. It is
 important to understand that this proves the authenticity of data against this profile, but it does not verify the
 identity of the entity controlling this profile.
@@ -214,8 +221,8 @@ Social profiles can expose a list of other social profiles as “friends”. If 
 
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
-| data | Array | required | List of profile URLs as Strings |
-| private | Array | optional | Array of private data as specified in chapter 9 |
+| data | Array | required | List of profile URIs as Strings |
+| private | Array | optional | Array of private data as specified in [chapter 10](#10-private-data) |
 
 Example:
 ```json
@@ -242,7 +249,7 @@ Each single post in the data array is a JSON object with these members:
 |---|---|---|---|
 | seqts | String | required | Sequence timestamp of post in the format “YYYY-MM-DD’T’hh:mm:ss.sss” always in UTC. Probably assigned by the SPXP server when it received this post object. <br/> The sequence timestamp must be unique across all posts of a profile. <br/> This member is not part of the signature. |
 | createts | String | optional | Optional creation timestamp of post in the format “YYYY-MM-DD’T’hh:mm:ss.sss” always in UTC. Assigned by the client when this post got created. |
-| author | String | optional | Profile URL of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve this profile root document and check the signature on this post against the profile key of the “author” profile. This key needs to bring a certificate on this post that grants “post” or “comment” permissions (7.2). |
+| author | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve this profile root document and check the signature on this post against the profile key of the “author” profile. This key needs to bring a certificate on this post that grants “post” or “comment” permissions (7.2). |
 | type | String | required | Type of post. One of “text”, “web”, “photo”, “video”, “profile”, “comment” |
 
 Depending on the “type”, additional members are defined as follows:
@@ -251,35 +258,35 @@ Depending on the “type”, additional members are defined as follows:
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
 | message | String | required | Text message |
-| place | String | optional | Social Profile URL of a place linked to the message |
+| place | String | optional | Social Profile URI of a place linked to the message |
 
 #### Type “web”:
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
 | message | String | optional | Text message |
-| link | String | required | URL of linked web page |
+| link | String | required | URI of linked web page |
 
 #### Type “photo”:
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
 | message | String | optional | Text message |
-| small | String <br/> or <br/> Object | required | Absolute URL pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see 6) |
-| full | String <br/> or <br/> Object | optional | Absolute URL pointing to a resource holding a high resolution image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted high resolution image resource. (see 6) |
-| place | String | optional | Social Profile URL of a place linked to the photo |
+| small | String <br/> or <br/> Object | required | Absolute URI pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see 6) |
+| full | String <br/> or <br/> Object | optional | Absolute URI pointing to a resource holding a high resolution image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted high resolution image resource. (see 6) |
+| place | String | optional | Social Profile URI of a place linked to the photo |
 
 #### Type “video”:
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
 | message | String | optional | Text message |
-| preview | String <br/> or <br/> Object | required | Absolute URL pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see 6) |
-| media | String <br/> or <br/> Object | required | Absolute URL pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see 6) |
-| place | String | optional | Social Profile URL of a place linked to the photo |
+| preview | String <br/> or <br/> Object | required | Absolute URI pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see 6) |
+| media | String <br/> or <br/> Object | required | Absolute URI pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see 6) |
+| place | String | optional | Social Profile URI of a place linked to the photo |
 
 #### Type “profile”:
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
 | message | String | optional | Text message |
-| profile | String | required | Social Profile URL |
+| profile | String | required | Social Profile URI |
 | publicKey | Object | required | Public key of referenced profile (required, may only be omitted if referenced profile does not have a profile key pair) |
 
 #### Type “comment”:
@@ -456,11 +463,11 @@ into the containing document in the order they appear in the “private” array
 Private data is supported for:
 - The social profile root document
 - The friend endpoint object
-- Individual post items. In this case, the “seqts” member must not be part of the encrypted  data.
+- Individual post items. In this case, the “seqts” member must not be part of the encrypted data.
 
 ### 10.2 Supported algorithm and encoding
-The only supported encryption method is direct encryption with 256 bit AES in Galois/Counter Mode. This requires a new
-random initialisation vector “iv” for each private block.
+The only supported encryption method is direct encryption with 256 bit AES in Galois/Counter Mode, identified as
+`"alg": "dir", "enc": "A265GCM"` by JWE. This requires a new random initialisation vector “iv” for each private block.
 
 ### 10.3 Object merging rules
 A source object `src` is merged into a target object `dst` as follows:  
@@ -715,7 +722,7 @@ following members:
 
 | Name | Type | Req/Opt | Description |
 |---|---|---|---|
-| endpoint | String | required | Relative or absolute URL pointing to the “connect endpoint” as specified in chapter 13.2 |
+| endpoint | String | required | Relative or absolute URI pointing to the “connect endpoint” as specified in chapter 13.2 |
 | key | String | required | Base64Url encoded public key for a Curve25519 Diffie-Hellmann function |
 | acceptedTokens | Array | optional | Optional list of tokens accepted for Connection requests |
 
@@ -724,14 +731,14 @@ TBD
 
 ## 14 Known problems
 - Profile keys do not have a validity period
-- Certificates do not have a timestamp, which would allow them to be signed  by an expired key
+- Certificates do not have a timestamp, which would allow them to be signedby an expired key
 - Certificates do not have a notValidBefore / notValidAfter field
 - The profile root document can only be signed by the profile key
 
 ## 15 Missing features
 - Key rollover. For example, see how matrix spec announces old verification keys in 3.3.1.1 here https://matrix.org/docs/spec/server_server/r0.1.3#get-matrix-key-v2-server-keyid
 - Expired keys in the root document
-- Validity period in old profile keys?  (notBefore, notAfter). But this requires that all published data objects have a timestamp, so that profile clients can select the correct key.
+- Validity period in old profile keys? (notBefore, notAfter). But this requires that all published data objects have a timestamp, so that profile clients can select the correct key.
 - Profile relocation
 - Profile key revocation
 - Certificate expiration
