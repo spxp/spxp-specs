@@ -23,14 +23,14 @@ must not present the data signed by different keys as belonging to the same prof
 
 ## 2 Communication protocols
 Data is exchanged between participating clients and servers via HTTP, preferably over TLS (i.e. HTTPS). Clients and
-servers are encouraged to use the latest versions of these protocols, e.g. HTTP/2 and HTTP/3 and to prefer IPv6.
+servers are encouraged to use the latest versions of these protocols, e.g. HTTP/2 and HTTP/3, and to prefer IPv6.
 
 ## 3 Transport encoding of structured data
 Data is encoded as JSON according to [RFC 7519 “The JavaScript Object Notation (JSON) Data Interchange
 Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP “Content-Type” header to
 be “application/json” with no “charset” parameter. Clients must always use UTF-8 character encoding, irrespective of any
 “charset” incorrectly sent by the server.  
-The term ”Base64Url” throughout this specification refers top the URL safe Base 64 Encoding as apecified in [RFC 4648
+The term ”Base64Url” throughout this specification refers to the URL safe Base 64 Encoding as apecified in [RFC 4648
 Section 5](https://tools.ietf.org/html/rfc4648#section-5) without padding.
 
 ## 4 Protocol versioning
@@ -84,10 +84,10 @@ Example:
     "friendsEndpoint" : "friends/alice",
     "postsEndpoint" : "posts?profile=alice",
     "publicKey": {
+        "kid": "C8xSIBPKRTcXxFix",
         "kty": "OKP",
         "crv": "Ed25519",
-        "kid": "ZUpNLu0Dc7u2ENdmKX",
-        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+        "x": "skpRppgAopeYo9MWRdExl26rGA_z701tMoiuJ-jIjU8"
     },
     "connect": {
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -123,16 +123,16 @@ Example of a profile with an encrypted profile photo:
 
 ## 7 Data authenticity
 JSON objects can be signed with a method that is designed after [JSON signatures in the matrix protocol
-specification](https://matrix.org/docs/spec/appendices#signing-json), but which is slightly different. If a profile
-exposes an Ed25519 public key as part of the profile root document, all information transmitted through SPXP has to be
-signed with this key to be considered authentic. A protocol client must not present any information to the user in the
-context of this profile that has not been signed by the announced profile key.
+specification](https://matrix.org/docs/spec/appendices#signing-json), but which is specified slightly different. If a
+profile exposes an Ed25519 public key as part of the profile root document, all information transmitted through SPXP has
+to be signed with this key to be considered authentic. A protocol client must not present any information to the user in
+the context of this profile that has not been signed by the announced profile key.
 
 ### 7.1 Signing JSON objects
 To sign an object, the “private” and “seqts” member fields are removed, it is converted into [Canonical JSON](#711-canonical-json),
 converted to a byte stream using UTF-8 character encoding and then signed with the profile key pair
 ([1.1](#11-cryptographic-profile-key-pair)) using the [Ed25519](http://ed25519.cr.yp.to/) signature algorithm. The
-resulting signature is then embedded into the JSON object as “signature” object with the following members:
+resulting signature is then embedded into the JSON object as `signature` object with the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
@@ -147,25 +147,24 @@ Example:
     "about" : "I love cryptography.",
     "website" : "https://en.wikipedia.org/wiki/Alice_and_Bob",
     "publicKey": {
+        "kid": "C8xSIBPKRTcXxFix",
         "kty": "OKP",
         "crv": "Ed25519",
-        "kid": "ZUpNLu0Dc7u2ENdmKX",
-        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+        "x": "skpRppgAopeYo9MWRdExl26rGA_z701tMoiuJ-jIjU8"
     },
     "signature": {
-        "key": "ZUpNLu0Dc7u2ENdmKX",
-        "sig": "ALK3RqZrk5XrNpeyOwr2LfUgY5qFwiIjSef8YAbl03V5"
+        "key": "C8xSIBPKRTcXxFix",
+        "sig": "JOaOvkupQmdMddAz846relqJitVNikBPrbzgLVEQKNRn6dFuAR_4AcGk2bYOUh58fnmxee_qcOovmRCJp40-Dg"
     }
 }
 ```
-**NOTE: SIGNATURE NOT VALID IN THIS EXAMPLE**  
 The plaintext of each encrypted object in the “private” array must be signed individually before being encrypted.
 
 #### 7.1.1 Canonical JSON
 Canonical JSON is the shortest serialization with lexicographically sorted members in objects. This means in particular:
 1. All insignificant whitespace outside of Strings is removed
 2. Members in objects are lexicographically sorted based on their key by unicode codepoint
-3. Escaping in strings is limited to ```\"```, ```\\```, ```\t```, ```\b```, ```\n```, ```\r```, ```\f``` and all codepoints less than 32 encoded by ```\u####``` 
+3. Escaping in strings is limited to and required for `\"`, `\\`, `\t`, `\b`, `\n`, `\r`, `\f` and all codepoints less than 32 encoded by `\u####` 
 
 ### 7.2 Authorized signing keys
 A profile can authorize other keys to publish information as part of the profile. In this case, the profile issues a
@@ -199,19 +198,18 @@ Example:
 ```json
 {
     "publicKey": {
+        "kid": "czlHMPEJcLb7jMUI",
         "kty": "OKP",
         "crv": "Ed25519",
-        "kid": "knXv8h6tI2un",
-        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+        "x": "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
     },
     "grant" : [ "post", "comment" ],
     "signature": {
-        "key": "ZUpNLu0Dc7u2ENdmKX",
-        "sig": "ALK3RqZrk5XrNpeyOwr2LfUgY5qFwiIjSef8YAbl03V5"
+        "key": "C8xSIBPKRTcXxFix",
+        "sig": "hmc8SolHWR8SMR8OXnYtX1Sxetvxak-uCBf92yHBfPIv-Vi-BvZHLTOScU3B-SeoPGVhyaUDz3f9SKF3NyPxBg"
     }
 }
 ```
-**NOTE: SIGNATURE NOT VALID IN THIS EXAMPLE**  
 
 ### 7.3 Self-signed profile key
 The profile root document ([5](#5-social-profile-root-document)) must be signed with the key listed as “publicKey” in
@@ -222,7 +220,7 @@ identity of the entity controlling this profile.
 
 ## 8 Friends endpoint
 Social profiles can expose a list of other social profiles as “friends”. If the profile root object declares a
-```friendsEndpoint```, then it exposes a JSON object as follows:
+`friendsEndpoint`, then it exposes a JSON object as follows:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
@@ -241,7 +239,7 @@ Example:
 	
 ## 9 Posts endpoint
 Social profiles can publish a stream of timestamped messages, named “posts”. If a social profile declares a
-```postsEndpoint``` in the profile root document, then the server responds with the following JSON object:
+`postsEndpoint` in the profile root document, then the server responds with the following JSON object:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
@@ -301,8 +299,8 @@ Depending on the “type”, additional members are defined as follows:
 | forseqts | String | required | Sequence timestamp of post this comment belongs to |
 | fingerprint | String | required | Base64URL encoded SHA256 hash of the [Canonical JSON](#711-canonical-json) of the original post after resolving the private data and removing the “signature” member |
 
-The member ```seqts``` is not part of the signature. It is a technical field assigned by the server. To authenticate a
-specific creation time, the ```createts``` member should be used.
+The member `seqts` is not part of the signature. It is a technical field assigned by the server. To authenticate a
+specific creation time, the `createts` member should be used.
 
 Example:
 ```json
@@ -310,11 +308,12 @@ Example:
     "data" : [
         {
             "seqts" : "2018-09-17T14:04:27.373",
+            "createts" : "2018-09-16T12:23:18.751",
             "type" : "text",
             "message" : "Hello, world!",
             "signature": {
-                "key": "ZUpNLu0Dc7u2ENdmKX",
-                "sig": "ALK3RqZrk5XrNpeyOwr2LfUgY5qFwiIjSef8YAbl03V5"
+                "key": "C8xSIBPKRTcXxFix",
+                "sig": "bDOgcT4uxTKYMTuOJXDbAPc1UA2p-aGdxwplUWNStzyDRIRPu9UxaTU1IoZ1ELjBY5iRf4FEBPV09Uw9TOYuCA"
             }
         }, {
             "seqts" : "2018-09-15T12:35:47.735",
@@ -322,8 +321,8 @@ Example:
             "message" : "Interesting read...",
             "link" : "https://example.com",
             "signature": {
-                "key": "ZUpNLu0Dc7u2ENdmKX",
-                "sig": "ALK3RqZrk5XrNpeyOwr2LfUgY5qFwiIjSef8YAbl03V5"
+                "key": "C8xSIBPKRTcXxFix",
+                "sig": "skQBzttDURV-N4kqK9fgyWw4Ddixsmld4nnilC_XUqSZhXfeNfw_4PrIlLwaFdHDTO-au4iaZM64oSWLP-z0BA"
             }
         }, {
             "seqts" : "2018-09-16T13:35:47.735",
@@ -336,18 +335,18 @@ Example:
             "signature": {
                 "key": {
                     "publicKey": {
+                        "kid": "czlHMPEJcLb7jMUI",
                         "kty": "OKP",
                         "crv": "Ed25519",
-                        "kid": "knXv8h6tI2un",
-                        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+                        "x": "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
                     },
                     "grant" : [ "post", "comment" ],
                     "signature": {
-                        "key": "ZUpNLu0Dc7u2ENdmKX",
-                        "sig": "ALK3RqZrk5XrNpeyOwr2LfUg…"
+                        "key": "C8xSIBPKRTcXxFix",
+                        "sig": "hmc8SolHWR8SMR8OXnYtX1Sxetvxak-uCBf92yHBfPIv-Vi-BvZHLTOScU3B-SeoPGVhyaUDz3f9SKF3NyPxBg"
                     }
                 },
-                "sig": "ALK3RqZrk5XrNpeyOwr2LfUgY5qFwiIjSef8YAbl03V5"
+                "sig": "94dyGxvPcVuueFjVj_RwedWy5m3dasRDYf1iOxnYXUEYDS33LYzn9kqe6aIRMZchxWqlM1K_fX-uHVFDRjzSAg"
             }
         }, {
             "seqts" : "2018-09-15T12:35:47.735",
@@ -355,21 +354,20 @@ Example:
             "message" : "Do you know Crypto Alice?",
             "profile" : " https://example.com/spxp/alice",
             "signature": {
-                "key": "ZUpNLu0Dc7u2ENdmKX",
-                "sig": "ALK3RqZrk5XrNpeyOwr2LfUgY5qFwiIjSef8YAbl03V5"
+                "key": "C8xSIBPKRTcXxFix",
+                "sig": "678UnO6pwpNb6SlkaYPzFhO7FJHM2Yor_QqWEelTaV6v5VED48f8nv4tpQ0WxFJgGyizthqXKHd9zTF-MmKLAw"
             }
         }
     ],
     "more" : true
 }
 ```
-**NOTE: SIGNATURES NOT VALID IN THIS EXAMPLE**  
-The ```data``` array contains a subset of posts known by the server. The number of returned items is chosen by the SPXP
-server, but the client can attach a ```max``` query parameter to influence this number. The client can further attach
-```before``` and ```after``` query parameters to specify a date range of requested items. The server guarantees that
-there are no additional items available between the oldest and the youngest items returned in the data array. The
-```more``` member in the response indicates if there are additional items available between the oldest item in the
-```data``` array and the requested date range.  
+The `data` array contains a subset of posts known by the server. The number of returned items is chosen by the SPXP
+server, but the client can attach a `max` query parameter to influence this number. The client can further attach
+`before` and `after` query parameters to specify a date range of requested items. The server guarantees that there are
+no additional items available between the oldest and the youngest items returned in the data array. The `more` member in
+the response indicates if there are additional items available between the oldest item in the `data` array and the
+requested date range.  
 Supported query parameters:
 
 | Name | Type | Description |
@@ -439,7 +437,7 @@ The server returns these items
 }
 ```
 The more parameter indicates that there are more items available between the oldest item in the data array and the
-```after``` query parameter. So the client tries to close this gap:
+`after` query parameter. So the client tries to close this gap:
 ```
 https://spxp.example.com/posts?user=alice&max=2&after=2018-09-17T14:04:27.373&before=2018-09-19T15:45:37.735
 ```
@@ -494,43 +492,42 @@ Example:
     "ver" : "0.3",
     "name" : "Crypto Alice",
     "private" : [
-        "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoiQUJDRC4xMjMifQ..8PhcCQkuOjnclrKb.ZUpNLu0Dc7u2ENdmKXR4ZcXA6NKTP08cVYkR8p4SBCq1.sFf31pw_pKT3vP8CiXkjiQ"
+        "eyJraWQiOiJBQkNELjEyMzQiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..SfT0skkIjzru5ylj.eDnedk0RIWIk6m6YQwwwzeZg7q1GH87HW5wUqKJcWRCNZHgI5hCUmDATDzW_eeUsQp8mkkQ4fpqlrBmX5lwv3vsdmgL4r-18GVhxGhbq6GxtbR8YE2MPTxJUZ3D56QHld8ZkOV5pOu7h5BhO9f2zKNEB2j0xbNEqgr259_T983VEoqqp0Rrze1qgmshMQLkZsUrbHsnDaPsp28bhRb_zMInvhBNfa6M.zYtiVMmo-TC_BhJDGPwoHA"
     ],
     "profilePhoto" : " https://images.example.com/alice.jpg",
     "friendsEndpoint" : "friends/alice",
     "postsEndpoint" : "posts/alice",
     "publicKey": {
+        "kid": "C8xSIBPKRTcXxFix",
         "kty": "OKP",
         "crv": "Ed25519",
-        "kid": "ZUpNLu0Dc7u2ENdmKX",
-        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+        "x": "skpRppgAopeYo9MWRdExl26rGA_z701tMoiuJ-jIjU8"
     },
     "signature": {
-        "key": "ZUpNLu0Dc7u2ENdmKX",
-        "sig": "ALK3RqZrk5XrNpeyOwr2LfUgY5qFwiIjSef8YAbl03V5"
+        "key": "C8xSIBPKRTcXxFix",
+        "sig": "kS-ByECFG-QWN4M5XNpAkCsvpbpX7KU_JrOzLrPHFdoP1YBaP4TKqa-tAz4yqr3BWqMky0SN_fJcMv2VTAE_Aw"
     }
 }
 ```
-**NOTE: SIGNATURE NOT VALID IN THIS EXAMPLE**  
-The “private” array contains one element in JWE Compact Serialization. The string is made up of 5 parts, encoded as
+The `private` array contains one element in JWE Compact Serialization. The string is made up of 5 parts, encoded as
 Base64Url and separated by dots.
 The first part is
 ```
-    eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoiQUJDRC4xMjMifQ
+    eyJraWQiOiJBQkNELjEyMzQiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0
 ```
 It is Base64Url decoded to the JWE header:
+```json
+    {"kid":"ABCD.1234","enc":"A256GCM","alg":"dir"}
 ```
-    {"alg":"dir","enc":"A256GCM","kid":"ABCD.123"}
-```
-It specifies direct encryption with 256 bit AES in Galois/Counter Mode using the key “ABCD.123”. Since we do not use a
-separate content encryption key (`"alg":"dir"`), the second part is empty. The third part `8PhcCQku…` contains the
-Initialization Vector and the forth part `ZUpNLu0D…` the ciphertext. The last part `sFf31pw_…` contains the tag to
+It specifies direct encryption with 256 bit AES in Galois/Counter Mode using the key “ABCD.1234”. Since we do not use a
+separate content encryption key (`"alg":"dir"`), the second part is empty. The third part `SfT0skkI…` contains the
+Initialization Vector and the forth part `eDnedk0R…` the ciphertext. The last part `zYtiVMmo…` contains the tag to
 validate the message integrity. The ciphertext is then decrypted to
+```json
+    {"website":"https://example.com","signature":{"key":"C8xSIBPKRTcXxFix","sig":"nEd-NXLlBDjcmCJHhzn9CaVYuRBsG4SDDgdHql85xdGtgb_bql2SnZh2oeMf-dk_g-YhT3uRyZHZRTriUEnCBA"}}
 ```
-    {"website":"https://example.com"}
-```
-**NOTE: MUST BE SIGNED**  
-This object gets then merged into the profile root document:
+The signature is validated with the same rules that apply to the object that conatins this private data and the object
+then gets merged into the profile root document:
 ```json
 {
     "ver" : "0.3",
@@ -603,7 +600,7 @@ to decrypt the private data.
 
 ### 11.2 Keys endpoint
 If a social profile makes use of private data as defined in [chapter 10](#10-private-data), it has to announce a
-```keysEndpoint``` in the profile root document ([5](#5-social-profile-root-document)).  
+`keysEndpoint` in the profile root document ([5](#5-social-profile-root-document)).  
 This endpoint takes two request parameters:
 
 | Name | Type | Description |
@@ -662,8 +659,8 @@ could look like this:
 ```
 The innermost member contains a JWE object in compact serialization that contains the wrapped round key as JWK object.
 The JWE headers of the ”groupX.key#” entries would define one of the ”groupA.key#” keys as the valid decryption key.  
-If the ```request``` parameter is given, the server returns all round keys given in this list as well as all
-intermediate round keys required to decrypt these keys until the initial key given as ```reader```.  
+If the `request` parameter is given, the server returns all round keys given in this list as well as all intermediate
+round keys required to decrypt these keys until the initial key given as `reader`.  
 Example:
 ```
 GET https://example.com/spxp/roger/keys?connectionId=key-alice&request=groupX.key2
@@ -683,10 +680,10 @@ GET https://example.com/spxp/roger/keys?connectionId=key-alice&request=groupX.ke
 ```
 In this example, the round key ”groupX.key2” is encrypted with the round key ”groupA.key1”. The key id required to
 decrypt the JWE object is given in the JWE header.  
-If the ```request``` parameter is missing, the server can chose the set of round keys that are returned. This set has to
+If the `request` parameter is missing, the server can chose the set of round keys that are returned. This set has to
 include at least all round keys that are required to read all private data in the profile root document accessible to
-the key given in the ```reader```. It additionally should include enough round keys to decrypt a sensible amount
-of most recent posts.
+the key given in the `reader`. It additionally should include enough round keys to decrypt a sensible amount of most
+recent posts.
 
 ### 11.3 Supported algorithm and encoding
 Key wrapping is limited to the same cryptographic algorithm and encoding as defined in [chapter
@@ -704,8 +701,8 @@ If another profile gets access to information published by this profile as part 
 Although private data is encrypted, it is good practice to still limit access to it to protect against a key loss. In
 the context of this protocol, it also prevents unauthorised readers from discovering the existence of data beyond their
 access level.  
-All SPXP endpoints support the additional query parameter ```reader```, which takes a comma separated list of reader key
-ids. SPXP servers should filter out all elements of any ```private``` array that cannot be decrypted by one of the given
+All SPXP endpoints support the additional query parameter `reader`, which takes a comma separated list of reader key
+ids. SPXP servers should filter out all elements of any `private` array that cannot be decrypted by one of the given
 reader keys. Since the SPXP server knows the key graph (see [chapter 11.1](#111-key-groups)), it is able to check if
 there is a path from one of the given reader keys to one of the keys required to decrypt the private data.  
 It is important to understand that this access restriction does not constitute an authentication mechanism. The server
@@ -716,7 +713,7 @@ client actually has this key.
 Two profiles can be mutually connected. This gives the entity behind each profile extended access to data published by
 the other profile as well as mutual publishing permissions.  
 A profile can choose whether it wants to participate in connections or not. If a profile chooses to accept connection
-requests from other profiles, it publishes a ```connect``` object as part of the profile root document. This object
+requests from other profiles, it publishes a `connect` object as part of the profile root document. This object
 contains the information required by other profiles to craft a connection request and send it to this profile. Since
 this process is open to the public, it can easily be misused by malicious actors automatically sending connection
 requests. To prevent this, profiles can request a unique token to be present on connection requests. An extensible
@@ -758,6 +755,37 @@ TBD
 - Encryption of posts and comments by other profiles
 - Domain bound profiles
 
+## Appendix A. Private keys used in examples
+The following profile key pairs have been used to sign the examples in this document.  
+Profile of “Crypto Alice”:
+```json
+{
+    "kid": "C8xSIBPKRTcXxFix",
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "skpRppgAopeYo9MWRdExl26rGA_z701tMoiuJ-jIjU8",
+    "d": "2z_e9iw_JST71w3g2LrKVf38QiCiESlAQLeSRYVwylM"
+}
+```
+Profile of “Crypto Bob” (Certificate in section 7.2):
+```json
+{
+    "kid": "czlHMPEJcLb7jMUI",
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg",
+    "d": "2rPwDJQKGDmIeF7iKrDnlJZPFzzQLUOp3Ul687Fc9QY"
+}
+```
+Symmetric AES key “ABCD.1234” used in chapter 10.1:
+```json
+{
+    "kid": "ABCD.1234",
+    "kty": "oct",
+    "alg": "A256GCM",
+    "k": "Dl3fyz_0lHaSeFl-TJxSTr2NET5H6t2SELmI5tiCFno"
+}
+```
 
 ### Proposed new Section 1.3 Unique profile identification
 The cryptographic key takes precedence over the profile URI. Two profiles published under different URIs but using the
