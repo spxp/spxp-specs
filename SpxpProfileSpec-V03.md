@@ -299,9 +299,6 @@ Depending on the “type”, additional members are defined as follows:
 | forseqts | String | required | Sequence timestamp of post this comment belongs to |
 | fingerprint | String | required | Base64URL encoded SHA256 hash of the [Canonical JSON](#711-canonical-json) of the original post after resolving the private data and removing the “signature” member |
 
-The member `seqts` is not part of the signature. It is a technical field assigned by the server. To authenticate a
-specific creation time, the `createts` member should be used.
-
 Example:
 ```json
 {
@@ -362,6 +359,14 @@ Example:
     "more" : true
 }
 ```
+
+### 9.1 Signing and Encrypting Posts
+Posts can be requested individually from the server. Thus, post messages are signed individually and independent of
+each other. Also private data is embedded in each post individually instead of the server response as whole.  
+The member `seqts` is not part of the signature. It is a technical field assigned by the server. To authenticate a
+specific creation time, the `createts` member should be used.
+
+### 9.2 Requesting Posts from the Server
 The `data` array contains a subset of posts known by the server. The number of returned items is chosen by the SPXP
 server, but the client can attach a `max` query parameter to influence this number. The client can further attach
 `before` and `after` query parameters to specify a date range of requested items. The server guarantees that there are
