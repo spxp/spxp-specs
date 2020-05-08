@@ -158,7 +158,9 @@ Example:
     }
 }
 ```
-The plaintext of each encrypted object in the “private” array must be signed individually before being encrypted.
+The plaintext of each encrypted object in the `private` array must be signed individually before being encrypted.  
+If a JSON object solely consists of a `seqts`  and a `private` member, it does not need to be signed. Signing these
+obejcts is even discouraged to save space and avoid a false feeling of authenticity.
 
 #### 7.1.1 Canonical JSON
 Canonical JSON is the shortest serialization with lexicographically sorted members in objects. This means in particular:
