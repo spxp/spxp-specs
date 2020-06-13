@@ -189,11 +189,10 @@ Valid “grant” values are (case sensitive):
 | Grant | Allows to sign |
 |---|---|
 | post | Individual post objects. If not combined with “impersonate”, then only in their own name. |
-| comment | Comments to posts. If not combined with “impersonate”, then only in their own name. |
 | friends | Data published on the friends endpoint |
 | grant | Other certificates, if these do not grant permissions that exceed the permissions on this certificate, except the permissions “grant” and “ca” |
 | ca | Other certificates, if these do not grant permissions that exceed the permissions on this certificate, including the permissions “grant” and “ca” |
-| impersonate | Posts and comments in the name of this profile |
+| impersonate | Posts in the name of this profile |
 
 The profile root document ([5](#5-social-profile-root-document)) must always be signed by the profile key pair
 ([1.1](#11-cryptographic-profile-key-pair)).
@@ -207,10 +206,10 @@ Example:
         "crv": "Ed25519",
         "x": "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
     },
-    "grant" : [ "post", "comment" ],
+    "grant" : [ "post" ],
     "signature": {
         "key": "C8xSIBPKRTcXxFix",
-        "sig": "hmc8SolHWR8SMR8OXnYtX1Sxetvxak-uCBf92yHBfPIv-Vi-BvZHLTOScU3B-SeoPGVhyaUDz3f9SKF3NyPxBg"
+        "sig": "PEekh7oCLQa0O4rCUPrH19yCJCLtEZfnumUlPrH0TPbq66Bj_aO71enf-P6gUttlgJFRRfvD1D7wAAYZaX6PCQ"
     }
 }
 ```
@@ -256,8 +255,8 @@ Each single post in the data array is a JSON object with these members:
 |---|---|---|---|
 | seqts | String | required | Sequence timestamp of post in the format “YYYY-MM-DD’T’hh:mm:ss.sss” always in UTC. Probably assigned by the SPXP server when it received this post object. <br/> The sequence timestamp must be unique across all posts of a profile. <br/> This member is not part of the signature. |
 | createts | String | optional | Optional creation timestamp of post in the format “YYYY-MM-DD’T’hh:mm:ss.sss” always in UTC. Assigned by the client when this post got created. |
-| author | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve this profile root document and check the signature on this post against the profile key of the “author” profile. This key needs to bring a certificate on this post that grants “post” or “comment” permissions (7.2). |
-| type | String | required | Type of post. One of “text”, “web”, “photo”, “video”, “profile” or “comment” |
+| author | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve this profile root document and check the signature on this post against the profile key of the “author” profile. This key needs to bring a certificate on this post that grants “post” permission (7.2). |
+| type | String | required | Type of post. One of “text”, “web”, “photo” or “video” |
 
 Depending on the “type”, additional members are defined as follows:
 
@@ -288,13 +287,6 @@ Depending on the “type”, additional members are defined as follows:
 | preview | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see [chapter 6](#6-encrypted-resources)) |
 | media | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see [chapter 6](#6-encrypted-resources)) |
 | place | String | optional | Social Profile URI of a place linked to the photo |
-
-#### Type “comment”:
-| Name | Type | Mandatory | Description |
-|---|---|---|---|
-| message | String | required | Text message. <br/> If the message consists of a single Unicode character representing an emoji, clients should treat this as a “reaction” and just display this emoji together with the total count of comments with this emoji. |
-| forseqts | String | required | Sequence timestamp of post this comment belongs to |
-| fingerprint | String | required | Base64URL encoded SHA256 hash of the [Canonical JSON](#711-canonical-json) of the original post after resolving the private data and removing the “signature” member |
 
 Example:
 ```json
@@ -334,10 +326,10 @@ Example:
                         "crv": "Ed25519",
                         "x": "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
                     },
-                    "grant" : [ "post", "comment" ],
+                    "grant" : [ "post" ],
                     "signature": {
                         "key": "C8xSIBPKRTcXxFix",
-                        "sig": "hmc8SolHWR8SMR8OXnYtX1Sxetvxak-uCBf92yHBfPIv-Vi-BvZHLTOScU3B-SeoPGVhyaUDz3f9SKF3NyPxBg"
+                        "sig": "PEekh7oCLQa0O4rCUPrH19yCJCLtEZfnumUlPrH0TPbq66Bj_aO71enf-P6gUttlgJFRRfvD1D7wAAYZaX6PCQ"
                     }
                 },
                 "sig": "94dyGxvPcVuueFjVj_RwedWy5m3dasRDYf1iOxnYXUEYDS33LYzn9kqe6aIRMZchxWqlM1K_fX-uHVFDRjzSAg"
@@ -730,7 +722,7 @@ TBD
 
 ## 14 Known problems
 - Profile keys do not have a validity period
-- Certificates do not have a timestamp, which would allow them to be signedby an expired key
+- Certificates do not have a timestamp, which would allow them to be signed by an expired key
 - Certificates do not have a notValidBefore / notValidAfter field
 - The profile root document can only be signed by the profile key
 
@@ -742,6 +734,8 @@ TBD
 - Profile key revocation
 - Certificate expiration
 - Certificate revocation list
+- Comments
+- Share a foreign post in the own profile
 - Rework “hometown” and “location” into profile links section
 - Friends endpoint: combine with profile links? Derivate from connection groups?
 - Publishing
