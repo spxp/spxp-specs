@@ -44,7 +44,8 @@ contains the following members:
 |---|---|---|---|
 | ver | String | required | Version of the SPXProtocol exposed by this URI. <br/> This specification is defining version “0.3” |
 | name | String | required | The display name of this profile |
-| about | String | optional | Additional description of this profile |
+| shortInfo | String | optional | Additional short description of this profile |
+| about | String | optional | Additional long description of this profile, like a resume or bio |
 | gender | String | optional | Free text string specifying the gender of this profile. Clients should recognize the english text strings “female” and “male” and display localized text or icons. All other content can be displayed as-is. |
 | website | String | optional | URI of the profile’s website |
 | email | String | optional | Email address of this profile |
@@ -68,7 +69,8 @@ Example:
 {
     "ver" : "0.3",
     "name" : "Crypto Alice",
-    "about" : "I love cryptography.",
+    "shortInfo" : "I love cryptography.",
+    "about" : "Alice and Bob are fictional characters commonly used as a placeholder name in cryptology, as well as science and engineering literature. The Alice and Bob characters were invented by Ron Rivest, Adi Shamir, and Leonard Adleman in their 1978 paper \",A Method for Obtaining Digital Signatures and Public-key Cryptosystems\".",
     "gender" : "female",
     "website" : "https://en.wikipedia.org/wiki/Alice_and_Bob",
     "email" : "cryptoalice@example.com",
@@ -144,7 +146,7 @@ Example:
 {
     "ver" : "0.3",
     "name" : "Crypto Alice",
-    "about" : "I love cryptography.",
+    "shortInfo" : "I love cryptography.",
     "website" : "https://en.wikipedia.org/wiki/Alice_and_Bob",
     "publicKey": {
         "kid": "C8xSIBPKRTcXxFix",
@@ -154,7 +156,7 @@ Example:
     },
     "signature": {
         "key": "C8xSIBPKRTcXxFix",
-        "sig": "JOaOvkupQmdMddAz846relqJitVNikBPrbzgLVEQKNRn6dFuAR_4AcGk2bYOUh58fnmxee_qcOovmRCJp40-Dg"
+        "sig": "WnRIWY8eoU5qPzWlgYjaT_j5x1MnQKpS2vD-8sC2ScnqEldHcLDnIEwRz1fOkGklq1ojNB4D2tRJVbEBrFB3AA"
     }
 }
 ```
