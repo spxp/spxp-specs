@@ -289,13 +289,6 @@ Depending on the “type”, additional members are defined as follows:
 | media | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see [chapter 6](#6-encrypted-resources)) |
 | place | String | optional | Social Profile URI of a place linked to the photo |
 
-#### Type “profile”:
-| Name | Type | Mandatory | Description |
-|---|---|---|---|
-| message | String | optional | Text message |
-| profile | String | required | Social Profile URI |
-| publicKey | Object | required | Public key of referenced profile (required, may only be omitted if referenced profile does not have a profile key pair) |
-
 #### Type “comment”:
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
@@ -348,15 +341,6 @@ Example:
                     }
                 },
                 "sig": "94dyGxvPcVuueFjVj_RwedWy5m3dasRDYf1iOxnYXUEYDS33LYzn9kqe6aIRMZchxWqlM1K_fX-uHVFDRjzSAg"
-            }
-        }, {
-            "seqts" : "2018-09-15T12:35:47.735",
-            "type" : "profile",
-            "message" : "Do you know Crypto Alice?",
-            "profile" : " https://example.com/spxp/alice",
-            "signature": {
-                "key": "C8xSIBPKRTcXxFix",
-                "sig": "678UnO6pwpNb6SlkaYPzFhO7FJHM2Yor_QqWEelTaV6v5VED48f8nv4tpQ0WxFJgGyizthqXKHd9zTF-MmKLAw"
             }
         }
     ],
