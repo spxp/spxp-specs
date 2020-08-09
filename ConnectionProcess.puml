@@ -1,0 +1,44 @@
+@startuml
+
+actor Alice
+database "Alice\nProfile" as AliceProfile
+database "Bob\nProfile" as BobProfile
+actor Bob
+
+rnote over Alice #FFFFD2: Create Reader Key\nfor Bob: K<sub>Alice-Bob</sub>
+
+Alice -> AliceProfile: Prepare K<sub>Alice-Bob</sub>
+Alice -> BobProfile: Connection Request Alice
+
+...
+
+Bob -> BobProfile: Updates?
+BobProfile -> Bob: Connection Request Alice
+
+Bob -[#0000FF]> AliceProfile !!: Read Private
+note left of AliceProfile: Connection Request does\nnot contain any keys
+
+
+rnote over Bob #FFFFD2: Create Reader Key\nfor Alice: K<sub>Bob-Alice</sub>
+
+Bob -> BobProfile: Publish K<sub>Bob-Alice</sub>
+Bob -> AliceProfile: Connection Accept K<sub>Bob-Alice</sub>
+
+activate AliceProfile
+
+AliceProfile -> Bob: K<sub>Alice-Bob</sub>
+
+deactivate AliceProfile
+
+Bob -[#0000FF]> AliceProfile: Read Private K<sub>Alice-Bob</sub>
+AliceProfile -[#0000FF]> Bob: Private Data
+
+...
+
+Alice -> AliceProfile: Updates?
+AliceProfile -> Alice: Connection Accept K<sub>Bob-Alice</sub>
+
+Alice -[#0000FF]> BobProfile: Read Private K<sub>Bob-Alice</sub>
+BobProfile -[#0000FF]> Alice: Private Data
+
+@enduml
