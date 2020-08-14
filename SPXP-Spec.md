@@ -21,13 +21,14 @@ must be treated as different profiles.
 If a profile client detects a change in the signing key used by the profile behind a URI, it has to warn the user and
 must not present the data signed by different keys as belonging to the same profile.  
 
-### 1.4 Authenticating identities
+### 1.4 Authenticating profiles
 The profile key pair can only verify that all information published on this profile originates from the same entity
 behind this profile, but it cannot validate the identity of this entity.  
 Authenticating the identity of a real life person or organisation behind a profile is achived by  a web of trust, where
 profiles attest the identity of connected profiles.  
-Alternatively, profiles can delegate the authentication of their identity  to the domain name system (DNS) by publishing
-their public profile key as a TXT record in the DNS.
+Alternatively, profiles can delegate their authentication to the domain name system (DNS). By publishing the public
+profile key as TXT record in DNS, profiles can attest that they are controlled by the same entity that has control over
+the corresponding domain record in DNS.
 
 ## 2 Communication protocols
 Data is exchanged between participating clients and servers via HTTP, preferably over TLS (i.e. HTTPS). Clients and
@@ -68,7 +69,7 @@ is composed of the following members:
 | keysEndpoint | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 13.2](#132-keys-endpoint) |
 | publishEndpoint | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “publish endpoint” as specified in [chapter 15](#15-publishing) |
 | publicKey | Object | optional | [Profile public key object](#6-profile-public-key-object) describing the public key of the [profile key pair](#11-cryptographic-profile-key-pair) |
-| connect | Object | optional | Additional details for connection process, if and only if this object accepts connection requests as specified in [chapter 16](#16-profile-connections) |
+| connect | Object | optional | Additional details for the connection process, if and only if this object accepts connection requests as specified in [chapter 16](#16-profile-connections) |
 | private | Array | optional | Array of private data as specified in [chapter 12](#12-private-data) |
 
 Example:
@@ -125,7 +126,7 @@ In the case of an embedded public key (`"src" : "embed"`), this object is identi
 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). Must have a unique, random key id (“kid”).  
 
 ### 6.1 Domain bound profile key pair
-It is possible to bind the identity of a profile to the DNS (see [1.4](#14-authenticating-identities)). In this case,
+It is possible to bind the identity of a profile to the DNS (see [1.4](#14-authenticating-profiles)). In this case,
 the `src` member of the profile public key object is set to `dns`. Clients need to read the `TXT` record named
 `spxp-public-profile-key` for the domain of the profile URI from DNS. This String value then contains a Base64Url
 encoded JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key
@@ -223,7 +224,7 @@ Example:
 If a JSON object solely consists of a `seqts`  and a `private` member, it does not need to be signed. Signing these
 objects is even discouraged to save space and avoid a false feeling of authenticity.  
 Additional Authenticated Data (AAD) can be included in the signature, which is used to prevent session replay attacks
-when publishing encrypted data.
+when encrypted data is published.
 
 #### 9.1.1 Canonical JSON
 Canonical JSON is the shortest serialization with lexicographically sorted members in objects. This means in particular:
@@ -542,7 +543,7 @@ nested objects (i.e. merge `src.m` into `dst.m`).
 - Otherwise, set the member `src.m` in the target object (i.e. `dst.m` := `src.m`).
 
 ### 12.4 Private data and signatures
-The “private” array is removed from JSON objects before signing (see also [8.9](#91-signing-json-objects)). Instead, the
+The “private” array is removed from JSON objects before signing (see also [9.1](#91-signing-json-objects)). Instead, the
 plaintext within each encrypted block must be signed individually. This prevents protocol servers from learning anything
 about the author of an encrypted data block.  
 If the JWE encrypted object uses Additional Authenticated Data (AAD), clients must validate that the AAD on the
@@ -762,7 +763,7 @@ If another profile gets access to information published by this profile as part 
 16](#16-profile-connections), then the reader key is exchanged as part of the connection process.
 
 ## 14 Restrain encrypted data
-Although private data is encrypted, it is good practice to still limit access to it to protect against a key loss. In
+Although private data is encrypted, it is good practice to limit access in order to protect against a key loss. In
 the context of this protocol, it also prevents unauthorised readers from discovering the existence of data beyond their
 access level.  
 All SPXP endpoints support the additional query parameter `reader`, which takes a comma separated list of reader key
@@ -787,7 +788,7 @@ with a JSON object as HTTP body which is composed of the following members:
 | type | String | required | Type of information to be published. In this version of the protocol, only “post” is supported. |
 | ver | String | required | Most recent version of the SPXProtocol supported by the client |
 | payload | Object | required | The object to be published |
-| authToken | String | required | One time authentication token as specified in [chapter 15.2](#142-authentication-tokens) |
+| authToken | String | required | One time authentication token as specified in [chapter 15.2](#152-authentication-tokens) |
 
 The server responds with one of these status codes.
 
