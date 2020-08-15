@@ -23,12 +23,12 @@ must not present the data signed by different keys as belonging to the same prof
 
 ### 1.4 Authenticating profiles
 The profile key pair can only verify that all information published on this profile originates from the same entity
-behind this profile, but it cannot validate the identity of this entity.  
+behind this profile, but it cannot validate it's identity.  
 Authenticating the identity of a real life person or organisation behind a profile is achived by  a web of trust, where
 profiles attest the identity of connected profiles.  
 Alternatively, profiles can delegate their authentication to the domain name system (DNS). By publishing the public
-profile key as TXT record in DNS, profiles can attest that they are controlled by the same entity that has control over
-the corresponding domain record in DNS.
+profile key as TXT record in DNS, profiles can show that they are controlled by the same entity that has control over
+the domain record in DNS.
 
 ## 2 Communication protocols
 Data is exchanged between participating clients and servers via HTTP, preferably over TLS (i.e. HTTPS). Clients and
@@ -131,13 +131,13 @@ the `src` member of the profile public key object is set to `dns`. Clients need 
 `spxp-public-profile-key` for the domain of the profile URI from DNS. This String value then contains a Base64Url
 encoded JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key
 (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section
-3.1](https://tools.ietf.org/html/rfc8037#section-3.1). Must have a unique, random key id (“kid”).
+3.1](https://tools.ietf.org/html/rfc8037#section-3.1). It must have a unique, random key id (“kid”).
 
 ## 7 Profile reference object
 Profiles are referenced by combining their [profile URI](#12-profile-uri) with the public key of their [profile key
-pair](#11-cryptographic-profile-key-pair). This validates that the profile behind a URI is still controlled by the same
-entity and has not changed since the reference got created. References to other profiles are described by a JSON object
-with these members:
+pair](#11-cryptographic-profile-key-pair). This guarantees that the profile behind a URI is still controlled by the same
+entity as it has been at the time of creating this reference. References to other profiles are described by a JSON
+object with these members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
@@ -188,10 +188,10 @@ JSON objects can be signed with a method that is designed after [JSON signatures
 specification](https://matrix.org/docs/spec/appendices#signing-json), but which is specified slightly different. If a
 profile exposes an Ed25519 public key as part of the profile root document, all information transmitted through SPXP has
 to be signed with this key to be considered authentic. A protocol client must not present any information to the user in
-the context of this profile that has not been signed by the announced profile key.
+the context of this profile that has not been signed by the announced profile key or its authorised delegates.
 
 ### 9.1 Signing JSON objects
-To sign an object, the “private” and “seqts” member fields are removed, it is converted into [Canonical JSON](#811-canonical-json),
+To sign an object, the “private” and “seqts” member fields are removed, it is converted into [Canonical JSON](#911-canonical-json),
 the optional aad is attached, it is converted to a byte stream using UTF-8 character encoding and then signed with the
 profile key pair ([1.1](#11-cryptographic-profile-key-pair)) using the [Ed25519](http://ed25519.cr.yp.to/) signature
 algorithm. The resulting signature is then embedded into the JSON object as `signature` object with the following members:
@@ -275,7 +275,8 @@ Example:
     }
 }
 ```
-Please note that certificates do not allow domain bound profile keys.
+Please note that certificates do not allow domain bound profile keys. You can use a DNS bound key to _sign_ a
+certificate, but the key getting granted permissions must be part of the certificate itself.
 
 ### 9.3 Self-signed profile key
 The profile root document ([5](#5-social-profile-root-document)) must be signed with the key listed as “publicKey” in
@@ -781,7 +782,7 @@ authorized source, it declares a `publishEndpoint` in the profile root document.
 
 ### 15.1 Publish endpoint
 To publish a piece of information, like a post, the protocol client sends an HTTP POST request to the “publish endpoint“
-with a JSON object as HTTP body which is composed of the following members:
+with a JSON object as HTTP body. Thus object is composed of the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
@@ -834,8 +835,8 @@ This makes authenticating requests to the publishing endpoint and preventing ses
 
 #### 15.2.2 Preventing Session Replay
 Since the server does not know anything about the content of the encrypted payload, the publishing endpoint is
-vulnerable to session replay attacks. An actor with publishing permissions could taking any existing post, encrypt it
-again, acquire a fresh authentication token, and then send it to the publishing endpoint. The server will always accept
+vulnerable to session replay attacks. An actor with publishing permissions could simply take any existing post, encrypt
+it again, acquire a fresh authentication token, and then send it to the publishing endpoint. The server will always accept
 it as long as the authentication token is valid.  
 By enforcing that the authentication token must be embedded as AAD in the JWE object, we can bind the encrypted object
 to this individual publishing request in a way that can be checked by the server without exposing details about the
@@ -856,28 +857,28 @@ server.
 
 ### 16.1 Connection Process
 The connection process between two profiles controlled by “Alice” and “Bob” is as follows:
-1. Alice creates a new [reader key](#134-reader-keys) and optionally [authorized signing key](#92-authorized-signing-keys)
-   for Bob as well as a random _connection establishment ID_ and an _ephemeral connection establishment key pair_.
+1. Alice creates a new [reader key](#134-reader-keys) and optionally an [authorized signing key](#92-authorized-signing-keys)
+   for Bob as well as a random _connection establishment ID_ and an _ephemeral connection establishment key_.
 2. Alice creates a connection package for Bob containing this reader key and certificate. She then encrypts this package
-   with the public _ephemeral connection establishment key_
+   with the _ephemeral connection establishment key_
 2. Alice prepares her profile server to establish the connection on her behalf and deposits the connection package for
    Bob on her own profile server.
 3. Alice creates a connection request message, encrypts it with Bob's public connection key and sends it to Bob's
    profile server. This message contains the _connection establishment ID_ and an _ephemeral connection establishment
-   key pair_.
+   key_.
 4. Next time when Bob checks his own profile server for **control messages**, he receives this encrypted connection request
 5. Bob decrypts the connection request with his private connection key and decides weather he wants to accept this
    request or not. If Bob does not want to accept the request, this process ends here. **The connection request will time
    out on Alice's profile server.**
-6. If Bob decides to accept, he creates a new [reader key](#134-reader-keys) and optionally [authorized signing
-   key](#92-authorized-signing-keys) for Alice and encrypts both with with the public _ephemeral connection
-   establishment key_ from the connection request
+6. If Bob decides to accept, he creates a new [reader key](#134-reader-keys) and optionally an [authorized signing
+   key](#92-authorized-signing-keys) for Alice, packs both in a connection package and encrypts this package with the
+   _ephemeral connection establishment key_ from the connection request
 7. Bob sends the encrypted package to Alice's profile server and receives the package Alice has deposited there for Bob
    in return
-8. Bob decrypts the reader key and certificate from the package with the private public _ephemeral connection
-   establishment key_ from the connection request
+8. Bob decrypts the reader key and certificate from the package with the _ephemeral connection establishment key_ from
+   the connection request
 9. Next time when Alice checks her own profile server for **control messages**, she receives the encrypted package from
-   Bob and decrypts it with the private public _ephemeral connection establishment key_
+   Bob and decrypts the reader key and certificate from the package with the _ephemeral connection establishment key_
 
 Note:  
 It is important to understand that this process does not guarantee any kind of "quid pro quo" between both profiles. The
@@ -885,11 +886,10 @@ exchange of the encrypted packages in step 7 happens on a profile server, which 
 content of each package.  
 Even if the server could guarantee the exchange of valid reader keys and certificates, it still does not guarantee that
 both profiles grant each other similar permissions.  
-It is a design criteria of this protocol that each profile has full control over the amount of information it wants to
+It is an explicit design decision of this protocol that each profile has full control over the amount of information it wants to
 expose. So a profile could issue a reader key in this process that does not give any substantial additional access over
-what is publicly available anyway. The receiving profile has no chance to detect this situation since it is a design
-criteria of this protocol to even hide the fact that there is more information available beyond what an actor can
-access.
+what is publicly available anyway. The receiving profile has no chance to detect this situation since even the fact that
+there is more information available beyond an actor's access level is hidden.
 
 ![Connection Process](./ConnectionProcess.png)
 
@@ -935,14 +935,14 @@ Example:
 ```
 
 ### 16.3 Connection Package
-Cryptographic material is transferred between protocol clients in _connection packages_. These packages are encrypted
-by JWE using an asymmetric key encryption scheme so that only the recipient is able to read this package. A connection
-package has the following members:
+Cryptographic material is transferred between protocol clients in _connection packages_. These are JSON objects with the
+following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | type | String | required | Fixed text string `connection_package` |
 | ver | String | required | Most recent version of the SPXProtocol supported by the client |
+| establishId | String | required | Unique random connection establishment ID |
 | readerKey | Object | optional | JSON object describing a [reader key](#134-reader-keys) as JWK as defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) |
 | publishingCertificate | Object | optional | JSON object describing the certificate containing the [authorized signing key](#92-authorized-signing-keys) |
 
@@ -951,6 +951,7 @@ Example:
 {
     "type" : "connection_package",
     "ver" : "0.3",
+    "establishId" : "K4dwfD4wA67xaD-t",
     "readerKey" : {
         "kid" : "ABCD.1234",
         "kty" : "oct",
@@ -976,10 +977,16 @@ Example:
 }
 ```
 
-The connection package object must always be signed by the issuer. It is then encrypted according to [RFC 7516 “JSON
-Web Encryption (JWE)”](https://tools.ietf.org/html/rfc7516) using the Elliptic Curve Diffie-Hellman Ephemeral Static key
-agreement on the X25519 curve and content encrypted with 256 bit AES in Galois/Counter Mode, identified by
-JWE as `"alg": "ECDH-ES", "enc": "A265GCM"`.
+The connection package must be signed by the issuer. It is then encrypted according to [RFC 7516 “JSON Web Encryption
+(JWE)”](https://tools.ietf.org/html/rfc7516) using the _ephemeral connection establishment key_. The only supported
+encryption method is direct encryption with 256 bit AES in Galois/Counter Mode, identified as `"alg": "dir", "enc":
+"A265GCM"` by JWE. This requires a new random initialisation vector “iv” for each package.
+
+### 16.4 Preparing a Connection
+The initiator prepares the connection by sending the reader key and encrypted connection package to her or his own
+profile server using the *profile management endpoint*. This data is associated with the _connection establishment ID_.
+The server knows how this reader key fits into the key graph, but does not know anything about the peer profile this
+connection is prepared for.
 
 ### 16.4 Connect Message
 To initiate a connection, the client generates a JSON object with the following members:
@@ -989,11 +996,13 @@ To initiate a connection, the client generates a JSON object with the following 
 | type | String | required | Fixed text string `connection_request` |
 | ver | String | required | Most recent version of the SPXProtocol supported by the client |
 | timestamp | String | required | Timestamp when the client created this request in the format “YYYY-MM-DD’T’hh:mm:ss.sss” always in UTC |
+| expires | String | required | Timestamp until when the server of the profile initiating this request will accept a key exchange in the format “YYYY-MM-DD’T’hh:mm:ss.sss” always in UTC |
+| establishId | String | required | Unique random connection establishment ID |
 | requester | Object | required | [Social profile reference](#7-profile-reference-object) of the profile sending the connection request |
 | requestee | Object | required | [Social profile reference](#7-profile-reference-object) of the profile this request is sent to |
-| responseEndpoint | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) relative to the requester profile URI specifying the endpoint to be used by the requestee to exchange connection packages. If missing, the requesters connection endpoint is used. |
+| responseEndpoint | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) relative to the requester profile URI specifying the endpoint to be used by the requestee to [exchange connection packages](#167-connection-package-exchange). If missing, the requesters connection endpoint is used. |
 | offering | Array | required | Array of Strings identifying the access that the requester is offering with this connection |
-| establishKey | Object | required | JSON object describing the ephemeral connection establishment key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the X25519 key agreement curve specifier as defined in [RFC 8037 Section 3.2](https://tools.ietf.org/html/rfc8037#section-3.2). |
+| establishKey | Object | required | JSON object describing the ephemeral connection establishment key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) |
 
 Valid “offering” values are (case sensitive):
 
@@ -1008,6 +1017,8 @@ Example:
     "type" : "connection_request",
     "ver" : "0.3",
     "timestamp" : "2020-01-12T09:40:17.734",
+    "expires" : "2020-07-12T09:40:17.734",
+    "establishId" : "K4dwfD4wA67xaD-t",
     "requester" : {
         "uri" : "https://example.com/spxp/alice",
         "publicKey" : {
@@ -1031,11 +1042,10 @@ Example:
         "publish"
     ],
     "establishKey" : {
-        "kid": "-W9wEpcu1oHtqMdC",
-        "kty": "OKP",
-        "crv": "X25519",
-        "x": "huTz4YTSpXVPl4vwWdmHqWWi6elyAcy51bIfaa5jOzo",
-        "d": "AJl3WOOYrjHQZXPvGrvRce_gJfG6XEh14QPWceGp2U4"
+        "kid": "T7n_19BqWjU17l1s",
+        "kty": "oct",
+        "alg": "A256GCM",
+        "k": "AnkrwD_Et1E0-FB0XYU38hpmdEGr0LOBO8O2HRdzgOw"
     },
     "signature" : {
         XXXXX
@@ -1120,7 +1130,71 @@ Example:
 ```
 
 ### 16.7 Connection package exchange
-**Work in progress -- TO BE DEFINED**
+When a profile chooses to accept a connection request, it first needs to activate the new reader key created for the
+peer profile by *publishing it to its own server*. The client then creates a new connection package and encrypts it with
+the _ephemeral connection establishment key_ defined in the connection message. The final key exchange is performed by
+sending a HTTP POST request to the `responseEndpoint` defined in the connect message. If no such endpoint is defined,
+the package is sent to the `connectEndpoint``defined in the peer profiles profile root document.  
+The HTTP body of this POST request contains a JSON object with these members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| type | String | required | Fixed text string `connection_accept` |
+| ver | String | required | Most recent version of the SPXProtocol supported by the client |
+| establishId | String | required | Unique random connection establishment ID |
+| package | Object | required | JWE object in JSON Serialization containing the encrypted connection package |
+
+The server tries to match the given `establishId` against the list of [prepared connections](#164-preparing-a-connection).
+If such a connection has been prepared, it activates the reader key associated with this connection, stores the provided
+package for the profile owner and then responds with a 200 status code and a JSON object with these members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| type | String | required | Fixed text string `connection_finish` |
+| ver | String | required | Most recent version of the SPXProtocol supported by the server |
+| establishId | String | required | connection establishment ID |
+| package | Object | required | JWE object in JSON Serialization containing the encrypted connection package |
+
+In error situations, the server responds with one of these status codes
+
+| Status code | Meaning |
+|---|---|
+| 404 | The establishId is unknown or has timed out |
+| 429 | The client IP address has sent too many requests |
+
+Example POST request:
+```json
+{
+    "type" : "connection_accept",
+    "ver" : "0.3",
+    "establishId" : "K4dwfD4wA67xaD-t",
+    "package" : {
+        XXXXX
+    }
+}
+```
+Example response:
+```json
+{
+    "type" : "connection_finish",
+    "ver" : "0.3",
+    "establishId" : "K4dwfD4wA67xaD-t",
+    "package" : {
+        XXXXX
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
 
 ## 17 Missing in this version
 The SPXP is developed in an agile manner, where we define new protocol versions, put them under test, and then evolve
@@ -1205,7 +1279,7 @@ The object in `acceptedTokens` describing this method has the following members:
 | method | String | required | Text string `spxp.org:webflow:1.0` |
 | start | String | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to the initial page. |
 
-The client must add one of these parameters to the URI:
+The client must add exactly one of these parameters to the URI:
 
 | Name | Description |
 |---|---|
@@ -1216,6 +1290,7 @@ Example using custom URI scheme:
 ```
 GET https://profiles.example.com/acquire-token?return_scheme=hello1234world HTTP/1.1
 ```
+Response:
 ```
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8
@@ -1227,8 +1302,9 @@ Content-Type: text/html; charset=utf-8
 
 Example using return URI:
 ```
-GET https://profiles.example.com/acquire-token?return_uri=http://example.com/token HTTP/1.1
+GET https://profiles.example.com/acquire-token?return_uri=http%3A%2F%2Fexample.com%2Ftoken HTTP/1.1
 ```
+Response:
 ```
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8
