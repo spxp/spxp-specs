@@ -778,7 +778,8 @@ client actually has this key.
 ## 15 Publishing
 The information exposed through SPXP can originate from any backend, like a content management system. If a profile
 accepts new information published directly from social profile clients, either from the profile owner or any other
-authorized source, it declares a `publishEndpoint` in the profile root document.
+authorized source, it declares a `publishEndpoint` in the profile root document.  
+**Publishing encrypted data.**
 
 ### 15.1 Publish endpoint
 To publish a piece of information, like a post, the protocol client sends an HTTP POST request to the “publish endpoint“
@@ -861,24 +862,25 @@ The connection process between two profiles controlled by “Alice” and “Bob
    for Bob as well as a random _connection establishment ID_ and an _ephemeral connection establishment key_.
 2. Alice creates a connection package for Bob containing this reader key and certificate. She then encrypts this package
    with the _ephemeral connection establishment key_
-2. Alice prepares her profile server to establish the connection on her behalf and deposits the connection package for
+3. Alice prepares her profile server to establish the connection on her behalf and deposits the connection package for
    Bob on her own profile server.
-3. Alice creates a connection request message, encrypts it with Bob's public connection key and sends it to Bob's
+4. Alice creates a connection request message, encrypts it with Bob's public connection key and sends it to Bob's
    profile server. This message contains the _connection establishment ID_ and an _ephemeral connection establishment
    key_.
-4. Next time when Bob checks his own profile server for **control messages**, he receives this encrypted connection request
-5. Bob decrypts the connection request with his private connection key and decides weather he wants to accept this
+5. Next time when Bob checks his own profile server for **control messages**, he receives this encrypted connection request
+6. Bob decrypts the connection request with his private connection key and decides weather he wants to accept this
    request or not. If Bob does not want to accept the request, this process ends here. **The connection request will time
    out on Alice's profile server.**
-6. If Bob decides to accept, he creates a new [reader key](#134-reader-keys) and optionally an [authorized signing
+7. If Bob decides to accept, he creates a new [reader key](#134-reader-keys) and optionally an [authorized signing
    key](#92-authorized-signing-keys) for Alice, packs both in a connection package and encrypts this package with the
    _ephemeral connection establishment key_ from the connection request
-7. Bob sends the encrypted package to Alice's profile server and receives the package Alice has deposited there for Bob
+8. Bob sends the encrypted package to Alice's profile server and receives the package Alice has deposited there for Bob
    in return
-8. Bob decrypts the reader key and certificate from the package with the _ephemeral connection establishment key_ from
-   the connection request
-9. Next time when Alice checks her own profile server for **control messages**, she receives the encrypted package from
-   Bob and decrypts the reader key and certificate from the package with the _ephemeral connection establishment key_
+9. Bob activates the new reader key on his profile server
+10. Bob decrypts the reader key and certificate from the package with the same _ephemeral connection establishment key_
+    from the connection request
+11. Next time when Alice checks her own profile server for **control messages**, she receives the encrypted package from
+    Bob and decrypts the reader key and certificate from the package with the _ephemeral connection establishment key_
 
 Note:  
 It is important to understand that this process does not guarantee any kind of "quid pro quo" between both profiles. The
@@ -984,7 +986,7 @@ encryption method is direct encryption with 256 bit AES in Galois/Counter Mode, 
 
 ### 16.4 Preparing a Connection
 The initiator prepares the connection by sending the reader key and encrypted connection package to her or his own
-profile server using the *profile management endpoint*. This data is associated with the _connection establishment ID_.
+profile server using the **profile management endpoint**. This data is associated with the _connection establishment ID_.
 The server knows how this reader key fits into the key graph, but does not know anything about the peer profile this
 connection is prepared for.
 
@@ -1131,10 +1133,10 @@ Example:
 
 ### 16.7 Connection package exchange
 When a profile chooses to accept a connection request, it first needs to activate the new reader key created for the
-peer profile by *publishing it to its own server*. The client then creates a new connection package and encrypts it with
-the _ephemeral connection establishment key_ defined in the connection message. The final key exchange is performed by
+peer profile by **publishing it to the own server**. The client then creates a new connection package and encrypts it with
+the same _ephemeral connection establishment key_ that is defined in the connection message. The final key exchange is performed by
 sending a HTTP POST request to the `responseEndpoint` defined in the connect message. If no such endpoint is defined,
-the package is sent to the `connectEndpoint``defined in the peer profiles profile root document.  
+the package is sent to the `connectEndpoint` defined in the peer's profile root document.  
 The HTTP body of this POST request contains a JSON object with these members:
 
 | Name | Type | Mandatory | Description |
@@ -1185,17 +1187,6 @@ Example response:
 }
 ```
 
-
-
-
-
-
-
-
-
-
-
-
 ## 17 Missing in this version
 The SPXP is developed in an agile manner, where we define new protocol versions, put them under test, and then evolve
 based on the findings in simulations and real-world tests.  
@@ -1223,14 +1214,6 @@ profile needs to go through the process of key revocation anyway and establish t
 know yet if we need a secondary mechanism that performs a key rollover while the key has not been compromised.  
 This also includes the question if profile key needs to have a validity period.
 
-##### Links to other profiles should include public key
-This protocol clearly defines in 1.3 that the signing key takes precedence over the profile URI. However, whenever this
-protocol references other profiles, e.g. in the list of friends, the place in posts or the hometown and location of a
-profile, it only includes the profile URI. So it is possible that the profile behind a specific URI gets replaced after
-the linking profile created the link, and the URI does no longer reflect the profiles intention.  
-Instead, it should use an object combining the public key with the URI. The link should only be displayed if the public
-key matches.
-
 ##### Profile relocation
 We only define that the profile signing key takes precedence over the profile URI, but we do not give any procedures or
 examples how a profile can actually seamlesly move from one URI to another.
@@ -1253,18 +1236,9 @@ By design, the profile root document cannot be signed by a delegate. This is req
 key itself. There might be use cases where a profile wants to delegate the publishing of the "about" or "shortInfo"
 fields to another entity. This is currently not possible without exposing the profile root key.
 
-##### Domain bound profiles
-The domain name system (DNS) is well established. There might be situations where a profile wants to delegate control
-over a profile to the DNS instead of relying on E2E encryption. A profile could publish the current signing key via a
-TXT record in the DNS.
-
 ##### Profile key revocation / reestablish trust in new key
 The vision of SPXP describes a process where a profile can replace a lost or compromised signing key and re-establish
 trust in the new key via neighborhood assistance through its connected profiles.
-
-## 17 Missing features
-- Publishing
-- Encryption of posts and comments by other profiles
 
 ## Appendix A. Web Flow token acquisition method
 The client needs to open a new browser window and let the user navigate through a series of pages. When the web
