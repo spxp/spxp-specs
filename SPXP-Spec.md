@@ -11,7 +11,7 @@ Although this protocol allows profiles without a signing key, using one is highl
 
 ### 1.2 Profile URI
 Every social profile is addressed by an _absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3).
-Every protocol client must support at least the scheme “https” and can choose to additionally support the scheme “http”
+Every protocol client must support at least the scheme `https` and can choose to additionally support the scheme `http`
 and others.
 
 ### 1.3 Unique profile identification
@@ -32,18 +32,18 @@ the domain record in DNS.
 
 ## 2 Communication protocols
 Data is exchanged between participating clients and servers via HTTP, preferably over TLS (i.e. HTTPS). Clients and
-servers are encouraged to use the latest versions of these protocols, e.g. HTTP/2 and HTTP/3, and to prefer IPv6.
+servers are encouraged to use the latest versions of these protocols, e.g. [HTTP/2](https://tools.ietf.org/html/rfc7540) and [HTTP/3](https://quicwg.org/base-drafts/draft-ietf-quic-http.html), and to prefer [IPv6](https://tools.ietf.org/html/rfc8200).
 
 ## 3 Transport encoding of structured data
 Data is encoded as JSON according to [RFC 7519 “The JavaScript Object Notation (JSON) Data Interchange
-Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP “Content-Type” header to
-be “application/json” with no “charset” parameter. Clients must always use UTF-8 character encoding, irrespective of any
-“charset” incorrectly sent by the server.  
-The term ”Base64Url” throughout this specification refers to the URL safe Base 64 Encoding as apecified in [RFC 4648
+Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP `Content-Type` header to
+be `application/json` with no `charset` parameter. Clients must always use UTF-8 character encoding, irrespective of any
+`charset` incorrectly sent by the server.  
+The term `Base64Url` throughout this specification refers to the URL safe Base 64 Encoding as apecified in [RFC 4648
 Section 5](https://tools.ietf.org/html/rfc4648#section-5) without padding.
 
 ## 4 Protocol versioning
-This protocol uses [Semantic Versioning](https://semver.org/). This document specifies protocol version is “0.3”.
+This protocol uses [Semantic Versioning](https://semver.org/). This document specifies protocol version `0.3`.
 
 ## 5 Social profile root document
 Protocol servers respond to requests for the social profile URI with the social profile root document. This JSON object
@@ -51,26 +51,26 @@ is composed of the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| ver | String | required | Version of the SPXProtocol exposed by this URI. <br/> This specification is defining version “0.3” |
-| name | String | required | The display name of this profile |
-| shortInfo | String | optional | Additional short description of this profile |
-| about | String | optional | Additional long description of this profile, like a resume or bio |
-| gender | String | optional | Free text string specifying the gender of this profile. Clients should recognize the english text strings “female” and “male” and display localized text or icons. All other content can be displayed as-is. |
-| website | String | optional | URI of the profile’s website |
-| email | String | optional | Email address of this profile |
-| birthDayAndMonth | String | optional | String of the format “dd-mm” with “dd” being a numeric value 1-31 and “mm“ being a numeric value 1-12 specifying the day and month of birth of this profile in the Gregorian calendar |
-| birthYear | String | optional | String containing a positive numeric integer specifying the year of birth of this profile in the Gregorian calendar |
-| hometown | Object | optional | [Social profile reference](#7-profile-reference-object) of the profile's hometown |
-| location | Object | optional | [Social profile reference](#7-profile-reference-object) of the profile's current location |
-| coordinates | Object | optional | JSON Object containing two members “latitude” and “longitude” containing numeric values encoded as Strings specifying the profiles current position in signed degrees format in the WGS84 geodetic system. <br/> Latitude ranges from -90 to +90 and longitude ranges from -180 to +180. |
-| profilePhoto | String <br/> or <br/> Object | optional | String containing a _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see [chapter 8](#8-encrypted-resources)) |
-| friendsEndpoint | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “friends endpoint” as specified in [chapter 10](#10-friends-endpoint) |
-| postsEndpoint | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “posts endpoint” as specified in [chapter 11](#11-posts-endpoint) |
-| keysEndpoint | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 13.2](#132-keys-endpoint) |
-| publishEndpoint | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “publish endpoint” as specified in [chapter 15](#15-publishing) |
-| publicKey | Object | optional | [Profile public key object](#6-profile-public-key-object) describing the public key of the [profile key pair](#11-cryptographic-profile-key-pair) |
-| connect | Object | optional | Additional details for the connection process, if and only if this object accepts connection requests as specified in [chapter 16](#16-profile-connections) |
-| private | Array | optional | Array of private data as specified in [chapter 12](#12-private-data) |
+| `ver` | String | required | Version of the SPXProtocol exposed by this URI. <br/> This specification is defining version `0.3` |
+| `name` | String | required | The display name of this profile |
+| `shortInfo` | String | optional | Additional short description of this profile |
+| `about` | String | optional | Additional long description of this profile, like a resume or bio |
+| `gender` | String | optional | Free text string specifying the gender of this profile. Clients should recognize the english text strings `female` and `male` and display localized text or icons. All other content can be displayed as-is. |
+| `website` | String | optional | URI of the profile’s website |
+| `email` | String | optional | Email address of this profile |
+| `birthDayAndMonth` | String | optional | String of the format `dd-mm` with `dd` being a numeric value 1-31 and `mm` being a numeric value 1-12 specifying the day and month of birth of this profile in the Gregorian calendar |
+| `birthYear` | String | optional | String containing a positive numeric integer specifying the year of birth of this profile in the Gregorian calendar |
+| `hometown` | Object | optional | [Social profile reference](#7-profile-reference-object) of the profile's hometown |
+| `location` | Object | optional | [Social profile reference](#7-profile-reference-object) of the profile's current location |
+| `coordinates` | Object | optional | JSON Object containing two members `latitude` and `longitude` containing numeric values encoded as Strings specifying the profiles current position in signed degrees format in the WGS84 geodetic system. <br/> Latitude ranges from -90 to +90 and longitude ranges from -180 to +180. |
+| `profilePhoto` | String <br/> or <br/> Object | optional | String containing a _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see [chapter 8](#8-encrypted-resources)) |
+| `friendsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “friends endpoint” as specified in [chapter 10](#10-friends-endpoint) |
+| `postsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “posts endpoint” as specified in [chapter 11](#11-posts-endpoint) |
+| `keysEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 13.2](#132-keys-endpoint) |
+| `publishEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “publish endpoint” as specified in [chapter 15](#15-publishing) |
+| `publicKey` | Object | optional | [Profile public key object](#6-profile-public-key-object) describing the public key of the [profile key pair](#11-cryptographic-profile-key-pair) |
+| `connect` | Object | optional | Additional details for the connection process, if and only if this object accepts connection requests as specified in [chapter 16](#16-profile-connections) |
+| `private` | Array | optional | Array of private data as specified in [chapter 12](#12-private-data) |
 
 Example:
 ```json
@@ -115,15 +115,15 @@ following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| src | String | optional | The source where to find the public key. Possible values are “embed” and “dns”. Defaults to “embed” if missing. |
-| kid | String | required for “embed” | Unique random key ID |
-| kty | String | required for “embed” | Key type. Always “OKP” |
-| crv | String | required for “embed” | Curve for Elliptic Curve public keys. Always “Ed25519”. |
-| x | String | required for “embed” | Base64Url encoded octet public key |
+| `src` | String | optional | The source where to find the public key. Possible values are `embed` and `dns`. Defaults to `embed` if missing. |
+| `kid` | String | required for `embed` | Unique random key ID |
+| `kty` | String | required for `embed` | Key type. Always `OKP` |
+| `crv` | String | required for `embed` | Curve for Elliptic Curve public keys. Always `Ed25519`. |
+| `x` | String | required for `embed` | Base64Url encoded octet public key |
 
-In the case of an embedded public key (`"src" : "embed"`), this object is identical to a JWK as  defined in [RFC 7517
+In the case of an embedded public key (`"src" : "embed"`), this object is identical to a JWK as defined in [RFC 7517
 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037
-Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). Must have a unique, random key id (“kid”).  
+Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). Must have a unique, random key id (`kid`).  
 
 ### 6.1 Domain bound profile key pair
 It is possible to bind the identity of a profile to the DNS (see [1.4](#14-authenticating-profiles)). In this case,
@@ -131,7 +131,7 @@ the `src` member of the profile public key object is set to `dns`. Clients need 
 `spxp-public-profile-key` for the domain of the profile URI from DNS. This String value then contains a Base64Url
 encoded JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key
 (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section
-3.1](https://tools.ietf.org/html/rfc8037#section-3.1). It must have a unique, random key id (“kid”).
+3.1](https://tools.ietf.org/html/rfc8037#section-3.1). It must have a unique, random key id (`kid`).
 
 ## 7 Profile reference object
 Profiles are referenced by combining their [profile URI](#12-profile-uri) with the public key of their [profile key
