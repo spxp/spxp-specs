@@ -39,7 +39,7 @@ Data is encoded as JSON according to [RFC 7519 “The JavaScript Object Notation
 Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP `Content-Type` header to
 be `application/json` with no `charset` parameter. Clients must always use UTF-8 character encoding, irrespective of any
 `charset` incorrectly sent by the server.  
-The term `Base64Url` throughout this specification refers to the URL safe Base 64 Encoding as apecified in [RFC 4648
+The term `Base64Url` throughout this specification refers to the URL safe Base 64 Encoding as specified in [RFC 4648
 Section 5](https://tools.ietf.org/html/rfc4648#section-5) without padding.
 
 ## 4 Protocol versioning
