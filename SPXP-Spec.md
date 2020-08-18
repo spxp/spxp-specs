@@ -318,11 +318,11 @@ Example:
 ```
 	
 ## 11 Posts endpoint
-Social profiles can publish a stream of timestamped messages, named “posts”. Henceforth, the `timestamp` datatype is defined as follows:
+Social profiles can publish a stream of timestamped messages, named “posts”. Henceforth, the "timestamp" datatype is defined as follows:
 
 | Name | Type | Description |
 |---|---|---|
-| `timestamp` | String | A timestamp in the format “YYYY-MM-DD’T’hh:mm:ss.sss”, always in UTC. |
+| timestamp | String | A timestamp in the format “YYYY-MM-DD’T’hh:mm:ss.sss”, always in UTC. |
 
 If a social profile declares a `postsEndpoint` in the profile root document ([5](#5-social-profile-root-document)), then the server responds with the following JSON object:
 
