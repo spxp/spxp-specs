@@ -32,7 +32,7 @@ the domain record in DNS.
 
 ## 2 Communication protocols
 Data is exchanged between participating clients and servers via HTTP, preferably over TLS (i.e. HTTPS). Clients and
-servers are encouraged to use the latest versions of these protocols, e.g. [HTTP/2](https://tools.ietf.org/html/rfc7540) and [HTTP/3](https://quicwg.org/base-drafts/draft-ietf-quic-http.html), and to prefer [IPv6](https://tools.ietf.org/html/rfc8200).
+servers are encouraged to use the latest versions of these protocols, e.g. HTTP/2 and HTTP/3, and to prefer IPv6.
 
 ## 3 Transport encoding of structured data
 Data is encoded as JSON according to [RFC 7519 “The JavaScript Object Notation (JSON) Data Interchange
