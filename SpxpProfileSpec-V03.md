@@ -1083,7 +1083,7 @@ Every object in the `acceptedTokens` array must have at least this member:
 |---|---|---|---|
 | `method` | String | required | Text string identifying the token acquisition method described by this object |
 
-Implementors are encouraged to use a [maven GAV like naming pattern](https://maven.apache.org/guides/mini/guide-naming-conventions.html).
+Implementors are encouraged to use a naming pattern similar to the [Maven Coordinates](https://maven.apache.org/pom.html#Maven_Coordinates).
 
 This protocol specification defines the "Web Flow" token acquisition method in [Appendix A. Web Flow token acquisition
 method](#appendix-a-web-flow-token-acquisition-method) and leaves it to implementors to define additional methods.
