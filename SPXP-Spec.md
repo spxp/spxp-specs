@@ -40,7 +40,13 @@ Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard 
 be `application/json` with no `charset` parameter. Clients must always use UTF-8 character encoding, irrespective of any
 `charset` incorrectly sent by the server.  
 The term "Base64Url" throughout this specification refers to the URL safe Base 64 Encoding as specified in [RFC 4648
-Section 5](https://tools.ietf.org/html/rfc4648#section-5) without padding.
+Section 5](https://tools.ietf.org/html/rfc4648#section-5) without padding.  
+In this protocol, all date and time related information is always given in UTC. We do not use timezone information or
+localised dates to minimise implementation problems. For this specification, we define the following String format to
+represent date and time information as part of JSON objects:
+| Format | Base Type | Description |
+|---|---|---|
+| `timestamp` | String | Instant in time in UTC encoded as “YYYY-MM-DD’T’hh:mm:ss.sss” accoring to [RFC3339](https://tools.ietf.org/html/rfc3339), but without a time offset  |
 
 ## 4 Protocol versioning
 This protocol uses [Semantic Versioning](https://semver.org/). This document specifies protocol version `0.3`.
@@ -318,13 +324,9 @@ Example:
 ```
 	
 ## 11 Posts endpoint
-Social profiles can publish a stream of timestamped messages, named “posts”. Henceforth, the "timestamp" datatype is defined as follows:
-
-| Name | Type | Description |
-|---|---|---|
-| timestamp | String | A timestamp in the format “YYYY-MM-DD’T’hh:mm:ss.sss”, always in UTC. |
-
-If a social profile declares a `postsEndpoint` in the profile root document ([5](#5-social-profile-root-document)), then the server responds with the following JSON object:
+Social profiles can publish a stream of timestamped messages, named “posts”. If a social profile declares a
+`postsEndpoint` in the profile root document ([5](#5-social-profile-root-document)), then the server responds with the
+following JSON object:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
