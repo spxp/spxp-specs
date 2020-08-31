@@ -46,7 +46,7 @@ localised dates to minimise implementation problems. For this specification, we 
 represent date and time information as part of JSON objects:
 | Format | Base Type | Description |
 |---|---|---|
-| `timestamp` | String | Instant in time in UTC encoded as “YYYY-MM-DD’T’hh:mm:ss.sss” accoring to [RFC3339](https://tools.ietf.org/html/rfc3339), but without a time offset  |
+| `timestamp` | String | Instant in time in UTC encoded as “YYYY-MM-DD’T’hh:mm:ss.sss” accoring to [RFC3339](https://tools.ietf.org/html/rfc3339), but with millisecond precision and without a time offset  |
 
 ## 4 Protocol versioning
 This protocol uses [Semantic Versioning](https://semver.org/). This document specifies protocol version `0.3`.
