@@ -441,7 +441,7 @@ Supported query parameters:
 
 | Name | Type | Description |
 |---|---|---|
-| `max` | Integer | Maximum number of items the client can handle in one response. The server can return fewer items than that, but must not return more items. |
+| `max` | Integer | Maximum number of items the client can handle in one response. The server can return fewer items, but must not return more items. |
 | `before` | timestamp | Only include items with a timestamp before this date |
 | `after` | timestamp | Only include items with a timestamp after this date |
 
