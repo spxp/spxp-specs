@@ -867,8 +867,9 @@ Example:
             "start" : "https://profiles.example.com/acquire-token"
         } ]
     },
-    "signature" : {
-        ...
+    "signature": {
+        "sig": "Zhz30juKG4yWH7qUYhnyPbc9nsG3O4WEZBhkNu5c2qkMUKHcn6tsB9yVeqVbqTEeXoQLWPLFbl8eoilVzIwzAQ",
+        "key": "C8xSIBPKRTcXxFix"
     }
 }
 ```
@@ -910,8 +911,9 @@ Example:
             "sig" : "PEekh7oCLQa0O4rCUPrH19yCJCLtEZfnumUlPrH0TPbq66Bj_aO71enf-P6gUttlgJFRRfvD1D7wAAYZaX6PCQ"
         }
     },
-    "signature" : {
-        XXXXX
+    "signature": {
+        "sig": "KwkZSI9hZQOxZbzlXviDvSL6ez2qJfimPLiP4vvFIOqgTqArimMagLuqYK8NM5F7BLRG5C_zp1VoExrU6Ps0DQ",
+        "key": "C8xSIBPKRTcXxFix"
     }
 }
 ```
@@ -997,7 +999,7 @@ Web Encryption (JWE)”](https://tools.ietf.org/html/rfc7516) using the Elliptic
 agreement on the X25519 curve and content encrypted with 256 bit AES in Galois/Counter Mode, identified by
 JWE as `"alg": "ECDH-ES", "enc": "A265GCM"`.
 
-### 16.6 Token acquisition
+### 15.6 Token acquisition
 Since the content of the connection request message is not accessible by the profile server, this process can easily be
 misused by malicious actors automatically sending connection requests.  
 To prevent this, profiles can request a unique token to be present on connection requests. An extensible framework
