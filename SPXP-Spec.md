@@ -924,10 +924,11 @@ encryption method is direct encryption with 256 bit AES in Galois/Counter Mode, 
 "A265GCM"` by JWE. This requires a new random initialisation vector `iv` for each package.
 
 ### 15.4 Preparing a Connection
-The initiator prepares the connection by sending the reader key and encrypted connection package to their own
-profile server using the **profile management endpoint**. This data is associated with the _connection establishment ID_.
-The server knows how this reader key fits into the key graph, but does not know anything about the peer profile this
-connection is prepared for.
+The initiator prepares the connection by sending the reader key and encrypted connection package to their own profile
+server, associating it with the _connection establishment ID_. This preparation must enable the profile server to later
+perform the [connection package exchange](#158-connection-package-exchange).  
+The management of profile servers, including this operation, is not part of SPXP. See [chapter
+16](#16-profile-extensions) for details.
 
 ### 15.5 Connect Message
 To initiate a connection, the client generates a JSON object with the following members:
@@ -1126,6 +1127,27 @@ Example response:
 }
 ```
 
+## 16 Profile Extensions
+This protocol specification intentionally focuses on the communication between client applications and servers hosting
+profiles the client is interested in. It does not define any requirements or make suggestions on how to actually
+implement client or server applications. This leaves implementors maximum flexibility on how to add this protocol to
+existing applications and does not limit them in exploring new ventures.  
+There are some operations however, especially during the establishment of connections, that require profile owners to
+make modifications on the server hosting their own profile. This makes it hard for client applications to provide a
+seamless user experience if they are not able to make certain changes to the user's own profile.
+In the sake of compatibility, we decided to provide extensions to SPXP, each in their own specification. You could
+compare this protocol family to POP3, SMTP and IMAP, where different protocols exist for sending and receiving messages.
+Implementors can freely chose if they want to provide these extensions and to what degree they want to support it.
+
+#### SPXP - Profile Management Extension
+Defines how profile owners can manage the server hosting their profile and update the information that gets published.  
+See [SPXP - Profile Management Extension Spec V 0.1](./ProfileManagementExtensionSpec-V01.md)
+
+#### SPXP - Service Provider Extension
+A service provider can offer the hosting of profiles. This specification defines how the initial setup of the profile
+takes place in a way that guarantees that the profile signing key never leaves the end user client.  
+See [SPXP - Service Provider Extension Spec V 0.1](./ServiceProviderExtensionSpec-V01.md)
+
 ## 17 Missing in this version
 The SPXP is developed in an agile manner, where we define new protocol versions, put them under test, and then evolve
 based on the findings in simulations and real-world tests.  
@@ -1133,6 +1155,11 @@ Not all aspects of the overall vision are already realised with this version of 
 aware of the following shortcomings and problems that we want to address in the upcoming versions of this
 protocol.
 
+##### Publishing posts, including encrypted posts
+Currently, only the profile owner can publish posts via the Profile Management Extension. We also want other profiles to
+be able to publish posts. This has already been prepared in this version by introducing signing certificates. But we are
+still missing endpoints to publish posts. Also publishing encrypted posts makes this even more challenging.
+ 
 ##### Comments
 We are aware that comments are a fundamental building block of social networks. Although there have been some
 experiments with this feature, we decided to defer it to the next version.
@@ -1284,14 +1311,3 @@ Connect keypair of “Crypto Alice”:
     "d" : "KJw3lk0cQ87vUaX8FDaE_7fpWXasmplyRv0zEo8K_VQ"
 }
 ```
-
-### Proposed new Section 1.3 Unique profile identification
-The cryptographic key takes precedence over the profile URI. Two profiles published under different URIs but using the
-same cryptographic key must be considered identical. And data signed with different cryptographic keys delivered by the
-same URI must be treated as different profiles, unless this key exchange has been authenticated as specified in
-**chapter XXX**.  
-If a profile client detects an unauthenticated change in the signing key used by the profile behind a URI, it has to
-warn the user and must not present the data signed by different keys as belonging to the same profile.  
-**TODO: Announced key rotation and ~DNS backed identities~**
-
-
