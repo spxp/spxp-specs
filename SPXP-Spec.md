@@ -989,8 +989,9 @@ Example:
         "alg": "A256GCM",
         "k": "AnkrwD_Et1E0-FB0XYU38hpmdEGr0LOBO8O2HRdzgOw"
     },
-    "signature" : {
-        XXXXX
+    "signature": {
+        "sig": "vzKvMxXl0JGIDFEqiPv2rMokMCW-f3DR1nTi-pFebddvBIDGChSsUttsiPP5wFLzTvyNW6NEcDSCfbNKz5qeDw",
+        "key": "C8xSIBPKRTcXxFix"
     }
 }
 ```
