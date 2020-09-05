@@ -57,7 +57,7 @@ is composed of the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `ver` | String | required | Version of the SPXProtocol exposed by this URI. <br/> This specification is defining version `0.3` |
+| `ver` | String | required | Version of SPXP exposed by this URI. <br/> This specification is defining version `0.3` |
 | `name` | String | required | The display name of this profile |
 | `shortInfo` | String | optional | Additional short description of this profile |
 | `about` | String | optional | Additional long description of this profile, like a resume or bio |
@@ -881,7 +881,7 @@ following members:
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `type` | String | required | Fixed text string `connection_package` |
-| `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
+| `ver` | String | required | Most recent version of SPXP supported by the client |
 | `establishId` | String | required | Unique random connection establishment ID |
 | `readerKey` | Object | optional | JSON object describing a [reader key](#134-reader-keys) as JWK as defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) |
 | `publishingCertificate` | Object | optional | JSON object describing the certificate containing the [authorized signing key](#92-authorized-signing-keys) |
@@ -935,7 +935,7 @@ To initiate a connection, the client generates a JSON object with the following 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `type` | String | required | Fixed text string `connection_request` |
-| `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
+| `ver` | String | required | Most recent version of SPXP supported by the client |
 | `timestamp` | timestamp | required | Timestamp when the client created this request |
 | `expires` | timestamp | required | Timestamp until when the server of the profile initiating this request will accept a key exchange |
 | `establishId` | String | required | Unique random connection establishment ID |
@@ -1029,7 +1029,7 @@ body:
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `type` | String | required | Fixed text string `connection_request` |
-| `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
+| `ver` | String | required | Most recent version of SPXP supported by the client |
 | `msg` | Object | required | JWE object in JSON Serialization containing the encrypted connection request message |
 | `token` | Object | optional | JSON Object containing two String members `method` and `value` containing token acquisition method chosen by the client and the token value |
 
@@ -1081,7 +1081,7 @@ The HTTP body of this POST request contains a JSON object with these members:
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `type` | String | required | Fixed text string `connection_accept` |
-| `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
+| `ver` | String | required | Most recent version of SPXP supported by the client |
 | `establishId` | String | required | Unique random connection establishment ID |
 | `package` | Object | required | JWE object in JSON Serialization containing the encrypted connection package |
 
@@ -1092,7 +1092,7 @@ package for the profile owner and then responds with a `200` status code and a J
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `type` | String | required | Fixed text string `connection_finish` |
-| `ver` | String | required | Most recent version of the SPXProtocol supported by the server |
+| `ver` | String | required | Most recent version of SPXP supported by the server |
 | `establishId` | String | required | connection establishment ID |
 | `package` | Object | required | JWE object in JSON Serialization containing the encrypted connection package |
 
