@@ -814,8 +814,8 @@ The connection process between two profiles controlled by “Alice” and “Bob
 8. Bob activates the new reader key on his profile server
 9. Bob sends the encrypted package to Alice's profile server and receives the package Alice has deposited there for Bob
    in return
-10. Bob decrypts the reader key and certificate from the package with the same _ephemeral connection establishment key_
-    from the connection request
+10. Bob decrypts the reader key and certificate from the package with the _ephemeral connection establishment key_ from
+    the connection request
 11. Next time when Alice checks her own profile server, she receives the encrypted package from Bob and decrypts the
     reader key and certificate from the package with the _ephemeral connection establishment key_
 
@@ -1159,10 +1159,12 @@ Example response:
 This protocol specification intentionally focuses on the communication between client applications and servers hosting
 profiles the client is interested in. It does not define any requirements or make suggestions on how to actually
 implement client or server applications. This leaves implementors maximum flexibility on how to add this protocol to
-existing applications and does not limit them in exploring new ventures.  
+existing applications and does not limit them in exploring new ventures.
+
 There are some operations however, especially during the establishment of connections, that require profile owners to
 make modifications on the server hosting their own profile. This makes it hard for client applications to provide a
 seamless user experience if they are not able to make certain changes to the user's own profile.
+
 In the sake of compatibility, we decided to provide extensions to SPXP, each in their own specification. You could
 compare this protocol family to POP3, SMTP and IMAP, where different protocols exist for sending and receiving messages.
 Implementors can freely chose if they want to provide these extensions and to what degree they want to support it.
@@ -1195,8 +1197,15 @@ The client must add exactly one of these parameters to the URI:
 |---|---|
 | `return_scheme` | The custom scheme to be used when returning the token |
 | `return_uri` | The absolute URI to post the token to |
-
-Example using custom URI scheme:
+Example:  
+Declaration in `connect` object in profile root document:
+```json
+{
+    "method" : "spxp.org:webflow:1.0",
+    "start" : "https://profiles.example.com/acquire-token"
+}
+```
+Client using custom URI scheme:
 ```
 GET https://profiles.example.com/acquire-token?return_scheme=hello1234world HTTP/1.1
 ```
@@ -1210,7 +1219,7 @@ Content-Type: text/html; charset=utf-8
 </body></html>
 ```
 
-Example using return URI:
+Client using return URI:
 ```
 GET https://profiles.example.com/acquire-token?return_uri=http%3A%2F%2Fexample.com%2Ftoken HTTP/1.1
 ```
@@ -1231,7 +1240,7 @@ The `return_scheme` method is recommended for applications that embed a web brow
 events therein. The `return_uri` method is recommended for web applications that host a server part.
 
 ## Appendix B. Private keys used in examples
-The following profile key pairs have been used to sign the examples in this document.  
+The following cryptographic material has been used in the examples in this document.  
 Profile keypair of “Crypto Alice”:
 ```json
 {
