@@ -144,6 +144,7 @@ Success body:
             "type" : "connection_package",
             "received" : "2018-09-13T02:53:11.856",
             "ver" : "0.3",
+            "establishId" : "",
             "package" : {
               ...
             }
