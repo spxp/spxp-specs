@@ -1215,7 +1215,7 @@ HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8
 
 <html><body>
-<a href="javascript:window.location.href='hello1234world:WRdExl26rGAz701tMoiuJ'">I am not a robot</a>
+<a href="hello1234world:WRdExl26rGAz701tMoiuJ">I am not a robot</a>
 </body></html>
 ```
 
