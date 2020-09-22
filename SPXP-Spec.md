@@ -24,7 +24,7 @@ must not present the data signed by different keys as belonging to the same prof
 ### 1.4 Authenticating profiles
 The profile key pair can only verify that all information published on this profile originates from the same entity
 behind this profile, but it cannot validate it's identity.  
-Authenticating the identity of a real life person or organisation behind a profile is achived by  a web of trust, where
+Authenticating the identity of a real life person or organisation behind a profile is achieved by a web of trust, where
 profiles attest the identity of connected profiles.  
 Alternatively, profiles can delegate their authentication to the domain name system (DNS). By publishing the public
 profile key as TXT record in DNS, profiles can show that they are controlled by the same entity that has control over
