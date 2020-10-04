@@ -1230,7 +1230,7 @@ Content-Type: text/html; charset=utf-8
 
 <html><body>
 <form action="http://example.com/token" method="post">
-<input type="hidden" id="token" name="token" value="WRdExl26rGAz701tMoiuJ">
+<input type="hidden" id="token" name="token" value="WRdExl26rGAz701tMoiuJ" />
 <button type="submit">I am not a robot</button>
 </form>
 </body></html>
