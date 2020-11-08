@@ -189,7 +189,7 @@ Endpoint: `<baseUri>/profile/friends`
 Method: `PUT`  
 Content-Type: `application/json`  
 Body: the entire JSON object as specified in the SPXP specification  
-Success response: `201` without body  
+Success response: `201` or `204` without body  
 Failure response code: `4xx` or `5xx`  
 
 ## Posts
@@ -203,9 +203,18 @@ Endpoint: `<baseUri>/posts`
 Method: `POST`  
 Content-Type: `application/json`  
 Body: the entire JSON object of one single post object as specified in the SPXP specification  
-Success response code: `204`  
-Failure response code: `4xx` or `5xx`  
-The server will assign a unique seqts and store it.
+
+Success response code: `200`  
+Content-Type: `application/json`  
+Body:
+```json
+{
+  "seqts" : ""
+}
+```
+The server will assign a unique seqts, store the post and return the assigned seqts.
+
+Failure response code: `4xx` or `5xx`
 
 ### Deleting
 Post objects can be removed with a DELETE HTTP request using the unique seqts of the post object.  
