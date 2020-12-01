@@ -765,8 +765,8 @@ Key wrapping is limited to the same cryptographic algorithm and encoding as defi
 12.2](#122-supported-algorithm-and-encoding) for private data.
 
 ### 13.4 Reader keys
-Reader keys can be distributed by any side channel among the audience and their key id can then be used on the keys
-endpoint. There is also no requirement that readers have to maintain a profile themselves.  
+Reader keys can be distributed by any side channel among the audience of a profile. There is also no requirement that
+readers have to maintain a profile themselves.  
 A profile could for example distribute keys as part of a paid-for subscription outside of SPXP and then publish selected
 information with SPXP only to paying subscribers.  
 If another profile gets access to information published by this profile as part of a connection as defined in [chapter
