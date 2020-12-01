@@ -755,10 +755,10 @@ GET https://example.com/spxp/roger/keys?connectionId=key-alice&request=groupX.ke
 ```
 In this example, the round key `groupX.key2` is encrypted with the round key `groupA.key1`. The key id required to
 decrypt the JWE object is given in the JWE header.  
-If the `request` parameter is missing, the server can chose the set of round keys it returns. This set has to
-include at least all round keys that are required to read all private data in the profile root document accessible to
-the key given in the `reader`. It additionally should include enough round keys to decrypt a sensible amount of most
-recent posts.
+If the `request` parameter is missing, the server returns at least one round key for every group accessible with the
+given `reader` keys. This request can be used by clients to discover the set of groups accessible with their set of
+reader keys. Ideally, the returned set of reader keys should include enough round keys to decrypt all private data in
+the profile root document accessible to given reader keys and a sensible amount of most recent posts.
 
 ### 13.3 Supported algorithm and encoding
 Key wrapping is limited to the same cryptographic algorithm and encoding as defined in [chapter
