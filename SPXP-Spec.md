@@ -341,6 +341,10 @@ Each single post in the data array is a JSON object with these members:
 | `author` | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve the author's profile root document ([5](#5-social-profile-root-document)) and check the signature on this post against the profile key (`publicKey`) of the author's profile. This key needs to bring a certificate on this post that grants `post` permission ([9.2](#92-authorized-signing-keys)). |
 | `type` | String | required | Type of post. One of `text`, `web`, `photo` or `video` |
 
+Note:  
+The original author of a post is just referenced by its profile URI and not a [profile reference
+object](#7-profile-reference-object) since the public key of the author can already be found in the signature.
+
 Depending on the `type`, additional members are defined as follows:
 
 #### Type `text`:
