@@ -801,27 +801,27 @@ The connection process between two profiles controlled by “Alice” and “Bob
 1. Alice creates a new [reader key](#134-reader-keys) and optionally an [authorized signing key](#92-authorized-signing-keys)
    (certificate) for Bob as well as a random _connection establishment ID_ and an _ephemeral connection establishment key_.
 2. Alice creates a connection package for Bob containing this reader key and certificate. She then encrypts this package
-   with the _ephemeral connection establishment key_
+   with the _ephemeral connection establishment key_.
 3. Alice prepares her profile server to establish the connection on her behalf and deposits the connection package for
-   Bob on her own profile server.
+   Bob on her own profile server, associating it with the _connection establishment ID_.
 4. Alice creates a connection request message, encrypts it with Bob's public connection key
    ([15.2](#152-connect-object-in-profile-root)) and sends it to Bob's profile server. This message contains the
    _connection establishment ID_ and an _ephemeral connection establishment
    key_.
-5. Next time when Bob checks his own profile server, he receives this encrypted connection request
+5. Next time when Bob checks his own profile server, he receives this encrypted connection request.
 6. Bob decrypts the connection request with his private connection key and decides weather he wants to accept this
    request or not. If Bob does not want to accept the request, this process ends here. The connection request will time
    out on Alice's profile server.
 7. If Bob decides to accept, he creates a new [reader key](#134-reader-keys) and optionally an [authorized signing
    key](#92-authorized-signing-keys) (certificate) for Alice, packs both in a connection package and encrypts this package
-   with the _ephemeral connection establishment key_ from the connection request
-8. Bob activates the new reader key on his profile server
+   with the _ephemeral connection establishment key_ from the connection request.
+8. Bob activates the new reader key on his profile server.
 9. Bob sends the encrypted package to Alice's profile server and receives the package Alice has deposited there for Bob
-   in return
+   in return.
 10. Bob decrypts the reader key and certificate from the package with the _ephemeral connection establishment key_ from
-    the connection request
+    the connection request.
 11. Next time when Alice checks her own profile server, she receives the encrypted package from Bob and decrypts the
-    reader key and certificate from the package with the _ephemeral connection establishment key_
+    reader key and certificate from the package with the _ephemeral connection establishment key_.
 
 Note:  
 It is important to understand that this process does not guarantee any kind of "quid pro quo" between both profiles. The
@@ -844,7 +844,6 @@ following members:
 |---|---|---|---|
 | `endpoint` | String | required | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “connect endpoint” as specified in [chapter 15.7](#157-connect-endpoint) |
 | `key` | Object | required | JSON object describing the public key of the connection key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the X25519 key agreement curve specifier as defined in [RFC 8037 Section 3.2](https://tools.ietf.org/html/rfc8037#section-3.2). |
-| `acceptedTokens` | Array | optional | Array of Objects defining token acquisition methods accepted by this profile. See [chapter 15.6](#156-token-acquisition) |
 
 Example:
 ```json
@@ -865,11 +864,7 @@ Example:
             "kty" : "OKP",
             "crv" : "X25519",
             "x" : "ixVNCGQUR8gS6bkBDwh9IR4S_YAgkdwGNfJrqtsbTBU"
-        },
-        "acceptedTokens" : [ {
-            "method" : "spxp.org:webflow:1.0",
-            "start" : "https://profiles.example.com/acquire-token"
-        } ]
+        }
     },
     "signature": {
         "sig": "Zhz30juKG4yWH7qUYhnyPbc9nsG3O4WEZBhkNu5c2qkMUKHcn6tsB9yVeqVbqTEeXoQLWPLFbl8eoilVzIwzAQ",
@@ -1012,10 +1007,25 @@ To prevent this, profiles can request a unique token to be present on connection
 defines how clients who wish to connect can obtain such a token, for instance by walking the user through a captcha
 process in the browser. This token is available on the unencrypted portion of the message, so that the task of
 gatekeeping can be delegated to the profile server without exposing the actual connection process.  
-If the `connect` object in the profile root document contains an array member named `acceptedTokens`, which has at least
-one element, then the profile indicates that it requires a token to be present on each connection request.  
-Each member of this array describes a possible method to obtain such a token. The client can freely pick one of them it
-supports.  
+To discover if a profile server requests such a token and what methods of token acquestion it supports, a client can
+send a HTTP POST request with a JSON object with the following members as HTTP body to the `connectEndpoint` defined in
+the peer's profile root document:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `type` | String | required | Fixed text string `connection_discovery` |
+| `ver` | String | required | Most recent version of SPXP supported by the client |
+
+The server responds with a `200` status code and a JSON object with these members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `type` | String | required | Fixed text string `connection_discovery` |
+| `ver` | String | required | Most recent version of SPXP supported by the server |
+| `acceptedTokens` | Array | optional | Array of Objects defining token acquisition methods accepted by this profile. See [chapter 15.6](#156-token-acquisition) |
+
+Each member of the `acceptedTokens` array describes a possible method to obtain such a token. The client can freely pick
+one of them it supports.  
 Every object in the `acceptedTokens` array must have at least this member:
 
 | Name | Type | Mandatory | Description |
@@ -1026,6 +1036,32 @@ Implementors are encouraged to use a naming pattern similar to the [Maven Coordi
 
 This protocol specification defines the "Web Flow" token acquisition method in [Appendix A. Web Flow token acquisition
 method](#appendix-a-web-flow-token-acquisition-method) and leaves it to implementors to define additional methods.
+
+In error situations, the server responds with one of these status codes
+
+| Status code | Meaning |
+|---|---|
+| `404` | The profile does not accept connection requests or this URI is not valid |
+| `429` | The client IP address has sent too many requests |
+
+Example POST request:
+```json
+{
+    "type" : "connection_discovery",
+    "ver" : "0.3"
+}
+```
+Example response:
+```json
+{
+    "type" : "connection_discovery",
+    "ver" : "0.3",
+    "acceptedTokens" : [ {
+        "method" : "spxp.org:webflow:1.0",
+        "start" : "https://profiles.example.com/acquire-token"
+    } ]
+}
+```
 
 ### 15.7 Connect endpoint
 The encrypted [connect message](#155-connect-message) is is sent to the “connect endpoint“ with a HTTP POST request,
