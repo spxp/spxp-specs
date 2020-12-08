@@ -99,7 +99,10 @@ Example:
     "location" : {
         "uri" : "https://hill-valley.example.com/profile",
         "publicKey" : {
-            "src": "dns"
+            "kid": "5N2SCpjuAeRUXNN-",
+            "kty" : "OKP",
+            "crv" : "Ed25519",
+            "x": "K3Lygk6AYNd2ZTnISpy7bhPbvQDutRL5pb7hurLhyO0"
         }
     },
     "coordinates" : {
@@ -1271,6 +1274,16 @@ Profile keypair of “Emerald City”:
     "crv" : "Ed25519",
     "x": "1B7B4OpoRBA6UvtewqF9cb_P1PiXVpc4f1THHfkzLmY",
     "d": "RIDTPT21NCvZlhZ6_CrGbLOPs6BI0LRcsOqjs5osdoI"
+}
+```
+Profile keypair of “Hill Valley”:
+```json
+{
+    "kid": "5N2SCpjuAeRUXNN-",
+    "kty" : "OKP",
+    "crv" : "Ed25519",
+    "x": "K3Lygk6AYNd2ZTnISpy7bhPbvQDutRL5pb7hurLhyO0",
+    "d": "2hmY4h-BIlBh3fW0O1XQhN8vMxA3rMax9tc4CQ9SPm4"
 }
 ```
 Profile keypair of “Crypto Bob” (Certificate in section 7.2):
