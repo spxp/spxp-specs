@@ -997,7 +997,7 @@ The server responds with a `200` status code and a JSON object with these member
 |---|---|---|---|
 | `type` | String | required | Fixed text string `connection_discovery` |
 | `ver` | String | required | Most recent version of SPXP supported by the server |
-| `acceptedTokens` | Array | optional | Array of Objects defining token acquisition methods accepted by this profile. See [chapter 14.6](#146-token-acquisition) |
+| `acceptedTokens` | Array | optional | Array of Objects defining token acquisition methods accepted by this profile |
 
 Each member of the `acceptedTokens` array describes a possible method to obtain such a token. The client can freely pick
 one of them it supports.  
