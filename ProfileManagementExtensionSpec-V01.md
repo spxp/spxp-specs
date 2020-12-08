@@ -59,7 +59,7 @@ clients must be prepared to re-register once their device token becomes invalid.
 The device token grants access to the profile and needs to be stored by clients in a secure location.
 
 ### Access Tokens
-Device Tokens need to be exchanged into short living Access Tokens before being used on API endpoints.  
+Device Tokens need to be exchanged into short living access tokens before being used on API endpoints.  
 Endpoint: `<baseUri>/auth/access_token`  
 Method: `POST`  
 Content-Type: `application/json`  
@@ -285,6 +285,18 @@ Endpoint: `<baseUri>/posts`
 Method: `POST`  
 Content-Type: `application/json`  
 Body: the entire JSON object of one single post object as specified in the SPXP specification  
+Example:
+```json
+{
+    "createts" : "2018-09-16T12:23:18.751",
+    "type" : "text",
+    "message" : "Hello, world!",
+    "signature" : {
+        "key" : "C8xSIBPKRTcXxFix",
+        "sig" : "bDOgcT4uxTKYMTuOJXDbAPc1UA2p-aGdxwplUWNStzyDRIRPu9UxaTU1IoZ1ELjBY5iRf4FEBPV09Uw9TOYuCA"
+    }
+}
+```
 
 Success response code: `200`  
 Content-Type: `application/json`  
