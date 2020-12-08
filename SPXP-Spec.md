@@ -41,6 +41,7 @@ Section 5](https://tools.ietf.org/html/rfc4648#section-5) without padding.
 In this protocol, all date and time related information is always given in UTC. We do not use timezone information or
 localised dates to minimise implementation problems. For this specification, we define the following String format to
 represent date and time information as part of JSON objects:
+
 | Format | Base Type | Description |
 |---|---|---|
 | `timestamp` | String | Instant in time in UTC encoded as “YYYY-MM-DD’T’hh:mm:ss.sss” accoring to [RFC3339](https://tools.ietf.org/html/rfc3339), but with millisecond precision and without a time offset  |
