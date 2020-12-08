@@ -1,15 +1,15 @@
 # SPXP - Profile Management Extension
 Version 0.1
 
-## Base URI
+## 1 Base URI
 A management server can manage profiles with various profile URIs, not just profiles on the same domain. To give the
 implementors flexibility on the layout of the URI hierarchy on this domain, this spec defines the API relative to
 a base URI.
 
-## Authentication
+## 2 Authentication
 This API uses an OAuth like authentication scheme.
 
-### Device Registration
+### 2.1 Device Registration
 Each device is granted a long living device token. Each device can choose a random unique device ID.  
 Endpoint: `<baseUri>/auth/device`  
 Method: `POST`  
@@ -58,7 +58,7 @@ limit the lifetime of a device token or a user can choose to invalidate a device
 clients must be prepared to re-register once their device token becomes invalid.  
 The device token grants access to the profile and needs to be stored by clients in a secure location.
 
-### Access Tokens
+### 2.2 Access Tokens
 Device Tokens need to be exchanged into short living access tokens before being used on API endpoints.  
 Endpoint: `<baseUri>/auth/access_token`  
 Method: `POST`  
@@ -103,7 +103,7 @@ Example:
 ```
 Failure response code: `403`
 
-### API Authentication
+### 2.3 API Authentication
 Every API request listed here, except for authentication requests, must be authorised by sending the `Authorization`
 http request header field containing the Access Token using the `Bearer` authentication scheme:
 ```
@@ -112,7 +112,7 @@ Authorization: Bearer <access_token>
 If the access token is invalid, the server responds with a `401` status code. Clients need to refresh the access token
 in this case or re-register the device.
 
-## Service info
+## 3 Service info
 The server implementation is providing the backend behind the various endpoints listed in the profile root document.
 Most likely, this implementation has some constraints on the endpoint URIs so that they cannot be freely chosen by the
 profile owner. The service info API provides the information needed by the profile owner to craft a profile root
@@ -162,12 +162,12 @@ Example:
 ```
 Failure response code: `4xx` or `5xx`
 
-## Service messages
+## 4 Service messages
 There are situations where a server needs to communicate with the profile owner, for example to inform the owner about
 a new service agreement that needs to be accepted or to relay connection requests received from other profiles.  
 These  messages use a similar approach as posts in SPXP.
 
-### Reading messages
+### 4.1 Reading messages
 We use the same basic approach and paging mechanism as in SPXP.  
 Endpoint: `<baseUri>/service/messages`  
 Method: `GET`  
@@ -252,7 +252,7 @@ Example:
 ```
 Failure response code: `4xx` or `5xx`  
 
-### Cleaning up messages
+### 4.2 Cleaning up messages
 Messages are hold by the server until they are cleaned up. Clients can decide if they delete messages on the server
 immediately after having received them, or only after having shown them to the user.  
 Endpoint: `<baseUri>/service/messages/<seqts>`  
@@ -261,7 +261,7 @@ Method: `DELETE`
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`  
 
-## Publishing profile objects
+## 5 Publishing profile objects
 To publish new data for the profile root document or the “friends endpoint“, the client simply PUTs the JSON objects
 to the server, including all private data. There is no possibility yet to selectively update individual elements in the
 private array or the main object.  
@@ -274,11 +274,11 @@ Body: the entire JSON object as specified in the SPXP specification
 Success response: `201` or `204` without body  
 Failure response code: `4xx` or `5xx`  
 
-## Posts
+## 6 Posts
 Clients have to use the normal “posts endpoint” in SPXP to enumerate all posts. This requires the profile owner to have
 a reader key (or set of keys) that is able to read all posts.
 
-### Publishing
+### 6.1 Publishing
 To pubish a new post, the client POSTs the entire post object to the server.  
 The server does not need to validate any signatures or availability of decryption keys.  
 Endpoint: `<baseUri>/posts`  
@@ -316,7 +316,7 @@ The server will assign a unique seqts, store the post and return the assigned se
 
 Failure response code: `4xx` or `5xx`
 
-### Deleting
+### 6.2 Deleting
 Post objects can be removed with a DELETE HTTP request using the unique seqts of the post object.  
 Endpoint: `<baseUri>/posts/<seqts>`  
 Parameter: `<seqts>` value of the `seqts` field in the post object to delete
@@ -324,12 +324,12 @@ Method: `DELETE`
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`  
 
-## Media
+## 7 Media
 Profiles can include links to other media files, like images and videos, in their posts and the profile. These media
 files can also be managed through this extension.  
 Media files are handled as opaque binary files by this protocol, uniquely identified by a media ID.
 
-### Uploading media
+### 7.1 Uploading media
 Binary files can be POSTed directly to the server as `multipart/form-data`.  
 Endpoint: `<baseUri>/media`  
 Method: `POST`  
@@ -358,20 +358,20 @@ Example:
 ```
 Failure response code: `4xx` or `5xx`
 
-### Deleting media
+### 7.2 Deleting media
 Endpoint: `<baseUri>/media/<mediaId>`  
 Parameter: `<mediaId>`  ID of media object to be deleted as returned by the upload media endpoint  
 Method: `DELETE`  
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`  
 
-## Key Management
+## 8 Key Management
 Maintaining the tree of keys and ensuring that actors have access to all the content they are entitled for is the sole
 responsibility of the profile owner. This management extension only provides endpoints to publish new keys to the server
 and to delete existing keys. The server will maintain this set of keys and use it compute the result set on the “keys
 endpoint” and to select the elements exposed as `private` data in objects.
 
-### Publishing keys
+### 8.1 Publishing keys
 The client transfers a set of keys to the server. Each key is processed independently, and the outcome of each operation
 is reported individually. A ”Success” response code only means that the entire request has been processed, but it does
 not indicate that any of these operations has been successful. The request is structured similar to the response on the
@@ -423,7 +423,7 @@ Success body:
 With `<outcome>` one of `ok`, `err_exists`, `err_invalid_jwk`, `err_invalid_jwk: <description>`, `err_retry` or `error: <description>`    
 Failure response code: `4xx` or `5xx`  
 
-### Removing keys
+### 8.2 Removing keys
 Keys can be deleted individually or in groups. The server does not perform any cascading delete. If a key can no longer
 be decrypted, it is still hold on the server. It is possible that a client is going to publish new decryption keys in a
 later operation.  
@@ -434,7 +434,7 @@ Method: `DELETE`
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`  
 
-## Connection packages
+## 9 Connection packages
 The server needs to be prepared for the connection package exchange with other profiles.  
 Endpoint: `<baseUri>/connect/packages`  
 Method: `POST`  
