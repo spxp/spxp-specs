@@ -1185,7 +1185,7 @@ compare this protocol family to POP3, SMTP and IMAP, where different protocols e
 Implementors can freely chose if they want to provide these extensions and to what degree they want to support it.
 
 #### SPXP - Profile Management Extension
-Defines how profile owners can manage the server hosting their profile and update the information that gets published.  
+Defines how profile owners can manage the server hosting their own profile and update the information that gets published.  
 See [SPXP - Profile Management Extension Spec V 0.1](./ProfileManagementExtensionSpec-V01.md)
 
 #### SPXP - Service Provider Extension
