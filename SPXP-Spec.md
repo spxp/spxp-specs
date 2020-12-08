@@ -1212,6 +1212,7 @@ The client must add exactly one of these parameters to the URI:
 |---|---|
 | `return_scheme` | The custom scheme to be used when returning the token |
 | `return_uri` | The absolute URI to post the token to |
+
 Example:  
 Declaration in `connect` object in profile root document:
 ```json
