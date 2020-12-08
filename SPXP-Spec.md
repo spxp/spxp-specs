@@ -67,13 +67,13 @@ is composed of the following members:
 | `hometown` | Object | optional | [Social profile reference](#6-profile-reference-object) of the profile's hometown |
 | `location` | Object | optional | [Social profile reference](#6-profile-reference-object) of the profile's current location |
 | `coordinates` | Object | optional | JSON Object containing two members `latitude` and `longitude` containing numeric values encoded as Strings specifying the profiles current position in signed degrees format in the WGS84 geodetic system. <br/> Latitude ranges from -90 to +90 and longitude ranges from -180 to +180. |
-| `profilePhoto` | String <br/> or <br/> Object | optional | String containing a _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see [chapter 8](#7-encrypted-resources)) |
-| `friendsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “friends endpoint” as specified in [chapter 10](#9-friends-endpoint) |
-| `postsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “posts endpoint” as specified in [chapter 11](#10-posts-endpoint) |
-| `keysEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 13.2](#122-keys-endpoint) |
+| `profilePhoto` | String <br/> or <br/> Object | optional | String containing a _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see [chapter 7](#7-encrypted-resources)) |
+| `friendsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “friends endpoint” as specified in [chapter 9](#9-friends-endpoint) |
+| `postsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “posts endpoint” as specified in [chapter 10](#10-posts-endpoint) |
+| `keysEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 12.2](#122-keys-endpoint) |
 | `publicKey` | Object | optional | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (“kid”) |
-| `connect` | Object | optional | Additional details for the connection process, if and only if this object accepts connection requests as specified in [chapter 15](#14-profile-connections) |
-| `private` | Array | optional | Array of private data as specified in [chapter 12](#11-private-data) |
+| `connect` | Object | optional | Additional details for the connection process, if and only if this object accepts connection requests as specified in [chapter 14](#14-profile-connections) |
+| `private` | Array | optional | Array of private data as specified in [chapter 11](#11-private-data) |
 
 Example:
 ```json
@@ -170,14 +170,14 @@ to be signed with this key to be considered authentic. A protocol client must no
 the context of this profile that has not been signed by the announced profile key or its authorised delegates.
 
 ### 8.1 Signing JSON objects
-To sign an object, the `private` ([12](#11-private-data)) and `seqts` ([11](#10-posts-endpoint)) member fields are removed, it is converted into [Canonical JSON](#811-canonical-json),
+To sign an object, the `private` ([11](#11-private-data)) and `seqts` ([10](#10-posts-endpoint)) member fields are removed, it is converted into [Canonical JSON](#811-canonical-json),
 the optional `aad` member is attached, it is converted to a byte stream using UTF-8 character encoding and then signed with the
 profile key pair ([1.1](#11-cryptographic-profile-key-pair)) using the [Ed25519](http://ed25519.cr.yp.to/) signature
 algorithm. The resulting signature is then embedded into the JSON object as `signature` object with the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `key` | String <br/> or <br/> Object | required | Contains either the key id (`kid`) of the profile key pair ([1.1](#11-cryptographic-profile-key-pair)) as String or a certificate chain of an authorized signing key as defined in [chapter 9.2](#82-authorized-signing-keys) |
+| `key` | String <br/> or <br/> Object | required | Contains either the key id (`kid`) of the profile key pair ([1.1](#11-cryptographic-profile-key-pair)) as String or a certificate chain of an authorized signing key as defined in [chapter 8.2](#82-authorized-signing-keys) |
 | `aad` | String | optional | additional authenticated data |
 | `sig` | String | required | Base64Url encoded Ed25519 signature |
 
@@ -203,7 +203,7 @@ Example:
 If a JSON object solely consists of a `seqts`  and a `private` member, it does not need to be signed. Signing these
 objects is even discouraged to save space and avoid a false feeling of authenticity.  
 Additional Authenticated Data (AAD) can be included in the signature, which is used to bind the authenticity of a JWE
-object to the signature of the decrypted plaintext (see also [12.4](#114-private-data-and-signatures)).
+object to the signature of the decrypted plaintext (see also [11.4](#114-private-data-and-signatures)).
 
 #### 8.1.1 Canonical JSON
 Canonical JSON is the shortest serialization with lexicographically sorted members in objects. This means in particular:
@@ -221,7 +221,7 @@ object with the following members:
 | `publicKey` | Object | required | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (`kid`) |
 | `grant` | Array | required | Array of Strings identifying the operations that this key pair is allowed to perform |
 
-This certificate object must be signed as defined in [chapter 9.1](#81-signing-json-objects). Since the key of this
+This certificate object must be signed as defined in [chapter 8.1](#81-signing-json-objects). Since the key of this
 signature can be a certificate again, it is possible to chain multiple certificates. The end of this chain must be the
 profile key pair ([1.1](#11-cryptographic-profile-key-pair)).  
 
@@ -269,7 +269,7 @@ Social profiles can expose a list of other social profiles as “friends”. If 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `data` | Array | required | Array of [Social profile reference objects](#6-profile-reference-object) |
-| `private` | Array | optional | Array of private data as specified in [chapter 12](#11-private-data) |
+| `private` | Array | optional | Array of private data as specified in [chapter 11](#11-private-data) |
 
 Example:
 ```json
@@ -310,7 +310,7 @@ Each single post in the data array is a JSON object with these members:
 |---|---|---|---|
 | `seqts` | timestamp | required | Sequence timestamp of post. Probably assigned by the SPXP server when it received this post object. <br/> The sequence timestamp must be unique across all posts of a profile. <br/> This member is not part of the signature. |
 | `createts` | timestamp | optional | Optional creation timestamp of post. Assigned by the client when this post got created. |
-| `author` | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve the author's profile root document ([5](#5-social-profile-root-document)) and check the signature on this post against the profile key (`publicKey`) of the author's profile. This key needs to bring a certificate on this post that grants `post` permission ([9.2](#82-authorized-signing-keys)). |
+| `author` | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve the author's profile root document ([5](#5-social-profile-root-document)) and check the signature on this post against the profile key (`publicKey`) of the author's profile. This key needs to bring a certificate on this post that grants `post` permission ([8.2](#82-authorized-signing-keys)). |
 | `type` | String | required | Type of post. One of `text`, `web`, `photo` or `video` |
 
 Note:  
@@ -335,16 +335,16 @@ Depending on the `type`, additional members are defined as follows:
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `message` | String | optional | Text message |
-| `small` | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see [chapter 8](#7-encrypted-resources)) |
-| `full` | String <br/> or <br/> Object | optional | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a high resolution image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted high resolution image resource. (see [chapter 8](#7-encrypted-resources)) |
+| `small` | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see [chapter 7](#7-encrypted-resources)) |
+| `full` | String <br/> or <br/> Object | optional | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a high resolution image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted high resolution image resource. (see [chapter 7](#7-encrypted-resources)) |
 | `place` | Object | optional | [Social profile reference](#6-profile-reference-object) of a place linked to the photo |
 
 #### Type `video`:
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `message` | String | optional | Text message |
-| `preview` | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see [chapter 8](#7-encrypted-resources)) |
-| `media` | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see [chapter 8](#7-encrypted-resources)) |
+| `preview` | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see [chapter 7](#7-encrypted-resources)) |
+| `media` | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see [chapter 7](#7-encrypted-resources)) |
 | `place` | Object | optional | [Social profile reference](#6-profile-reference-object) of a place linked to the video |
 
 Example:
@@ -503,13 +503,13 @@ Web Encryption (JWE)”](https://tools.ietf.org/html/rfc7516). These objects com
 containing an array of either a String containing a JWE object in Compact Serialization or an object containing a JWE
 object in JSON Serialization. The decrypted plaintext contains again a JSON object in UTF-8 charset encoding. The
 decrypted objects are then merged into the main object according to the object merging rules defined in
-[12.3](#113-object-merging-rules). If multiple JWE objects in the `private` array can be decrypted by the SPXP client,
+[11.3](#113-object-merging-rules). If multiple JWE objects in the `private` array can be decrypted by the SPXP client,
 then the contained objects are merged into the containing document in the order they appear in the `private` array.
 
 ### 11.1 Private data support
 Private data is supported for:
 - The social profile root document ([5](#5-social-profile-root-document))
-- The friend endpoint object ([10](#9-friends-endpoint))
+- The friend endpoint object ([9](#9-friends-endpoint))
 - Individual post items. In this case, the `seqts` member must not be part of the encrypted data.
 
 ### 11.2 Supported algorithm and encoding
@@ -526,7 +526,7 @@ nested objects (i.e. merge `src.m` into `dst.m`).
 - Otherwise, set the member `src.m` in the target object (i.e. `dst.m` := `src.m`).
 
 ### 11.4 Private data and signatures
-The `private` array is removed from JSON objects before signing (see also [9.1](#81-signing-json-objects)). Instead, the
+The `private` array is removed from JSON objects before signing (see also [8.1](#81-signing-json-objects)). Instead, the
 plaintext within each encrypted block must be signed individually. This prevents protocol servers from learning anything
 about the author of an encrypted data block.  
 If the JWE encrypted object uses Additional Authenticated Data (AAD), clients must validate that the AAD on the
@@ -596,7 +596,7 @@ then gets merged into the profile root document:
 Private data can only be decrypted by readers who are able to obtain the necessary decryption key. Due to the possibly
 large number of readers and/or large number of data items, we cannot simply encrypt every single data element for all
 possible readers. Instead, readers are organized in a hierarchical structure of groups. Decryption keys are then
-encrypted themselves along a path through this hierarchy (key wrapping). The “keys endpoint” ([13.2](#122-keys-endpoint))
+encrypted themselves along a path through this hierarchy (key wrapping). The “keys endpoint” ([12.2](#122-keys-endpoint))
 allows clients to discover groups relevant to them and to obtain keys required to decrypt dependant keys and data
 elements.
 
@@ -646,7 +646,7 @@ encrypted keys `grp-friends.key2` and `grp-virt0.key2`, decrypts the key `grp-vi
 to decrypt the private data.
 
 ### 12.2 Keys endpoint
-If a social profile makes use of private data as defined in [chapter 12](#11-private-data), it has to announce a
+If a social profile makes use of private data as defined in [chapter 11](#11-private-data), it has to announce a
 `keysEndpoint` in the profile root document ([5](#5-social-profile-root-document)).  
 This endpoint takes two request parameters:
 
@@ -734,7 +734,7 @@ the profile root document accessible to given reader keys and a sensible amount 
 
 ### 12.3 Supported algorithm and encoding
 Key wrapping is limited to the same cryptographic algorithm and encoding as defined in [chapter
-12.2](#112-supported-algorithm-and-encoding) for private data.
+11.2](#112-supported-algorithm-and-encoding) for private data.
 
 ### 12.4 Reader keys
 Reader keys can be distributed by any side channel among the audience of a profile. There is also no requirement that
@@ -742,7 +742,7 @@ readers have to maintain a profile themselves.
 A profile could for example distribute keys as part of a paid-for subscription outside of SPXP and then publish selected
 information with SPXP only to paying subscribers.  
 If another profile gets access to information published by this profile as part of a connection as defined in [chapter
-15](#14-profile-connections), then the reader key is exchanged as part of the connection process.
+14](#14-profile-connections), then the reader key is exchanged as part of the connection process.
 
 ## 13 Restrain encrypted data
 Although private data is encrypted, it is good practice to limit access in order to protect against a key loss. In
@@ -750,7 +750,7 @@ the context of this protocol, it also prevents unauthorised readers from discove
 access level.  
 All SPXP endpoints support the additional query parameter `reader`, which takes a comma separated list of reader key
 ids. SPXP servers should filter out all elements of any `private` array that cannot be decrypted by one of the given
-reader keys. Since the SPXP server knows the key graph (see [chapter 13.1](#121-key-groups)), it is able to check if
+reader keys. Since the SPXP server knows the key graph (see [chapter 12.1](#121-key-groups)), it is able to check if
 there is a path from one of the given reader keys to one of the keys required to decrypt the private data.  
 It is important to understand that this access restriction does not constitute an authentication mechanism. The server
 just checks if the client knows the key id. But there is no test whatsoever performed by the server to check if the
@@ -764,7 +764,7 @@ actor can learn anything about new or existing connections.
 The clients exchange messages via the profile servers, which act as relay agents without being able to see the message
 content. This creates some extra challenges to prevent malicious use of this functionality.  
 A profile can choose whether it wants to participate in connections or not. If a profile chooses to accept connection
-requests from other profiles, it publishes a `connect` object ([15.2](#142-connect-object-in-profile-root)) as part of the profile root document. This object
+requests from other profiles, it publishes a `connect` object ([14.2](#142-connect-object-in-profile-root)) as part of the profile root document. This object
 contains the information required by other profiles to craft a connection request message and send it to the profile
 server.
 
@@ -777,7 +777,7 @@ The connection process between two profiles controlled by “Alice” and “Bob
 3. Alice prepares her profile server to establish the connection on her behalf and deposits the connection package for
    Bob on her own profile server, associating it with the _connection establishment ID_.
 4. Alice creates a connection request message, encrypts it with Bob's public connection key
-   ([15.2](#142-connect-object-in-profile-root)) and sends it to Bob's profile server. This message contains the
+   ([14.2](#142-connect-object-in-profile-root)) and sends it to Bob's profile server. This message contains the
    _connection establishment ID_ and an _ephemeral connection establishment
    key_.
 5. Next time when Bob checks his own profile server, he receives this encrypted connection request.
@@ -814,7 +814,7 @@ following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `endpoint` | String | required | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “connect endpoint” as specified in [chapter 15.7](#147-connect-endpoint) |
+| `endpoint` | String | required | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “connect endpoint” as specified in [chapter 14.7](#147-connect-endpoint) |
 | `key` | Object | required | JSON object describing the public key of the connection key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the X25519 key agreement curve specifier as defined in [RFC 8037 Section 3.2](https://tools.ietf.org/html/rfc8037#section-3.2). |
 
 Example:
@@ -899,7 +899,7 @@ The initiator prepares the connection by sending the reader key and encrypted co
 server, associating it with the _connection establishment ID_. This preparation must enable the profile server to later
 perform the [connection package exchange](#148-connection-package-exchange).  
 The management of profile servers, including this operation, is not part of SPXP. See [chapter
-16](#15-profile-extensions) for details.
+15](#15-profile-extensions) for details.
 
 ### 14.5 Connect Message
 To initiate a connection, the client generates a JSON object with the following members:
@@ -994,7 +994,7 @@ The server responds with a `200` status code and a JSON object with these member
 |---|---|---|---|
 | `type` | String | required | Fixed text string `connection_discovery` |
 | `ver` | String | required | Most recent version of SPXP supported by the server |
-| `acceptedTokens` | Array | optional | Array of Objects defining token acquisition methods accepted by this profile. See [chapter 15.6](#146-token-acquisition) |
+| `acceptedTokens` | Array | optional | Array of Objects defining token acquisition methods accepted by this profile. See [chapter 14.6](#146-token-acquisition) |
 
 Each member of the `acceptedTokens` array describes a possible method to obtain such a token. The client can freely pick
 one of them it supports.  
