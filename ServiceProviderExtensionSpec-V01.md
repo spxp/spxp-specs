@@ -42,7 +42,7 @@ initially given `return_scheme` and using a random one-time token as path.
 
 ## Profile Key Binding
 After the user has registered with a service provider, the client needs to bind the public profile key to this account
-and retrioeve the profile URI.  
+and retrieve the profile URI.  
 The client sends a HTTP POST request to the URI given as `bind` member in the [service discovery](#service-discovery)
 response. The HTTP body of this POST request contains a JSON object with these members:
           
