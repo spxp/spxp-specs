@@ -221,12 +221,13 @@ object with the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `publicKey` | Object | required | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (`kid`) |
+| `publicKey` | Object | required | JSON object describing the public key of the authorized key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (`kid`) |
 | `grant` | Array | required | Array of Strings identifying the operations that this key pair is allowed to perform |
 
 This certificate object must be signed as defined in [chapter 8.1](#81-signing-json-objects). Since the key of this
-signature can be a certificate again, it is possible to chain multiple certificates. The end of this chain must be the
-profile key pair ([1.1](#11-cryptographic-profile-key-pair)).  
+signature can be a certificate again, it is possible to chain multiple certificates. The end of this chain must be
+signed by the profile key pair ([1.1](#11-cryptographic-profile-key-pair)) of the profile where the signed information
+is published on.  
 
 Valid `grant` values are (case sensitive):
 
@@ -239,7 +240,7 @@ Valid `grant` values are (case sensitive):
 | `impersonate` | Posts in the name of this profile |
 
 The profile root document ([5](#5-social-profile-root-document)) must always be signed by the profile key pair
-([1.1](#11-cryptographic-profile-key-pair)).
+([1.1](#11-cryptographic-profile-key-pair)) directly.
 
 Example:
 ```json
@@ -313,7 +314,7 @@ Each single post in the data array is a JSON object with these members:
 |---|---|---|---|
 | `seqts` | timestamp | required | Sequence timestamp of post. Probably assigned by the SPXP server when it received this post object. <br/> The sequence timestamp must be unique across all posts of a profile. <br/> This member is not part of the signature. |
 | `createts` | timestamp | optional | Optional creation timestamp of post. Assigned by the client when this post got created. |
-| `author` | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve the author's profile root document ([5](#5-social-profile-root-document)) and check the signature on this post against the profile key (`publicKey`) of the author's profile. This key needs to bring a certificate on this post that grants `post` permission ([8.2](#82-authorized-signing-keys)). |
+| `author` | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve the author's profile root document ([5](#5-social-profile-root-document)) and check the signature on this post against the profile key (`publicKey`) of the author's profile. The key of the signature on this post must bring a certificate that grants `post` permission ([8.2](#82-authorized-signing-keys)). |
 | `type` | String | required | Type of post. One of `text`, `web`, `photo` or `video` |
 
 Note:  
