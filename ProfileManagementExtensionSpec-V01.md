@@ -48,8 +48,8 @@ Success response body:
 Example:
 ```json
 {
-  "token_type" : "device_token",
-  "device_token" : "MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+    "token_type" : "device_token",
+    "device_token" : "MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
 }
 ```
 Failure response code: `403`  
@@ -96,9 +96,9 @@ Success response body:
 Example:
 ```json
 {
-  "token_type" : "access_token",
-  "access_token" : "jT4k9ZgkRwHIctzlNoxYAhY4eG3NCpaVVzQEGaVGruM0Y6ez6BQ",
-  "expires_in" : 3600
+    "token_type" : "access_token",
+    "access_token" : "jT4k9ZgkRwHIctzlNoxYAhY4eG3NCpaVVzQEGaVGruM0Y6ez6BQ",
+    "expires_in" : 3600
 }
 ```
 Failure response code: `403`
@@ -142,22 +142,22 @@ Success response body:
 Example:
 ```json
 {
-  "server" : {
-    "vendor" : "ACME Corp.",
-    "product" : "Fancy SPXP Server (tm)",
-    "version" : "1.0",
-    "helpUri" : "http://acme.example.com/fancy-server/user-help.html"
-  },
-  "endpoints" : {
-    "friendsEndpoint" : "friends/alice",
-    "postsEndpoint" : "posts?profile=alice",
-    "keysEndpoint" : "keys/alice",
-    "connectEndpoint" : "connect/alice",
-    "connectResponseEndpoint" : "connectResponse/alice"
-  },
-  "limits" : {
-    "maxMediaSize" : 10485760
-  }
+    "server" : {
+        "vendor" : "ACME Corp.",
+        "product" : "Fancy SPXP Server (tm)",
+        "version" : "1.0",
+        "helpUri" : "http://acme.example.com/fancy-server/user-help.html"
+    },
+        "endpoints" : {
+        "friendsEndpoint" : "friends/alice",
+        "postsEndpoint" : "posts?profile=alice",
+        "keysEndpoint" : "keys/alice",
+        "connectEndpoint" : "connect/alice",
+        "connectResponseEndpoint" : "connectResponse/alice"
+    },
+    "limits" : {
+        "maxMediaSize" : 10485760
+    }
 }
 ```
 Failure response code: `4xx` or `5xx`
@@ -234,7 +234,7 @@ Example:
             "received" : "2018-09-15T12:35:46.123",
             "ver" : "0.3",
             "msg" : {
-              ...
+                "..." : "..."
             }
         }, {
             "seqts" : "2018-09-13T02:53:12.154",
@@ -243,7 +243,7 @@ Example:
             "ver" : "0.3",
             "establishId" : "",
             "package" : {
-              ...
+                "..." : "..."
             }
         }
     ],
@@ -256,7 +256,7 @@ Failure response code: `4xx` or `5xx`
 Messages are hold by the server until they are cleaned up. Clients can decide if they delete messages on the server
 immediately after having received them, or only after having shown them to the user.  
 Endpoint: `<baseUri>/service/messages/<seqts>`  
-Parameter: `<seqts>` value of the `seqts` field in the service message object to delete
+Parameter: `<seqts>` value of the `seqts` field in the service message object to delete  
 Method: `DELETE`  
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`  
@@ -309,7 +309,7 @@ Success response body:
 Example:
 ```json
 {
-  "seqts" : "2018-09-17T14:04:27.373"
+    "seqts" : "2018-09-17T14:04:27.373"
 }
 ```
 The server will assign a unique seqts, store the post and return the assigned seqts.
@@ -352,8 +352,8 @@ Success response body:
 Example:
 ```json
 {
-  "mediaId" : "3d3af028-8c61-4cdc-8b96-6012a85faa99",
-  "uri" : "https://cdn.example.com/3d3af028-8c61-4cdc-8b96-6012a85faa99"
+    "mediaId" : "3d3af028-8c61-4cdc-8b96-6012a85faa99",
+    "uri" : "https://cdn.example.com/3d3af028-8c61-4cdc-8b96-6012a85faa99"
 }
 ```
 Failure response code: `4xx` or `5xx`
@@ -369,7 +369,7 @@ Failure response code: `4xx` or `5xx`
 Maintaining the tree of keys and ensuring that actors have access to all the content they are entitled for is the sole
 responsibility of the profile owner. This management extension only provides endpoints to publish new keys to the server
 and to delete existing keys. The server will maintain this set of keys and use it compute the result set on the “keys
-endpoint” and to select the elements exposed as `private` data in objects.
+endpoint” as well as to select the elements exposed as `private` data in objects.
 
 ### 8.1 Publishing keys
 The client transfers a set of keys to the server. Each key is processed independently, and the outcome of each operation
@@ -383,20 +383,20 @@ Request body: The same 3 level JSON structure as specified for the keys endpoint
 Example:
 ```json
 {
-  "audience1" : {
-    "group1" : {
-      "round1" : "<JWK>",
-      "round2" : "<JWK>",
-      "round3" : "<JWK>"
+    "audience1" : {
+        "group1" : {
+            "round1" : "<JWK1>",
+            "round2" : "<JWK>",
+            "round3" : "<JWK>"
+        },
+        "group2" : {
+            "round1" : "<JWK>",
+            "round2" : "<JWK>",
+            "round3" : "<JWK>"
+        }
     },
-    "group2" : {
-      "round1" : "<JWK>",
-      "round2" : "<JWK>",
-      "round3" : "<JWK>"
+    "audience2" : {
     }
-  },
-  "audience2" : {
-  }
 }
 ```
 Success response code: `200`  
@@ -404,20 +404,20 @@ Content-Type: `application/json`
 Success body:
 ```json
 {
-  "audience1" : {
-    "group1" : {
-      "round1" : "<outcome>",
-      "round2" : "<outcome>",
-      "round3" : "<outcome>"
+    "audience1" : {
+        "group1" : {
+            "round1" : "<outcome>",
+            "round2" : "<outcome>",
+            "round3" : "<outcome>"
+        },
+        "group2" : {
+            "round1" : "<outcome>",
+            "round2" : "<outcome>",
+            "round3" : "<outcome>"
+        }
     },
-    "group2" : {
-      "round1" : "<outcome>",
-      "round2" : "<outcome>",
-      "round3" : "<outcome>"
+    "audience2" : {
     }
-  },
-  "audience2" : {
-  }
 }
 ```
 With `<outcome>` one of `ok`, `err_exists`, `err_invalid_jwk`, `err_invalid_jwk: <description>`, `err_retry` or `error: <description>`    
@@ -451,27 +451,27 @@ Body:
 Example:
 ```json
 {
-  "establishId" : "K4dwfD4wA67xaD-t",
-  "expires" : "2020-07-12T09:40:17.734",
-  "package" : {
-    ...
-  },
-  "keys" : {
-    "audience1" : {
-      "group1" : {
-        "round1" : "<JWK>",
-        "round2" : "<JWK>",
-        "round3" : "<JWK>"
-      },
-      "group2" : {
-        "round1" : "<JWK>",
-        "round2" : "<JWK>",
-        "round3" : "<JWK>"
-      }
+    "establishId" : "K4dwfD4wA67xaD-t",
+    "expires" : "2020-07-12T09:40:17.734",
+    "package" : {
+        "..." : "..."
     },
-    "audience2" : {
+    "keys" : {
+        "audience1" : {
+            "group1" : {
+                "round1" : "<JWK>",
+                "round2" : "<JWK>",
+                "round3" : "<JWK>"
+            },
+            "group2" : {
+                "round1" : "<JWK>",
+                "round2" : "<JWK>",
+                "round3" : "<JWK>"
+            }
+        },
+        "audience2" : {
+        }
     }
-  }
 }
 ```
 Success response code: `204`  
