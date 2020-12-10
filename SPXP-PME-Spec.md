@@ -434,7 +434,10 @@ Method: `DELETE`
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`  
 
-### 8.2 Managing keys in prepared packages
+### 8.3 Managing keys in prepared packages
+To add or remove keys that are associated with a prepared package, the client can add the `establishId` of the prepared
+package as suffix to the audience, seperated by the `@` character.
+See [9.3](#93-updating-keys associated-with-a-prepared-package) for details.
 
 ## 9 Connection packages
 When a peer profile accepts a connection request, the server has to perform the package exchange on behalf of the user.
@@ -493,7 +496,7 @@ Method: `DELETE`
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`
 
-### 9.2 Updating keys associated with a prepared package
+### 9.3 Updating keys associated with a prepared package
 It is possible that the client needs to extend or even replace cryptographic material associated with a connection
 process. If either the reader key or certificate are effected, the client needs to revoke the entire package and issue
 a new one with the same establishId.  
