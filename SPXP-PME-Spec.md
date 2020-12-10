@@ -437,7 +437,7 @@ Failure response code: `4xx` or `5xx`
 ### 8.3 Managing keys in prepared packages
 To add or remove keys that are associated with a prepared package, the client can add the `establishId` of the prepared
 package as suffix to the audience, seperated by the `@` character.
-See [9.3](#93-updating-keys associated-with-a-prepared-package) for details.
+See [9.3](#93-updating-keys-associated-with-a-prepared-package) for details.
 
 ## 9 Connection packages
 When a peer profile accepts a connection request, the server has to perform the package exchange on behalf of the user.
