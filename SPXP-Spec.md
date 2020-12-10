@@ -1187,12 +1187,12 @@ Implementors can freely chose if they want to provide these extensions and to wh
 
 #### SPXP - Profile Management Extension
 Defines how profile owners can manage the server hosting their own profile and update the information that gets published.  
-See [SPXP - Profile Management Extension Spec V 0.1](./ProfileManagementExtensionSpec-V01.md)
+See [SPXP - Profile Management Extension Spec](SPXP-SPE-Spec.md)
 
 #### SPXP - Service Provider Extension
 A service provider can offer the hosting of profiles. This specification defines how the initial setup of the profile
 takes place in a way that guarantees that the profile signing key never leaves the end user client.  
-See [SPXP - Service Provider Extension Spec V 0.1](./ServiceProviderExtensionSpec-V01.md)
+See [SPXP - Service Provider Extension Spec](./SPXP-SPE-Spec.md)
 
 ## Appendix A. Web Flow token acquisition method
 The client needs to open a new browser window and let the user navigate through a series of pages. When the web
