@@ -368,7 +368,7 @@ Failure response code: `4xx` or `5xx`
 ## 8 Key Management
 Maintaining the tree of keys and ensuring that actors have access to all the content they are entitled for is the sole
 responsibility of the profile owner. This management extension only provides endpoints to publish new keys to the server
-and to delete existing keys. The server will maintain this set of keys and use it compute the result set on the “keys
+and to delete existing keys. The server will maintain this set of keys and use it to compute the result set on the “keys
 endpoint” as well as to select the elements exposed as `private` data in objects.
 
 ### 8.1 Publishing keys
@@ -434,7 +434,16 @@ Method: `DELETE`
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`  
 
+### 8.2 Managing keys in prepared packages
+
 ## 9 Connection packages
+When a peer profile accepts a connection request, the server has to perform the package exchange on behalf of the user.
+In this process, the server has to activate a set of keys so that the peer profile can start to read private
+information, accept and store  the package provided by the peer profile and then hand out the connection package that
+has been prepared for the peer. Please see the main SPXP specification for details on this process.  
+The profile management extension defines the following operations to manage this process.
+
+### 9.1 Preparing a package
 The server needs to be prepared for the connection package exchange with other profiles.  
 Endpoint: `<baseUri>/connect/packages`  
 Method: `POST`  
@@ -476,3 +485,34 @@ Example:
 ```
 Success response code: `204`  
 Failure response code: `4xx` or `5xx`  
+
+### 9.2 Revoke a prepared package
+The client can revoke a prepared connection package based on the establishId.  
+Endpoint: `<baseUri>/connect/packages/<establishId>`  
+Method: `DELETE`  
+Success response code: `204`  
+Failure response code: `4xx` or `5xx`
+
+### 9.2 Updating keys associated with a prepared package
+It is possible that the client needs to extend or even replace cryptographic material associated with a connection
+process. If either the reader key or certificate are effected, the client needs to revoke the entire package and issue
+a new one with the same establishId.  
+If the change is limited to the round keys that are associated with a connection, which is most likely, then the client
+can use the normal [key management](#8-key-management) operations using this special audience:  
+`<audince>'@'<establishId>`  
+While a connection request ages, it is likely that new round keys need to be generated in the assigned group. In this
+case, these new round keys need to be added to the prepared package.  
+Example body on the keys endpoint:
+```json
+{
+    "audience1@establish1" : {
+        "group1" : {
+            "round1" : "<JWK1>",
+            "round2" : "<JWK>",
+            "round3" : "<JWK>"
+        }
+    },
+    "audience2" : {
+    }
+}
+```
