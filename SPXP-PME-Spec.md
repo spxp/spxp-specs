@@ -1,5 +1,5 @@
 # SPXP - Profile Management Extension
-Version 0.1
+Version 0.3
 
 ## 1 Base URI
 A management server can manage profiles with various profile URIs, not just profiles on the same domain. To give the
