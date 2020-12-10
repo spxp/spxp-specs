@@ -278,8 +278,8 @@ and goals of SPXP.
 
 | Version | Objective |
 |---|---|
-| [0.1](./SpxpProfileSpec-V01.md) | Investigates how data of social profiles can be efficiently encoded in JSON |
-| [0.2](./SpxpProfileSpec-V02.md) | Adds JWE based encryption and investigates efficient key distribution and management |
+| [0.1](https://github.com/spxp/spxp-specs/blob/v0.1/SPXP-Spec.md) | Investigates how data of social profiles can be efficiently encoded in JSON |
+| [0.2](https://github.com/spxp/spxp-specs/blob/v0.2/SPXP-Spec.md) | Adds JWE based encryption and investigates efficient key distribution and management |
 | [0.3](./SPXP-Spec.md) | Changes cryptographic algorithms, adds signing, specifies profile connections (in progress) |
 | 0.4 | Adds Neighbourhood Assistance, handling of profile relocation, handling of key loss, guaranteed quid pro quo (planned) |
 
