@@ -276,11 +276,11 @@ in real applications and to put it under performance tests on real devices.
 During this feedback cycle, it is possible that there is no protocol specification that fully covers the current vision
 and goals of SPXP.
 
+Latest version: [0.3](https://github.com/spxp/spxp-specs/releases/tag/v0.3)
+
 | Version | Objective |
 |---|---|
 | [0.1](https://github.com/spxp/spxp-specs/blob/v0.1/SPXP-Spec.md) | Investigates how data of social profiles can be efficiently encoded in JSON |
 | [0.2](https://github.com/spxp/spxp-specs/blob/v0.2/SPXP-Spec.md) | Adds JWE based encryption and investigates efficient key distribution and management |
-| [0.3](./SPXP-Spec.md) | Changes cryptographic algorithms, adds signing, specifies profile connections (in progress) |
-| 0.4 | Adds Neighbourhood Assistance, handling of profile relocation, handling of key loss, guaranteed quid pro quo (planned) |
-
-See SPXP protocol specification for a list of changes.
+| [0.3](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md) | Changes cryptographic algorithms, adds signing, specifies profile connections |
+| [wip](./SPXP-Spec.md) | Working on: Cross profile publishing, comments, reactions, neighbourhood Assistance, profile relocation, handling of key loss, guaranteed quid pro quo (planned) |
