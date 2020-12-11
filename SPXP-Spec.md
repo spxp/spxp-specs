@@ -1,5 +1,5 @@
 # Social Profile Exchange Protocol Specification
-Version 0.3
+Working Draft (Version 0.4)
 
 ## 1 Social profile
 

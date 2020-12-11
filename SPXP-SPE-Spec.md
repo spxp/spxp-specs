@@ -1,5 +1,5 @@
 # SPXP - Service Provider Extension
-Version 0.3
+Working Draft (Version 0.4)
 
 ## Background
 Social Profiles are uniquely identified by their profile key pair, and are intentionally only loosely coupled to their
