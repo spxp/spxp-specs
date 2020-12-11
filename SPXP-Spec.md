@@ -1298,7 +1298,7 @@ Profile keypair of “Crypto Bob” (Certificate in section 7.2):
     "d" : "2rPwDJQKGDmIeF7iKrDnlJZPFzzQLUOp3Ul687Fc9QY"
 }
 ```
-Symmetric AES key “ABCD.1234” used in chapter 10.1:
+Symmetric AES key “ABCD.1234” used in chapter 11.5:
 ```json
 {
     "kid" : "ABCD.1234",
@@ -1327,7 +1327,7 @@ Connect keypair of “Crypto Bob”:
     "d" : "EFNnIBvFGaV_hIq0tznz4b1O1Md0xPLgY_Fam_z0A04"
 }
 ```
-Ephemeral Connection Establishment Key between “Crypto Alice” and “Crypto Bob” used in chapter 15:
+Ephemeral Connection Establishment Key between “Crypto Alice” and “Crypto Bob” used in chapter 14:
 ```json
 {
     "kid" : "T7n_19BqWjU17l1s",
