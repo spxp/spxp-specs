@@ -843,8 +843,8 @@ Example:
         }
     },
     "signature" : {
-        "sig" : "Zhz30juKG4yWH7qUYhnyPbc9nsG3O4WEZBhkNu5c2qkMUKHcn6tsB9yVeqVbqTEeXoQLWPLFbl8eoilVzIwzAQ",
-        "key" : "C8xSIBPKRTcXxFix"
+        "sig": "KwkZSI9hZQOxZbzlXviDvSL6ez2qJfimPLiP4vvFIOqgTqArimMagLuqYK8NM5F7BLRG5C_zp1VoExrU6Ps0DQ",
+        "key": "C8xSIBPKRTcXxFix"
     }
 }
 ```
