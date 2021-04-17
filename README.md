@@ -35,7 +35,7 @@ projects.
 
 ## Commandline tooling
 For most operations, `curl` and `jq` are sufficient. For cryptographic operations, we provide the
-[SpxpCryptoTool](./../spxp-crypto-tools/src/main/java/org/spxp/crypto/tool/SpxpCryptoTool.java)
+[SpxpCryptoTool](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/README.md)
 which can be used on the command line or from scripts.  
 With this tool, you can [explore the testbed profiles](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/ExploreTestbedProfiles.md)
 from the command line.
