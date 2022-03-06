@@ -48,16 +48,24 @@ Example:
 }
 ```
 
+### In section "14.5 Connect Message"
+
+Change description of `publish` offering value as follows:
+
+| Offering | Providing |
+|---|---|
+| `publish` | When accepting this request, the requestee is given additional information to publish posts on this profile (only in its own name) |
+
 ### Insert new section before "Profile Relocation"
 
 #### 15 Publishing
 The information exposed through SPXP can originate from any backend, like a content management system. If a profile
 accepts contributions from peer profiles, or any other authorized source, it declares a `publishEndpoint` in the profile
-root document.  
-The authorized source needs to be in possession of a valid [authorized signing key (8.2)](../SPXP-Spec.md#82-authorized-signing-keys)
+root document ([5](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#5-social-profile-root-document)).  
+The authorized source needs to be in possession of a valid [authorized signing key (8.2)](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#82-authorized-signing-keys)
 to sign its contribution. In the case of private contributions, the source additionally needs to possess a _publishing
 key_ and needs to know the encryption group to be used. All of these are contained in the [publishing object
-(15.1)](#151-publishing-object-in-connection-package) of the [connection package](../SPXP-Spec.md#143-connection-package)
+(15.1)](#151-publishing-object-in-connection-package) of the [connection package](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#143-connection-package)
 exchanged during the connection process.
 
 ##### 15.1 Publishing object in connection package
@@ -171,16 +179,16 @@ set as `aad` on the JWE object. Clients with the appropriate reader key then nee
 tag on the JWE object is valid and that this `aad` is included in the signature within the encrypted object.
 
 ##### 15.3 Authentication tokens
-To prepare the publishing process, the protocol client first needs to obtain a one time authentication token. To obtain
-an `authToken` for the publishing process, the protocol client sends an HTTP POST request to the “publish  endpoint“ 
-with a JSON object as HTTP body. This object is composed of the following members:
+To prepare the publishing process, the protocol client first needs to obtain a one time authentication token by sending
+an HTTP POST request to the “publish  endpoint“  with a JSON object as HTTP body. This object is composed of the
+following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `type` | String | required | Type of request. Use `prepare_post` to obtain a one time authentication token. |
 | `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
 | `timestamp` | Timestamp | required | Current time |
-| `group` | String | optional | Publish group id the client wants to use |
+| `group` | String | optional | In case of private posts, publish group id the client wants to use |
 
 This JSON object must be signed as defined in [chapter 8.1](#81-signing-json-objects) by either the profile key if the
 protocol client wants to make a public post or by the "publish key" if the client wants to make a private post.
