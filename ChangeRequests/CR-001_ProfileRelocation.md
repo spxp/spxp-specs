@@ -29,22 +29,22 @@ the state recorded by the client.
 #### 15 Profile Relocation
 A profile can be transferred to a new profile URI while maintaining its profile key pair. Clients can validate this
 transfer by checking the profile's signature on the new profile URI and update their internal state. A client should
-only accept a new profileUri if the new profile root document ([5](#5-social-profile-root-document)) has a more recent
-timestamp and is including the new profileUri as `profileLocation`.  
-If the previous  service provider is cooperative, it can be used to announce the new profile location by updating the
-profile root document with the new `profileLocation`.  
+only accept a new profile URI if the new profile root document ([5](#5-social-profile-root-document)) has a more recent
+timestamp and is including the new profile URI as `profileLocation`.  
+If the previous service provider is cooperative, it can be used to announce the new profile location by updating the
+profile root document on the previous provider with the new `profileLocation`.  
 Connected peer profiles which discover such a profile relocation must update all references to this profile published
 via the "friends endpoint" ([9](../SPXP-Spec.md#9-friends-endpoint)) using the new profile URI and must only use this
 new profile URI for any references used in posts or anywhere else in this protocol from now on.  
 If a profile is no longer accessible, or the client has reason to believe that a profile URI delivers stale information,
 it should use profile references published by other profiles, e.g. via their "friends endpoint"
 ([9](../SPXP-Spec.md#9-friends-endpoint)), to discover the new profile URI.  
+If a client discovers a signed post by a profile on a peer profile with a different URI in the profile reference and a
+more recent creation date as the latest profile timestamp on record, then this is a good reason to believe that the
+known profile URI delivers stale information.
 It is possible that a malicious actor is copying the profile root document to a different URI and trying to trick
 clients into switching over to this URI. This can be used to prevent clients from receiving updates from the original
 profile. To prevent this, it is important that clients check the `profileLocation` and `timestamp` in the new profile
 root document.  
 In case a profile has been relocated multiple times, the `timestamp` value also helps clients to identify the most
 recent profile location.  
-If a client discovers a signed post by a profile on a peer profile with a different URI in the profile reference and a
-more recent creation date as the latest profile timestamp on record, then this is a good reason to believe that the
-known profile URI delivers stale information.
