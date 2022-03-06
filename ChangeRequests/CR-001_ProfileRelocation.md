@@ -21,8 +21,8 @@ Add the following members:
 | `profileLocation` | String | optional | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to the primary location of this profile. Used in the relocation process as specified in [chapter 15](#15-profile-relocation) |
 
 Add the following Note:  
-Clients should track the `timestamp` of a profile in their internal data structures and discard information older than
-the state recorded by the client.
+Clients should track the `timestamp` of a profile in their internal data structures and discard profile root documents
+they receive which are older than the state recorded by the client.
 
 ### Insert new section before "Profile Extensions"
 
@@ -42,6 +42,7 @@ it should use profile references published by other profiles, e.g. via their "fr
 If a client discovers a signed post by a profile on a peer profile with a different URI in the profile reference and a
 more recent creation date as the latest profile timestamp on record, then this is a good reason to believe that the
 known profile URI delivers stale information.
+
 It is possible that a malicious actor is copying the profile root document to a different URI and trying to trick
 clients into switching over to this URI. This can be used to prevent clients from receiving updates from the original
 profile. To prevent this, it is important that clients check the `profileLocation` and `timestamp` in the new profile
