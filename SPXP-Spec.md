@@ -73,7 +73,13 @@ is composed of the following members:
 | `keysEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 12.2](#122-keys-endpoint) |
 | `publicKey` | Object | optional | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (“kid”) |
 | `connect` | Object | optional | Additional details for the connection process, if and only if this object accepts connection requests as specified in [chapter 14](#14-profile-connections) |
+| `timestamp` | timestamp | optional | Timestamp helping clients identifying the most recent version of a profile. Required if `profileLocation` is present. |
+| `profileLocation` | String | optional | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to the primary location of this profile. Used in the relocation process as specified in [chapter 15](#15-profile-relocation) |
 | `private` | Array | optional | Array of private data as specified in [chapter 11](#11-private-data) |
+
+Note:  
+Clients should track the `timestamp` of a profile in their internal data structures and discard profile root documents
+they receive which are older than the state recorded by the client.
 
 Example:
 ```json
@@ -111,7 +117,9 @@ Example:
     },
     "profilePhoto" : " https://images.example.com/alice.jpg",
     "friendsEndpoint" : "friends/alice",
-    "postsEndpoint" : "posts?profile=alice"
+    "postsEndpoint" : "posts?profile=alice",
+    "profileLocation" : "https://example.com/spxp/alice",
+    "timestamp" : "2018-09-11T09:42:13.526"
 }
 ```
 
@@ -903,7 +911,7 @@ The initiator prepares the connection by sending the reader key and encrypted co
 server, associating it with the _connection establishment ID_. This preparation must enable the profile server to later
 perform the [connection package exchange](#148-connection-package-exchange).  
 The management of profile servers, including this operation, is not part of SPXP. See [chapter
-15](#15-profile-extensions) for details.
+15](#16-profile-extensions) for details.
 
 ### 14.5 Connect Message
 To initiate a connection, the client generates a JSON object with the following members:
@@ -1171,7 +1179,31 @@ Example response:
 }
 ```
 
-## 15 Profile Extensions
+## 15 Profile Relocation
+A profile can be transferred to a new profile URI while maintaining its profile key pair. Clients can validate this
+transfer by checking the profile's signature on the new profile URI and update their internal state. A client should
+only accept a new profile URI if the new profile root document ([5](#5-social-profile-root-document)) has a more recent
+timestamp and is including the new profile URI as `profileLocation`.  
+If the previous service provider is cooperative, it can be used to announce the new profile location by updating the
+profile root document on the previous provider with the new `profileLocation`.  
+Connected peer profiles which discover such a profile relocation must update all references to this profile published
+via the "friends endpoint" ([9](../SPXP-Spec.md#9-friends-endpoint)) using the new profile URI and must only use this
+new profile URI for any references used in posts or anywhere else in this protocol from now on.  
+If a profile is no longer accessible, or the client has reason to believe that a profile URI delivers stale information,
+it should use profile references published by other profiles, e.g. via their "friends endpoint"
+([9](../SPXP-Spec.md#9-friends-endpoint)), to discover the new profile URI.  
+If a client discovers a signed post by a profile on a peer profile with a different URI in the profile reference and a
+more recent creation date as the latest profile timestamp on record, then this is a good reason to believe that the
+known profile URI delivers stale information.
+
+It is possible that a malicious actor is copying the profile root document to a different URI and trying to trick
+clients into switching over to this URI. This can be used to prevent clients from receiving updates from the original
+profile. To prevent this, it is important that clients check the `profileLocation` and `timestamp` in the new profile
+root document.  
+In case a profile has been relocated multiple times, the `timestamp` value also helps clients to identify the most
+recent profile location.
+
+## 16 Profile Extensions
 This protocol specification intentionally focuses on the communication between client applications and servers hosting
 profiles the client is interested in. It does not define any requirements or make suggestions on how to actually
 implement client or server applications. This leaves implementors maximum flexibility on how to add this protocol to
