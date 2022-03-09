@@ -13,7 +13,7 @@ needs to be done without revealing information about the post or its author to t
 challenging as we need to protect the profile server against session replay attacks and different kinds of DoS attacks
 as well.
 
-## Proposed changes
+## Proposed changes to SPXP Spec
 
 ### In section "5 Social profile root document"
 Add the following members:
@@ -54,7 +54,7 @@ Change description of `publish` offering value as follows:
 
 | Offering | Providing |
 |---|---|
-| `publish` | When accepting this request, the requestee is given additional information to publish posts on this profile (only in its own name) |
+| `publish` | When accepting this request, the requestee is given additional information in the `publishing` object of the connection package to publish posts on this profile (only in its own name) |
 
 ### In section "14.8 Connection package exchange"
 
@@ -82,7 +82,6 @@ Replace Example response:
 }
 ```
 
-
 ### Insert new section before "Profile Relocation"
 
 #### 15 Publishing
@@ -96,9 +95,9 @@ key_ and needs to know the encryption group to be used. All of these are contain
 exchanged during the connection process.
 
 ##### 15.1 Publishing object in connection package
-If a profile grants its peer publishing permissions during a connection process, it provides the required information
-as part of the `publishing` object in the [connection package](../SPXP-Spec.md#143-connection-package) with the following
-members:
+If a profile grants publishing permissions to a peer profile during a connection process, it provides the required
+information  as part of the `publishing` object in the [connection package](../SPXP-Spec.md#143-connection-package) with
+the following  members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
@@ -110,7 +109,7 @@ The optional `postPrivate` JSON objects has the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `publishKey` | Object | required | JSON object describing the private and public key of the signing key pair used in the private publishing process as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1) |
+| `publishKey` | Object | required | JSON object describing the signing key pair used in the private publishing process as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1) |
 | `groups` | Object | required | JSON object containing a mapping between end user display names and group ids of publish groups which can be used for encrypted private posts |
 
 Example within a connection package:
@@ -155,28 +154,28 @@ Example within a connection package:
         }
     },
     "signature" : {
-        "sig" : XXXXX,
+        "sig": "p5XKQ3uuQW7UwZUy72qLcfNV_jDzFUSdmu5mAsMDn5ju4mPpHx7bJatohbVQEhW8t8CFiN6LT1xZ-g0j9ZXABA",
         "key" : "C8xSIBPKRTcXxFix"
     }
 }
 ```
 
 ##### 15.2 Publish endpoint
-To publish a piece of information, like a post, the protocol client sends an HTTP POST request to the “publish endpoint“
-with a JSON object as HTTP body. This object is composed of the following members:
+To publish a post on the peer profile, the protocol client sends an HTTP POST request to the “publish endpoint“ with a
+JSON object as HTTP  body. This object is composed of the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `type` | String | required | Type of request. Use `post` to publish the payload as peer post. |
+| `type` | String | required | Fixed text string `post` |
 | `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
 | `post` | Object | required | The [post object](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#10-posts-endpoint) to be published. Can be encrypted. |
-| `token` | String | required | One time publishing token as specified in [chapter 15.3](#153-authentication-tokens) |
+| `token` | String | required | One time publishing token as specified in [chapter 15.3](#153-publishing-tokens) |
 
 The server responds with one of these status codes.
 
 | Status code | Meaning |
 |---|---|
-| `200` | The information has been accepted and stored |
+| `204` | The information has been accepted and stored |
 | `403` | The authentication token is not present or invalid |
 | `429` | The client IP address has sent too many requests to the profile server in a given time window |
 
@@ -186,13 +185,13 @@ Example:
     "type" : "post",
     "ver" : "0.3",
     "post" : {
-        "createts" : "2018-09-16T12:23:18.751",
-        "type" : "text",
-        "message" : "Hello, world!",
-        "signature" : {
-            "key" : "C8xSIBPKRTcXxFix",
-            "aad" : "a0b1c2d3e4f5g6h7i8j9",
-            "sig" : XXXX
+        "createts": "2018-09-16T12:23:18.751",
+        "type": "text",
+        "message": "Hello, world!",
+        "signature": {
+            "key": "czlHMPEJcLb7jMUI",
+            "aad": "a0b1c2d3e4f5g6h7i8j9",
+            "sig": "PYXU88UoBpwAh_rp8pB2S5JwQaioeo-fcrZDjI9BMLPe8uZFtTj_dNSHM_ec_cPSy9J-jgr_y_qve7zhEkVTDw"
         }
     },
     "token" : "a0b1c2d3e4f5g6h7i8j9"
@@ -201,9 +200,9 @@ Example:
 
 To prevent session replay attacks, the token needs to be embedded in the actual signature as additional authenticated
 data (`aad`). On unencrypted payloads, the server needs to verify that the `token` value is part of the signature
-(see 8.1](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#81-signing-json-objects)) and that this signature is
+(see [8.1](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#81-signing-json-objects)) and that this signature is
 valid. On encrypted payloads, the server needs to verify that the `token` is set  as `aad` on the JWE object. Clients
-with the appropriate reader key then need to verify that the authentication tag on  the JWE object is  valid and that
+with the appropriate reader key then need to verify that the authentication tag on  the JWE object is valid and that
 this `aad` is included in the signature within the encrypted object (see
 [11.4](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#114-private-data-and-signatures)).
 
@@ -214,9 +213,9 @@ following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `type` | String | required | Type of request. Use `prepare_post` to obtain a one time publishing token. |
+| `type` | String | required | Fixed text string `prepare_post` |
 | `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
-| `timestamp` | Timestamp | required | Current time |
+| `timestamp` | Timestamp | required | Timestamp when the client created this request |
 | `group` | String | optional | In case of private posts, publish group id the client wants to use |
 
 This JSON object must be signed as defined in [chapter 8.1](#81-signing-json-objects) by either the profile key if the
@@ -227,7 +226,7 @@ The server responds with one of these status codes.
 
 | Status code | Meaning |
 |---|---|
-| `200` | A one time authentication token has been issued |
+| `200` | A one time publishing token has been issued |
 | `403` | The signature is not present, invalid or the signing key is not authorised to post |
 | `429` | The client IP address has sent too many requests to the profile server in a given time window |
 
@@ -237,6 +236,27 @@ If the request is accepted, the protocol server responds with a `200` status cod
 |---|---|---|---|
 | `token` | String | required | The issued one time publishing token |
 | `groupRound` | String | optional | If `group` has been present in the request, the most recent round id of this group |
+
+Example POST request:
+```json
+{
+    "type" : "prepare_post",
+    "ver" : "0.3",
+    "timestamp" : "2021-06-21T14:11:35.621",
+    "group" : "grp-friends",
+    "signature": {
+        "key": "QcUQRaiTiOuchvSy",
+        "sig": "vsHv1qr5nVwPOg0BJABMelvKf4KqG92Tf9HAARC-Tq8gcXHeBlbiVrJUZ7z8EcnNDyEHyccpvdSkpR2KpuWYDg"
+    }
+}
+```
+Example response:
+```json
+{
+    "token" : "a0b1c2d3e4f5g6h7i8j9",
+    "groupRound" : "key2"
+}
+```
 
 ##### 15.4 Attack mitigations
 This protocol wants to enable social interactions between profiles, like comments and reactions, while still maintaining
@@ -264,10 +284,81 @@ the `adad` in the signature in the decrypted plaintext.
 ###### 15.4.3 Privacy guarantees
 When a public, unencrypted post is sent to the publishing endpoint, the server obviously knows about the content and
 the author. Just like anybody else. But when an encrypted post is sent to the server, the server should only be able to
-learn as little as possible its author or any other metadata.  
+learn as little as possible about its author or any other metadata.  
 By issuing publishing keys to individual contributors, we are able to hide the actual identity of the contributor from
-the protocol server. However, the server is still able to correlate all posts from the same contributor and link them
-to the publishing key.  
+the protocol server. However, the server is still able to correlate all encrypted posts from the same contributor and
+link them  to a publishing key.  
 There are more sophisticated authentication schemes available like ring signatures, however there is only very little
-support for these in today's standard cryptographic libraries. This publishing mechanism is assumed to provide a good
-balance between security, privacy concerns and ease of implementation to be able to benefit as many people as possible.
+support for these in today's standard cryptographic libraries. The publishing scheme used in this protocol version is
+assumed to provide a good  balance between security, privacy concerns and ease of implementation to be able to benefit
+as many people as possible.
+
+## Proposed changes to SPXP-PME Spec
+
+### Insert new section at the end
+
+#### 10 Publishing key management
+To be able to authenticate requests for publishing tokens on the [publishing endpoint](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md##153-publishing-tokens),
+the server needs to know the set of keys which are authorized to post publicly and those authorized to post privately.  
+Although fundamentally different from reader keys, the lifecycle is similar: They are exchanged as part of connection
+packages and either need to be activated during the package exchange or they get published most commonly together with
+a set of reader keys when accepting connections. Hence, we tread these keys like reader keys and use the usual
+[key management endpoints](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md#8-key-management) and [package
+preparation endpoints](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md#91-preparing-a-package) with
+the following 3 level JSON object structure:
+
+| Level | Content |
+|---|---|
+| Outermost level | Fixed text string `@publish` |
+| Middle level | key id |
+| Inner level | Fixed text string `public` or `private` depending on allowed key use |
+
+To be compatible with round keys, the JWK of the public signing key is transferred as a String containing the JSON
+serialisation of the JWK.
+
+Example on the `<baseUri>/keys` endpoint:
+```json
+{
+    "@publish@" : {
+        "QcUQRaiTiOuchvSy" : {
+            "private" : "{\"kid\":\"QcUQRaiTiOuchvSy\",\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"rHdyo3zVbl50ufXSajF71HjidGdBwk-YQSKDM2hS5Yc\"}"
+        },
+        "czlHMPEJcLb7jMUI" : {
+            "public" : "{\"kid\":\"czlHMPEJcLb7jMUI\",\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg\"}"
+        }
+    }
+}
+```
+
+Example on the `<baseUri>/connect/packages` endpoint:
+```json
+{
+    "establishId" : "K4dwfD4wA67xaD-t",
+    "expires" : "2020-07-12T09:40:17.734",
+    "package" : {
+        "..." : "..."
+    },
+    "keys" : {
+        "audience1" : {
+            "group1" : {
+                "round1" : "<JWK>",
+                "round2" : "<JWK>",
+                "round3" : "<JWK>"
+            },
+            "group2" : {
+                "round1" : "<JWK>",
+                "round2" : "<JWK>",
+                "round3" : "<JWK>"
+            }
+        },
+        "@publish@" : {
+            "QcUQRaiTiOuchvSy" : {
+                "private" : "{\"kid\":\"QcUQRaiTiOuchvSy\",\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"rHdyo3zVbl50ufXSajF71HjidGdBwk-YQSKDM2hS5Yc\"}"
+            },
+            "czlHMPEJcLb7jMUI" : {
+                "public" : "{\"kid\":\"czlHMPEJcLb7jMUI\",\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg\"}"
+            }
+        }
+    }
+}
+```
