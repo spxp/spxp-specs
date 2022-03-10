@@ -1153,7 +1153,7 @@ Example response:
     "package" : {
         "protected" : "eyJlbmMiOiJBMjU2R0NNIn0",
         "unprotected" : {
-           "alg": "A256GCMKW"
+           "alg" : "A256GCMKW"
         },
         "recipients" : [ {
             "encrypted_key" : "hK_3SKBrl0o762L_4R8CSaKql9nzitYLhLOfBf4Uxd4",
