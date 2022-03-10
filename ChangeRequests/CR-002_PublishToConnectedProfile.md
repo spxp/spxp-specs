@@ -371,6 +371,36 @@ as many people as possible.
 
 ## Proposed changes to SPXP-PME Spec
 
+### In section "3 Service info"
+Add the following members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `endpoints.publishEndpoint` | String | optional | `publishEndpoint` to be used in the profile root document |
+
+Update the example:
+```json
+{
+    "server" : {
+        "vendor" : "ACME Corp.",
+        "product" : "Fancy SPXP Server (tm)",
+        "version" : "1.0",
+        "helpUri" : "http://acme.example.com/fancy-server/user-help.html"
+    },
+    "endpoints" : {
+        "friendsEndpoint" : "friends/alice",
+        "postsEndpoint" : "posts?profile=alice",
+        "keysEndpoint" : "keys/alice",
+        "connectEndpoint" : "connect/alice",
+        "connectResponseEndpoint" : "connectResponse/alice",
+        "publishEndpoint" : "publish/alice"
+    },
+    "limits" : {
+        "maxMediaSize" : 10485760
+    }
+}
+```
+
 ### Insert new section at the end
 
 #### 10 Publishing key management
