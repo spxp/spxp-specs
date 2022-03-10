@@ -1196,10 +1196,9 @@ If a client discovers a signed post by a profile on a peer profile with a differ
 more recent creation date as the latest profile timestamp on record, then this is a good reason to believe that the
 known profile URI delivers stale information.
 
-It is possible that a malicious actor is copying the profile root document to a different URI and trying to trick
-clients into switching over to this URI. This can be used to prevent clients from receiving updates from the original
-profile. To prevent this, it is important that clients check the `profileLocation` and `timestamp` in the new profile
-root document.  
+A malicious actor might want to prevent clients from receiving updates from a profile. They could copy the profile
+root document to a different URI and try tricking clients into switching over to this URI. To prevent this, it is
+important that clients check the `profileLocation` and `timestamp` in the new profile root document.
 In case a profile has been relocated multiple times, the `timestamp` value also helps clients to identify the most
 recent profile location.
 
