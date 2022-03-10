@@ -56,6 +56,82 @@ Change description of `publish` offering value as follows:
 |---|---|
 | `publish` | When accepting this request, the requestee is given additional information in the `publishing` object of the connection package to publish posts on this profile (only in its own name) |
 
+Example:
+```json
+{
+    "type" : "connection_request",
+    "ver" : "0.3",
+    "timestamp" : "2020-01-12T09:40:17.734",
+    "expires" : "2020-07-12T09:40:17.734",
+    "establishId" : "K4dwfD4wA67xaD-t",
+    "requester" : {
+        "uri" : "https://example.com/spxp/alice",
+        "publicKey" : {
+            "kid" : "C8xSIBPKRTcXxFix",
+            "kty" : "OKP",
+            "crv" : "Ed25519",
+            "x" : "skpRppgAopeYo9MWRdExl26rGA_z701tMoiuJ-jIjU8"
+        }
+    },
+    "requestee" : {
+        "uri" : "https://example.com/spxp/bob",
+        "publicKey" : {
+            "kid" : "czlHMPEJcLb7jMUI",
+            "kty" : "OKP",
+            "crv" : "Ed25519",
+            "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
+        }
+    },
+    "offering" : [
+        "read"
+    ],
+    "establishKey" : {
+        "kid" : "T7n_19BqWjU17l1s",
+        "kty" : "oct",
+        "alg" : "A256GCM",
+        "k" : "AnkrwD_Et1E0-FB0XYU38hpmdEGr0LOBO8O2HRdzgOw"
+    },
+    "signature" : {
+        "sig" : "hLNJLtg76uoynSDcW419Kt01tF3dylYBnhRvu3gUxLiyI7kcdQiwmv6Fmg-X0u0JGK2AHuzO14HIF3QQqz5xDA",
+        "key" : "C8xSIBPKRTcXxFix"
+    }
+}
+```
+
+### In section "14.7 Connect endpoint"
+
+Replace Example:
+```json
+{
+    "type" : "connection_request",
+    "ver" : "0.3",
+    "msg" : {
+        "protected" : "eyJlbmMiOiJBMjU2R0NNIn0",
+        "unprotected" : {
+            "alg" : "ECDH-ES"
+        },
+        "recipients" : [ {
+            "header" : {
+                "kid" : "-aiWD4qECT28QUyh",
+                "epk" : {
+                    "kid" : "aRXfOEpa0iKhx5s9",
+                    "kty" : "OKP",
+                    "crv" : "X25519",
+                    "x" : "Hdn21J5bP2y-Hw-LVDGOa9CNhZ3cRYXGJC0BhjAoVyI"
+                }
+            }
+        } ],
+        "iv": "0BDtOlc3hG-FR3bG",
+        "ciphertext": "KYsJ16xQMcpBy7IAJ9sxZPgjdZFEvoVhceEAO4LxSaW3cXXq2deCIUDyFzQlQ1PBQG_J9_seAEquUFu1bSX4LBEQojaIef5Ki7xdGr93hzO0TGysD_2LMwC1P16abjsbN8ton8Pwa8nFeQFPAhNl9w2Bw92OKgw-3ZuNm1q3F0GjJfFoqTEutsw2HHQXOByXlR2515r6qjyEfI0vSWfXk97nch5HAyRlPEBid4256K0AOlCQGsIJRF332KLP4pneP8maSYcRYTmbUmzT_-qHqlQ-dP1Eqiq7pNVNyww_VnlllAadte9XW_QERoR34rSlqEajSleo8Osp4AfHBR2HPcirm8CF0v15V6gnE3GdjY07VWz9pm129ScXKxm5bx3Ke-66c1pMxHwi3ElnMaIWLRimRkXWzrwQfJKx1HLmrs4rxMLee1LvCoS75nms46eiIJt882I2y3-xCL5FkGqHrMOACmdbznWM6GwHmtqr7fW5xVPDUrP7gImF9YK97Bf40D3NZxl6iLJQtVdBoIRpJ39Vi-S7VnSR9bZs4I_ZqcMSWVgUh-d6WfyksW1RANzU00SfXQTC_7vPDj1y9Z6IROcCH4Lc0mMxdRc0gQIJLt53JgythMwwbJpVX3TRRRyPHHnjf6Qfm71kBEDHHtiGpQ0HkeosovzZaQPgWe7sS64xWjJAfb6G6c1fP28NpHe9T6wqK0lqMmBWrWCBpjoSqOEF5pgnS_ljc_Xr9MNsekRzPg68dHlpEDdedrXPsECcsgdeAbwH0Bhqt0Wf9HESSmDTO_Os2R9XusdQvoBMSMtv__bIV_tcDZt47LrE-Fk-khY8n3JjSFfz-OKuPd2JNnp8RcCSMVwqMzY7Ifpsfz4YcxwORxsciBKPsejg3ijW6E6QfpGTVeo54oa7KSDgBapdzXjchfX_ZLW6Rgvsf49RzqSKesyddYyyXInb88C5S4KY-MaCyc1fJO6S0Lqk_hQck2mUe2rSfbs_rU-Imz2iiwQuZNk4d5YOTe1M7XLCSV6xOK1ZxCStBp-YI7hHD_8pV5Br107LVcsin0h3PDgNiXoLUzuu1ThxQEAyQINUAg3a7MnAcsSeRAtCQdZ8PAuK6KKYpkKfy7l5RlSEPZuARZbkhtngZa6y2TgCBSK-emTT_9ujZziigj3BwTIisvrVUCs5WKYUYmrRCyK-fQNaNGvGn2NXe0-qGgkbhayYOsfE3SGYE1aZ0GxT7PISpZrz6JgSJ249TEnViiyU6lXu41rzGBSvKRRPDOA4pjjXcIHetg7oWDe2W6bBfYgP_6Dd4meyc7x8PwUDyGY6H_MI_1AIZLIwkMBGd1pXFTJpEnAWv56nL0kEkXCVm2k7rcK575FzsYGJpapR9T_cB0FVwwoP7JkLc6ZBYw61xfSi5Iyd7ijGeJIrSIT9oM0xCRgaOAlj6jm4IVLEN3hXnNUOZxzjlG0tQB2-5dw6rb6ZShcieLESTIu7ppx3q0tLWooKmJZ8di_J6F4df4YP03W3iJTWI9IK",
+        "tag": "8E15Cnsiu300B77pn3PjiA"
+    },
+    "token" : {
+        "method" : "spxp.org:webflow:1.0",
+        "value" : "some-token-value"
+    }
+}
+```
+
 ### In section "14.8 Connection package exchange"
 
 Replace Example response:
@@ -309,7 +385,7 @@ the following 3 level JSON object structure:
 
 | Level | Content |
 |---|---|
-| Outermost level | Fixed text string `@publish` |
+| Outermost level | Fixed text string `@publish@` |
 | Middle level | key id |
 | Inner level | Fixed text string `public` or `private` depending on allowed key use |
 
