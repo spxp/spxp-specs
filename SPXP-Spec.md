@@ -1369,7 +1369,7 @@ the `adad` in the signature in the decrypted plaintext.
 #### 15.4.3 Privacy guarantees
 When a public, unencrypted post is sent to the publishing endpoint, the server obviously knows about the content and
 the author. Just like anybody else. But when an encrypted post is sent to the server, the server should only be able to
-learn as little as possible about its author or any other metadata.  
+learn as little information as possible about its author or any other metadata.  
 By issuing publishing keys to individual contributors, we are able to hide the actual identity of the contributor from
 the protocol server. However, the server is still able to correlate all encrypted posts from the same contributor and
 link them  to a publishing key.  
