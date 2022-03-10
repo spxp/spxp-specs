@@ -1329,9 +1329,9 @@ Example POST request:
     "ver" : "0.3",
     "timestamp" : "2021-06-21T14:11:35.621",
     "group" : "grp-friends",
-    "signature": {
-        "key": "QcUQRaiTiOuchvSy",
-        "sig": "vsHv1qr5nVwPOg0BJABMelvKf4KqG92Tf9HAARC-Tq8gcXHeBlbiVrJUZ7z8EcnNDyEHyccpvdSkpR2KpuWYDg"
+    "signature" : {
+        "key" : "QcUQRaiTiOuchvSy",
+        "sig" : "vsHv1qr5nVwPOg0BJABMelvKf4KqG92Tf9HAARC-Tq8gcXHeBlbiVrJUZ7z8EcnNDyEHyccpvdSkpR2KpuWYDg"
     }
 }
 ```
