@@ -136,6 +136,7 @@ Success response body:
 | `endpoints.keysEndpoint` | String | optional | `keysEndpoint` to be used in the profile root document |
 | `endpoints.connectEndpoint` | String | optional | `connectEndpoint` to be used in the profile root document |
 | `endpoints.connectResponseEndpoint` | String | optional | `responseEndpoint` to be used in connection requests |
+| `endpoints.publishEndpoint` | String | optional | `publishEndpoint` to be used in the profile root document |
 | `limits` | Object | required | Information about service limits as defined below |
 | `limits.maxMediaSize` | Integer | optional | Maximum size in bytes of media objects accepted by this server |
 
@@ -148,12 +149,13 @@ Example:
         "version" : "1.0",
         "helpUri" : "http://acme.example.com/fancy-server/user-help.html"
     },
-        "endpoints" : {
+    "endpoints" : {
         "friendsEndpoint" : "friends/alice",
         "postsEndpoint" : "posts?profile=alice",
         "keysEndpoint" : "keys/alice",
         "connectEndpoint" : "connect/alice",
-        "connectResponseEndpoint" : "connectResponse/alice"
+        "connectResponseEndpoint" : "connectResponse/alice",
+        "publishEndpoint" : "publish/alice"
     },
     "limits" : {
         "maxMediaSize" : 10485760
@@ -516,6 +518,72 @@ Example body on the keys endpoint:
         }
     },
     "audience2" : {
+    }
+}
+```
+
+## 10 Publishing key management
+To be able to authenticate requests for publishing tokens on the [publishing endpoint](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md##153-publishing-tokens),
+the server needs to know the set of keys which are authorized to post publicly and those authorized to post privately.  
+Although fundamentally different from reader keys, the lifecycle is similar: They are exchanged as part of connection
+packages and either need to be activated during the package exchange or they get published most commonly together with
+a set of reader keys when accepting connections. Hence, we treat these keys like reader keys and use the usual
+[key management endpoints](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md#8-key-management) and [package
+preparation endpoints](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md#91-preparing-a-package) with
+the following 3 level JSON object structure:
+
+| Level | Content |
+|---|---|
+| Outermost level | Fixed text string `@publish@` |
+| Middle level | key id |
+| Inner level | Fixed text string `public` or `private` depending on allowed key use |
+
+To be compatible with round keys, the JWK of the public signing key is transferred as a String containing the JSON
+serialisation of the JWK.
+
+Example on the `<baseUri>/keys` endpoint:
+```json
+{
+    "@publish@" : {
+        "QcUQRaiTiOuchvSy" : {
+            "private" : "{\"kid\":\"QcUQRaiTiOuchvSy\",\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"rHdyo3zVbl50ufXSajF71HjidGdBwk-YQSKDM2hS5Yc\"}"
+        },
+        "czlHMPEJcLb7jMUI" : {
+            "public" : "{\"kid\":\"czlHMPEJcLb7jMUI\",\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg\"}"
+        }
+    }
+}
+```
+
+Example on the `<baseUri>/connect/packages` endpoint:
+```json
+{
+    "establishId" : "K4dwfD4wA67xaD-t",
+    "expires" : "2020-07-12T09:40:17.734",
+    "package" : {
+        "..." : "..."
+    },
+    "keys" : {
+        "audience1" : {
+            "group1" : {
+                "round1" : "<JWK>",
+                "round2" : "<JWK>",
+                "round3" : "<JWK>"
+            },
+            "group2" : {
+                "round1" : "<JWK>",
+                "round2" : "<JWK>",
+                "round3" : "<JWK>"
+            }
+        },
+        "@publish@" : {
+            "QcUQRaiTiOuchvSy" : {
+                "private" : "{\"kid\":\"QcUQRaiTiOuchvSy\",\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"rHdyo3zVbl50ufXSajF71HjidGdBwk-YQSKDM2hS5Yc\"}"
+            },
+            "czlHMPEJcLb7jMUI" : {
+                "public" : "{\"kid\":\"czlHMPEJcLb7jMUI\",\"kty\":\"OKP\",\"crv\":\"Ed25519\",\"x\":\"vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg\"}"
+            }
+        }
     }
 }
 ```

@@ -71,6 +71,7 @@ is composed of the following members:
 | `friendsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “friends endpoint” as specified in [chapter 9](#9-friends-endpoint) |
 | `postsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “posts endpoint” as specified in [chapter 10](#10-posts-endpoint) |
 | `keysEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 12.2](#122-keys-endpoint) |
+| `publishEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “publish endpoint” as specified in [chapter 15](#15-publishing) |
 | `publicKey` | Object | optional | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (“kid”) |
 | `connect` | Object | optional | Additional details for the connection process, if and only if this object accepts connection requests as specified in [chapter 14](#14-profile-connections) |
 | `timestamp` | timestamp | optional | Timestamp helping clients identifying the most recent version of a profile. Required if `profileLocation` is present. |
@@ -851,8 +852,8 @@ Example:
         }
     },
     "signature" : {
-        "sig": "KwkZSI9hZQOxZbzlXviDvSL6ez2qJfimPLiP4vvFIOqgTqArimMagLuqYK8NM5F7BLRG5C_zp1VoExrU6Ps0DQ",
-        "key": "C8xSIBPKRTcXxFix"
+        "sig" : "KwkZSI9hZQOxZbzlXviDvSL6ez2qJfimPLiP4vvFIOqgTqArimMagLuqYK8NM5F7BLRG5C_zp1VoExrU6Ps0DQ",
+        "key" : "C8xSIBPKRTcXxFix"
     }
 }
 ```
@@ -867,7 +868,7 @@ following members:
 | `ver` | String | required | Most recent version of SPXP supported by the client |
 | `establishId` | String | required | Unique random connection establishment ID |
 | `readerKey` | Object | optional | JSON object describing a [reader key](#124-reader-keys) as JWK as defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) |
-| `publishingCertificate` | Object | optional | JSON object describing the certificate containing the [authorized signing key](#82-authorized-signing-keys) |
+| `publishing` | Object | optional | Object containing additional information for the publishing process as specified in [chapter 15](#15-publishing) if the peer is authorised to publish on this profile |
 
 Example:
 ```json
@@ -881,21 +882,8 @@ Example:
         "alg" : "A256GCM",
         "k" : "Dl3fyz_0lHaSeFl-TJxSTr2NET5H6t2SELmI5tiCFno"
     },
-    "publishingCertificate" : {
-        "publicKey" : {
-            "kid" : "czlHMPEJcLb7jMUI",
-            "kty" : "OKP",
-            "crv" : "Ed25519",
-            "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
-        },
-        "grant" : [ "post" ],
-        "signature" : {
-            "key" : "C8xSIBPKRTcXxFix",
-            "sig" : "PEekh7oCLQa0O4rCUPrH19yCJCLtEZfnumUlPrH0TPbq66Bj_aO71enf-P6gUttlgJFRRfvD1D7wAAYZaX6PCQ"
-        }
-    },
     "signature" : {
-        "sig" : "KwkZSI9hZQOxZbzlXviDvSL6ez2qJfimPLiP4vvFIOqgTqArimMagLuqYK8NM5F7BLRG5C_zp1VoExrU6Ps0DQ",
+        "sig" : "MYD_wt5ARYtLCpjDbCxFMmjhO5V4VOEbgs10snKifa13cwZgsNBwuCjI4b2AvGznAQKft2EoiQf-TD3kNOm8Ag",
         "key" : "C8xSIBPKRTcXxFix"
     }
 }
@@ -911,7 +899,7 @@ The initiator prepares the connection by sending the reader key and encrypted co
 server, associating it with the _connection establishment ID_. This preparation must enable the profile server to later
 perform the [connection package exchange](#148-connection-package-exchange).  
 The management of profile servers, including this operation, is not part of SPXP. See [chapter
-15](#16-profile-extensions) for details.
+15](#17-profile-extensions) for details.
 
 ### 14.5 Connect Message
 To initiate a connection, the client generates a JSON object with the following members:
@@ -934,7 +922,7 @@ Valid `offering` values are (case sensitive):
 | Offering | Providing |
 |---|---|
 | `read` | When accepting this request, the requestee is given a [reader key](#124-reader-keys) with extended access to the requesters data |
-| `publish` | When accepting this request, the requestee is given a [signing key](#82-authorized-signing-keys) allowing to publish posts on this profile (only in its own name) |
+| `publish` | When accepting this request, the requestee is given additional information in the `publishing` object of the connection package to publish posts on this profile (only in its own name) |
 
 Example:
 ```json
@@ -963,8 +951,7 @@ Example:
         }
     },
     "offering" : [
-        "read",
-        "publish"
+        "read"
     ],
     "establishKey" : {
         "kid" : "T7n_19BqWjU17l1s",
@@ -973,7 +960,7 @@ Example:
         "k" : "AnkrwD_Et1E0-FB0XYU38hpmdEGr0LOBO8O2HRdzgOw"
     },
     "signature" : {
-        "sig" : "vzKvMxXl0JGIDFEqiPv2rMokMCW-f3DR1nTi-pFebddvBIDGChSsUttsiPP5wFLzTvyNW6NEcDSCfbNKz5qeDw",
+        "sig" : "hLNJLtg76uoynSDcW419Kt01tF3dylYBnhRvu3gUxLiyI7kcdQiwmv6Fmg-X0u0JGK2AHuzO14HIF3QQqz5xDA",
         "key" : "C8xSIBPKRTcXxFix"
     }
 }
@@ -1084,13 +1071,13 @@ Example:
                     "kid" : "aRXfOEpa0iKhx5s9",
                     "kty" : "OKP",
                     "crv" : "X25519",
-                    "x" : "3egow_gyKt3dnv_XrrtDavZxM_NQnTMMh1fDdhh2mS4"
+                    "x" : "Hdn21J5bP2y-Hw-LVDGOa9CNhZ3cRYXGJC0BhjAoVyI"
                 }
             }
         } ],
-        "iv" : "GC6OBOUW21bxIWGw",
-        "ciphertext" : "O_Dg4E4KhLivXUwPYV3VLmyNruzDM_8FZGv2WYwnEixaQwdDXQvWmqypeVQXBnnprmzNYz0dhcHI72GBxU1AzK8Fyvdd5CY5IQnIAq6PzUvCP9lS1G7pSM3Qu1hTMOQWlr_o5RohjzwLG3pFHw62rR-xfA0q89ras3aAZLrDpi5bFGA4BAqsYpqzyKdLFSFQDYxidiE1aNYXgJ0qFPrHbj5JkB051wwiD5OYlmYZMVA3OCNq77wbaBi32fEXQRLBxKRVVmItjRflUYKz4HTQPu0zrv-eg1gB5WnhfjQ8WIIY3384XCK11bEy1GzsUgLGiMPVoOOec1G-k5ZTX8Ncqc1vdja8ureayjY-ZCMrTUazv70ubVh0z36vO3oA_qgmq0_mFvu8UsTHJlMZ6JgG1dW7vLnHWo4ZfNo0Rz6s3jF_pZVaRnYySajuoiEFCVJ8QmhqZ7ErKHATway6fsrB1bp-txXDDfFMzamfhAjM2F-YviHUKheReXLDP_a4xVFZg5WwvbcVqjDh03M679HOKb9flki5qTs-yHNyJWScDHTvjdgYER4DcXYCnF8B5eqfGjtHqFyItOxlXc1fJRc9h7TClj60Np_kk6Bh7-o4fO0LbbZ_DLUpaWhNxx1ur0DcmfSQFJub3pOuX3idDrEtjQQD-GiEYTGylhv8TD9nuIsOLBPV4cdPk3TkibYWyfSYtYoeNqNI8MUFTZttLvi4ix0Qq0uSvqtqnnGS08Onz3-ZFQ2nmo3SoAli7ylArh7qiScugd5xDfHXUtQD5GJYb9f_RziP2GJOqIgwQpFIGleqk5ZHi16TFMcNX7cstyLsD6Xp5DPAIAaomDOtolkvzBawdbHZ0jsfmTGpIYmXoAS_D8xmHHyAkTJBJL0n0SSw6WMBr1bL2iG6_GSrsDJ2n9AEnHh-rTaEH0cEVyk_fzFn3FfK2GfbslKeblZ9uyp4PQlmplKKBpjl_tdB3DiEPgBQOprR3UD7Pll-Y9CrWxoHeYvtvunNswMp7CtCAEkNWkbY8pZX0HLjayJa5B7n7Hr1IH4_mG5FgGWYq-p8MqhzBRwvtlYasMrSYBcMI0WT8rZWX3-wxISPuR7TNTNfVnkoK5v9fOF9ceD9Bkhy54_qgNN6IlvR38Z-dWciR7pqZ0Hu-lstH6RmlMwidDfcZaL_VOsq7wCLyiyuldbw3p3G_Dw1RllssG8XZjPBfeP-S5EB7fSqFOP03K4t8BeTUF_a_DcvVUEkzFGTmDM995lxb5ek8cbgGDOnR4lme2usko29TPkmggfGUfF7LyA_3skxdGQYOIKjw-yTpLVwRCYdQgRLkz8bY55Vz5K2kDUaG6vS2_3w8hmx_sFuYGGny-pPOv3OCUmFNZP0yRpPW1QdIPxrujDuYcsv05bGil3kna4apvJFocSYd8uQPfWAwD1uGqWCH92B27facsgCkaJocS4gM1pWf-ZdDkY1Eg6N_XCRXWD9kSI2Zoj0EcsPAPoXs8IF",
-        "tag" : "NTF9X-OZrkENipIVNKcTDw"
+        "iv" : "0BDtOlc3hG-FR3bG",
+        "ciphertext" : "KYsJ16xQMcpBy7IAJ9sxZPgjdZFEvoVhceEAO4LxSaW3cXXq2deCIUDyFzQlQ1PBQG_J9_seAEquUFu1bSX4LBEQojaIef5Ki7xdGr93hzO0TGysD_2LMwC1P16abjsbN8ton8Pwa8nFeQFPAhNl9w2Bw92OKgw-3ZuNm1q3F0GjJfFoqTEutsw2HHQXOByXlR2515r6qjyEfI0vSWfXk97nch5HAyRlPEBid4256K0AOlCQGsIJRF332KLP4pneP8maSYcRYTmbUmzT_-qHqlQ-dP1Eqiq7pNVNyww_VnlllAadte9XW_QERoR34rSlqEajSleo8Osp4AfHBR2HPcirm8CF0v15V6gnE3GdjY07VWz9pm129ScXKxm5bx3Ke-66c1pMxHwi3ElnMaIWLRimRkXWzrwQfJKx1HLmrs4rxMLee1LvCoS75nms46eiIJt882I2y3-xCL5FkGqHrMOACmdbznWM6GwHmtqr7fW5xVPDUrP7gImF9YK97Bf40D3NZxl6iLJQtVdBoIRpJ39Vi-S7VnSR9bZs4I_ZqcMSWVgUh-d6WfyksW1RANzU00SfXQTC_7vPDj1y9Z6IROcCH4Lc0mMxdRc0gQIJLt53JgythMwwbJpVX3TRRRyPHHnjf6Qfm71kBEDHHtiGpQ0HkeosovzZaQPgWe7sS64xWjJAfb6G6c1fP28NpHe9T6wqK0lqMmBWrWCBpjoSqOEF5pgnS_ljc_Xr9MNsekRzPg68dHlpEDdedrXPsECcsgdeAbwH0Bhqt0Wf9HESSmDTO_Os2R9XusdQvoBMSMtv__bIV_tcDZt47LrE-Fk-khY8n3JjSFfz-OKuPd2JNnp8RcCSMVwqMzY7Ifpsfz4YcxwORxsciBKPsejg3ijW6E6QfpGTVeo54oa7KSDgBapdzXjchfX_ZLW6Rgvsf49RzqSKesyddYyyXInb88C5S4KY-MaCyc1fJO6S0Lqk_hQck2mUe2rSfbs_rU-Imz2iiwQuZNk4d5YOTe1M7XLCSV6xOK1ZxCStBp-YI7hHD_8pV5Br107LVcsin0h3PDgNiXoLUzuu1ThxQEAyQINUAg3a7MnAcsSeRAtCQdZ8PAuK6KKYpkKfy7l5RlSEPZuARZbkhtngZa6y2TgCBSK-emTT_9ujZziigj3BwTIisvrVUCs5WKYUYmrRCyK-fQNaNGvGn2NXe0-qGgkbhayYOsfE3SGYE1aZ0GxT7PISpZrz6JgSJ249TEnViiyU6lXu41rzGBSvKRRPDOA4pjjXcIHetg7oWDe2W6bBfYgP_6Dd4meyc7x8PwUDyGY6H_MI_1AIZLIwkMBGd1pXFTJpEnAWv56nL0kEkXCVm2k7rcK575FzsYGJpapR9T_cB0FVwwoP7JkLc6ZBYw61xfSi5Iyd7ijGeJIrSIT9oM0xCRgaOAlj6jm4IVLEN3hXnNUOZxzjlG0tQB2-5dw6rb6ZShcieLESTIu7ppx3q0tLWooKmJZ8di_J6F4df4YP03W3iJTWI9IK",
+        "tag" : "8E15Cnsiu300B77pn3PjiA"
     },
     "token" : {
         "method" : "spxp.org:webflow:1.0",
@@ -1140,7 +1127,9 @@ Example POST request:
     "establishId" : "K4dwfD4wA67xaD-t",
     "package" : {
         "protected" : "eyJlbmMiOiJBMjU2R0NNIn0",
-        "unprotected" : { "alg" : "A256GCMKW" },
+        "unprotected" : {
+           "alg" : "A256GCMKW"
+        },
         "recipients" : [ {
             "encrypted_key" : "6IwyDn2vjPer0_IgHE0-Cm9LHXJ8QN94jyRW8nWOaHU",
             "header" : {
@@ -1163,7 +1152,9 @@ Example response:
     "establishId" : "K4dwfD4wA67xaD-t",
     "package" : {
         "protected" : "eyJlbmMiOiJBMjU2R0NNIn0",
-        "unprotected" : { "alg" : "A256GCMKW" },
+        "unprotected" : {
+           "alg" : "A256GCMKW"
+        },
         "recipients" : [ {
             "encrypted_key" : "hK_3SKBrl0o762L_4R8CSaKql9nzitYLhLOfBf4Uxd4",
             "header" : {
@@ -1173,13 +1164,221 @@ Example response:
             }
         } ],
         "iv" : "gERFsZnJVr-VmMf0",
-        "ciphertext" : "VYSJXeISVSnMmQ0cL8WXHhRQrI5zfLT6x6jcYPUJ5RuPdikv53LonU_bjI95erMOjP1f4GLzSeTm0Ghrp9IfpNUiPoN5JMiqcGhZANO2K9eoKU3lfQnApaNotxLdNl8zM99pmJQ5Jn6mzUhGW1RuMIrBJAkGM8TVNGbHLHsvkfNriqrhwDiOvuIJ7zsYTTp9axbhxHQ61QyT-2oj8_kC2Xx0CtpnFmSH0C5X0fEH5ZcB3bFT4OKZq7Ma_9GBpg1QUG9pjzyi8fCE2Ci-11rO37hbJuATHcbr8BuaJqpMTmBhb52PXIfuXj7pHFTe0aLAgNZegDUqjKuIE84a_4Wc9RL4Z9TpLveZgQ-QZngJ1uJXBp5o-vB6FxME9FXoV7vojBfmsxTt3EXyHlj886tmy62dnGaJmoXvKT2ZoDCG0SN4KVi4il9xQV-3Tf2YKcAekoKQH2AhRDxVrK6UwNG8m5hdEGc_FPzfzWY222f0GGbzO089g0PFlqqbISmBg2ylblLQFHOHOsd0hXc7rW3CLh6HqomSw6dlIQSs_dGKMAnENIfP57Z6SkabTBkROwv42BcItJfWCTD7y0o_8Mn4G2PsHeVjqfDtQnLv4Id4KUgbuMxz3SKj0S0YxxjFtNMWe-5tlETJtuDOeYxvpTRYK3jH93meoM9VtQCNZrsQ3QnDv3TqYCuR1DDAJDGBM8loIzEMKU1AbeRZTA0HAqdw_kEL9KBxIL6htUDREoJ53PcHocBu79Z230DyYOjLrSEkdSKfA1EKQJhax8J3tvO-sSGSZgCCivb4n6yOdo_5Dlp0bkVA5qjOuamcbZyG10c3_uSOxN8QXcYvptqE1klTkA9oIo35qISos6xzZnO798937iEIiV-mZIdd7DprmBlhwjwU1rnavACqdyl1YKckQHJuRFYh8eqe3hIKunDqnqD5euFC5WJyKacLRT3WQlgWogFakmBIuhCSJwq4hrgblW9uE6PpqCaz1oKy-UmEmXdo5a-U6FnXAshUY7I_rg2x0LKVDaRKK1PviASnaipMQ3cgx1Lzl_7Si8K6Ui92hj2lhJ4ClhXvM8SYcHs_CGeZ3o5r0lVqIWTBnbQoDA8bRmOuGBdRYL3xbN8Bganj1YvIvnCaDP1zPY8cl8ODtWE6iMq1v44RLo1uH643",
-        "tag" : "uk3bFnvhaZdu7XTlh4pIMA"
+        "ciphertext" : "xV7fJA8uaJMzYtDkFHjj0DNL0j-MYStpbtaTHZwDBUisW38k_RcYfXciBMXgDJFAIgReurnwiqqOSrPCIijTSTU4NKG4h6oULTyYkdkPJ_zsVe0CQpUy2UWN_uwFIoCZTxh7QWOKEckSJf17a-XjBfXViaQ9GVR4Ht5Wxh9xyVqGpx1z1JZwWneKl2FlK3IY1eD2Rn3OPvLD1sNY7584-zxBmxa5hMuEB59PgVX7GlrSpUdQtV7izEGq4m8aoocLbDXxovBgOQjcHi9d-fcmR0NPTDSbFb-KVi5ZiCP6kukVIese4o_XKW4EHVEgJOcFu7jnjUnt0lhh0UXRC0DJqaKj7R8KcgYtKAzV5041oqEXMlYDtpl7mxDgbsFYfgF0q0wc9UtqNqba5ZPTthJhc4ZeY53V-y8uRNgSWl5r39-2n3UtPlmrkwW2ku7oG5g8qs9cuT8fldIyZKt7uuptm5pIss6-syjA3EG5zCmHgyAAWGwx7gEzLmZeSGAUvb5JnbevczNk4rmxn52yEYLX8VQfScWOAdrohi7g9Pc9y7EJYNmWw1oKzdue8KfC_0EhujyCYBBEu3-N",
+        "tag" : "EhOPkRCOPwE57I1KueCKrw"
     }
 }
 ```
 
-## 15 Profile Relocation
+## 15 Publishing
+The information exposed through SPXP can originate from any backend, like a content management system. If a profile
+accepts contributions from peer profiles, or any other authorized source, it declares a `publishEndpoint` in the profile
+root document ([5](#5-social-profile-root-document)).  
+The authorized source needs to be in possession of a valid [authorized signing key (8.2)](#82-authorized-signing-keys)
+to sign its contribution. In the case of private contributions, the source additionally needs to possess a _publishing
+key_ and needs to know the encryption group to be used. All of these are contained in the [publishing object
+(15.1)](#151-publishing-object-in-connection-package) of the [connection package](#143-connection-package) exchanged
+during the connection process.
+
+### 15.1 Publishing object in connection package
+If a profile grants publishing permissions to a peer profile during a connection process, it provides the required
+information  as part of the `publishing` object in the [connection package](#143-connection-package) with
+the following  members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `certificate` | Object | required | JSON object describing the certificate containing the [authorized signing key](#82-authorized-signing-keys) |
+| `postPublic` | Boolean | required | Flag indicating if the peer is authorised to make public unencrypted posts on this profile |
+| `postPrivate` | Object | optional | JSON object containing additional information for the private publishing process |
+
+The optional `postPrivate` JSON objects has the following members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `publishKey` | Object | required | JSON object describing the signing key pair used in the private publishing process as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1) |
+| `groups` | Object | required | JSON object containing a mapping between end user display names and group ids of publish groups which can be used for encrypted private posts |
+
+Example within a connection package:
+```json
+{
+    "type" : "connection_package",
+    "ver" : "0.3",
+    "establishId" : "K4dwfD4wA67xaD-t",
+    "readerKey" : {
+        "kid" : "ABCD.1234",
+        "kty" : "oct",
+        "alg" : "A256GCM",
+        "k" : "Dl3fyz_0lHaSeFl-TJxSTr2NET5H6t2SELmI5tiCFno"
+    },
+    "publishing" : {
+        "postPublic" : true,
+        "postPrivate" : {
+            "publishKey" : {
+                "kid" : "QcUQRaiTiOuchvSy",
+                "kty" : "OKP",
+                "crv" : "Ed25519",
+                "x" : "rHdyo3zVbl50ufXSajF71HjidGdBwk-YQSKDM2hS5Yc",
+                "d" : "_2d29YJOonjeuCdiYmou43Upi2McbSkJZ3rI-bR09ZI"
+            },
+            "groups" : {
+                "Friends" : "grp-friends",
+                "Family" : "grp-family"
+            }
+        },
+      "certificate" : {
+            "publicKey" : {
+                "kid" : "czlHMPEJcLb7jMUI",
+                "kty" : "OKP",
+                "crv" : "Ed25519",
+                "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
+            },
+            "grant" : [ "post" ],
+            "signature" : {
+                "key" : "C8xSIBPKRTcXxFix",
+                "sig" : "PEekh7oCLQa0O4rCUPrH19yCJCLtEZfnumUlPrH0TPbq66Bj_aO71enf-P6gUttlgJFRRfvD1D7wAAYZaX6PCQ"
+            }
+        }
+    },
+    "signature" : {
+        "sig" : "p5XKQ3uuQW7UwZUy72qLcfNV_jDzFUSdmu5mAsMDn5ju4mPpHx7bJatohbVQEhW8t8CFiN6LT1xZ-g0j9ZXABA",
+        "key" : "C8xSIBPKRTcXxFix"
+    }
+}
+```
+
+### 15.2 Publish endpoint
+To publish a post on the peer profile, the protocol client sends an HTTP POST request to the “publish endpoint“ with a
+JSON object as HTTP  body. This object is composed of the following members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `type` | String | required | Fixed text string `post` |
+| `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
+| `post` | Object | required | The [post object](#10-posts-endpoint) to be published. Can be encrypted. |
+| `token` | String | required | One time publishing token as specified in [chapter 15.3](#153-publishing-tokens) |
+
+The server responds with one of these status codes.
+
+| Status code | Meaning |
+|---|---|
+| `204` | The information has been accepted and stored |
+| `403` | The authentication token is not present or invalid |
+| `429` | The client IP address has sent too many requests to the profile server in a given time window |
+
+Example:
+```json
+{
+    "type" : "post",
+    "ver" : "0.3",
+    "post" : {
+        "createts" : "2018-09-16T12:23:18.751",
+        "type" : "text",
+        "message" : "Hello, world!",
+        "signature" : {
+            "key" : "czlHMPEJcLb7jMUI",
+            "aad" : "a0b1c2d3e4f5g6h7i8j9",
+            "sig" : "PYXU88UoBpwAh_rp8pB2S5JwQaioeo-fcrZDjI9BMLPe8uZFtTj_dNSHM_ec_cPSy9J-jgr_y_qve7zhEkVTDw"
+        }
+    },
+    "token" : "a0b1c2d3e4f5g6h7i8j9"
+}
+```
+
+To prevent session replay attacks, the token needs to be embedded in the actual signature as additional authenticated
+data (`aad`). On unencrypted payloads, the server needs to verify that the `token` value is part of the signature
+(see [8.1](#81-signing-json-objects)) and that this signature is  valid. On encrypted payloads, the server needs to
+verify that the `token` is set  as `aad` on the JWE object. Clients with the appropriate reader key then need to verify
+that the authentication tag on  the JWE object is valid and that this `aad` is included in the signature within the
+encrypted object (see [11.4](#114-private-data-and-signatures)).
+
+### 15.3 Publishing tokens
+To prepare the publishing process, the protocol client first needs to obtain a one time publishing token by sending
+an HTTP POST request to the “publish  endpoint“  with a JSON object as HTTP body. This object is composed of the
+following members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `type` | String | required | Fixed text string `prepare_post` |
+| `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
+| `timestamp` | Timestamp | required | Timestamp when the client created this request |
+| `group` | String | optional | In case of private posts, publish group id the client wants to use |
+
+This JSON object must be signed as defined in [chapter 8.1](#81-signing-json-objects) by either the profile key if the
+protocol client wants to make a public post or by the "publish key" ([15.1](#151-publishing-object-in-connection-package))
+if the client wants to make a private post.
+
+The server responds with one of these status codes.
+
+| Status code | Meaning |
+|---|---|
+| `200` | A one time publishing token has been issued |
+| `403` | The signature is not present, invalid or the signing key is not authorised to post |
+| `429` | The client IP address has sent too many requests to the profile server in a given time window |
+
+If the request is accepted, the protocol server responds with a `200` status code and a JSON object with these members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `token` | String | required | The issued one time publishing token |
+| `groupRound` | String | optional | If `group` has been present in the request, the most recent round id of this group |
+
+Example POST request:
+```json
+{
+    "type" : "prepare_post",
+    "ver" : "0.3",
+    "timestamp" : "2021-06-21T14:11:35.621",
+    "group" : "grp-friends",
+    "signature" : {
+        "key" : "QcUQRaiTiOuchvSy",
+        "sig" : "vsHv1qr5nVwPOg0BJABMelvKf4KqG92Tf9HAARC-Tq8gcXHeBlbiVrJUZ7z8EcnNDyEHyccpvdSkpR2KpuWYDg"
+    }
+}
+```
+Example response:
+```json
+{
+    "token" : "a0b1c2d3e4f5g6h7i8j9",
+    "groupRound" : "key2"
+}
+```
+
+### 15.4 Attack mitigations
+This protocol wants to enable social interactions between profiles, like comments and reactions, while still maintaining
+end to end privacy. This makes authenticating legitimate requests more challenging for the protocol server if the goal
+is to prevent the server from learning too many details about the contributor. This chapter discusses different attacks
+on this process and how these are mitigated.
+
+#### 15.4.1 Preventing Session Replay attacks against token acquisition
+It is possible that a malicious actor captures a `prepare_post` request and simply replays this request to the server to
+get a fresh token. To prevent this, the server needs to record the last used `timestamp` per signing key and only accept
+requests with a more recent timestamp. This is also limiting DoS attacks as the client needs to sign each new request
+before being able to send it.
+
+#### 15.4.2 Preventing Session Replay attacks on the publishing endpoint
+Since the server does not know anything about the content of the encrypted payload, the publishing endpoint is
+vulnerable to session replay attacks. An actor with publishing permissions could simply take any existing post, encrypt
+it again with a new IV or round key, acquire a fresh token, and then send it to the publishing endpoint. The server
+would always accept it as long as the token is valid. It is intentionally not possible for the server to detect if the
+request to the "publish endpoint" has been sent by the same actor who signed the post.  
+By embedding the token in the JWE object as additionally authenticated data, we can bind the encrypted object to this
+individual token in a way that can be checked by the server without exposing details about the encrypted data. Protocol
+clients consuming and decrypting this JWE object then need to validate the `aad` outside on the encrypted JWE against
+the `adad` in the signature in the decrypted plaintext.
+
+#### 15.4.3 Privacy guarantees
+When a public, unencrypted post is sent to the publishing endpoint, the server obviously knows about the content and
+the author. Just like anybody else. But when an encrypted post is sent to the server, the server should only be able to
+learn as little information as possible about its author or any other metadata.  
+By issuing publishing keys to individual contributors, we are able to hide the actual identity of the contributor from
+the protocol server. However, the server is still able to correlate all encrypted posts from the same contributor and
+link them  to a publishing key.  
+There are more sophisticated authentication schemes available like ring signatures, however there is only very little
+support for these in today's standard cryptographic libraries. The publishing scheme used in this protocol version is
+assumed to provide a good  balance between security, privacy concerns and ease of implementation to be able to benefit
+as many people as possible.
+
+## 16 Profile Relocation
 A profile can be transferred to a new profile URI while maintaining its profile key pair. Clients can validate this
 transfer by checking the profile's signature on the new profile URI and update their internal state. A client should
 only accept a new profile URI if the new profile root document ([5](#5-social-profile-root-document)) has a more recent
@@ -1187,11 +1386,11 @@ timestamp and is including the new profile URI as `profileLocation`.
 If the previous service provider is cooperative, it can be used to announce the new profile location by updating the
 profile root document on the previous provider with the new `profileLocation`.  
 Connected peer profiles which discover such a profile relocation must update all references to this profile published
-via the "friends endpoint" ([9](../SPXP-Spec.md#9-friends-endpoint)) using the new profile URI and must only use this
-new profile URI for any references used in posts or anywhere else in this protocol from now on.  
+via the "friends endpoint" ([9](#9-friends-endpoint)) using the new profile URI and must only use this new profile URI
+for any references used in posts or anywhere else in this protocol from now on.  
 If a profile is no longer accessible, or the client has reason to believe that a profile URI delivers stale information,
 it should use profile references published by other profiles, e.g. via their "friends endpoint"
-([9](../SPXP-Spec.md#9-friends-endpoint)), to discover the new profile URI.  
+([9](#9-friends-endpoint)), to discover the new profile URI.  
 If a client discovers a signed post by a profile on a peer profile with a different URI in the profile reference and a
 more recent creation date as the latest profile timestamp on record, then this is a good reason to believe that the
 known profile URI delivers stale information.
@@ -1202,7 +1401,7 @@ important that clients check the `profileLocation` and `timestamp` in the new pr
 In case a profile has been relocated multiple times, the `timestamp` value also helps clients to identify the most
 recent profile location.
 
-## 16 Profile Extensions
+## 17 Profile Extensions
 This protocol specification intentionally focuses on the communication between client applications and servers hosting
 profiles the client is interested in. It does not define any requirements or make suggestions on how to actually
 implement client or server applications. This leaves implementors maximum flexibility on how to add this protocol to
@@ -1218,7 +1417,7 @@ Implementors can freely chose if they want to provide these extensions and to wh
 
 #### SPXP - Profile Management Extension
 Defines how profile owners can manage the server hosting their own profile and update the information that gets published.  
-See [SPXP - Profile Management Extension Spec](SPXP-SPE-Spec.md)
+See [SPXP - Profile Management Extension Spec](./SPXP-PME-Spec.md)
 
 #### SPXP - Service Provider Extension
 A service provider can offer the hosting of profiles. This specification defines how the initial setup of the profile
@@ -1365,5 +1564,15 @@ Ephemeral Connection Establishment Key between “Crypto Alice” and “Crypto 
     "kty" : "oct",
     "alg" : "A256GCM",
     "k" : "AnkrwD_Et1E0-FB0XYU38hpmdEGr0LOBO8O2HRdzgOw"
+}
+```
+Publishing Keypair issued by “Crypto Alice” for “Crypto Bob” to used in chapter 15:
+```json
+{
+    "kid" : "QcUQRaiTiOuchvSy",
+    "kty" : "OKP",
+    "crv" : "Ed25519",
+    "x" : "rHdyo3zVbl50ufXSajF71HjidGdBwk-YQSKDM2hS5Yc",
+    "d" : "_2d29YJOonjeuCdiYmou43Upi2McbSkJZ3rI-bR09ZI"
 }
 ```
