@@ -1214,11 +1214,11 @@ Example within a connection package:
         "postPublic" : true,
         "postPrivate" : {
             "publishKey" : {
-                "kid": "QcUQRaiTiOuchvSy",
-                "kty": "OKP",
-                "crv": "Ed25519",
-                "x": "rHdyo3zVbl50ufXSajF71HjidGdBwk-YQSKDM2hS5Yc",
-                "d": "_2d29YJOonjeuCdiYmou43Upi2McbSkJZ3rI-bR09ZI"
+                "kid" : "QcUQRaiTiOuchvSy",
+                "kty" : "OKP",
+                "crv" : "Ed25519",
+                "x" : "rHdyo3zVbl50ufXSajF71HjidGdBwk-YQSKDM2hS5Yc",
+                "d" : "_2d29YJOonjeuCdiYmou43Upi2McbSkJZ3rI-bR09ZI"
             },
             "groups" : {
                 "Friends" : "grp-friends",
