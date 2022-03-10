@@ -527,7 +527,7 @@ To be able to authenticate requests for publishing tokens on the [publishing end
 the server needs to know the set of keys which are authorized to post publicly and those authorized to post privately.  
 Although fundamentally different from reader keys, the lifecycle is similar: They are exchanged as part of connection
 packages and either need to be activated during the package exchange or they get published most commonly together with
-a set of reader keys when accepting connections. Hence, we tread these keys like reader keys and use the usual
+a set of reader keys when accepting connections. Hence, we treat these keys like reader keys and use the usual
 [key management endpoints](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md#8-key-management) and [package
 preparation endpoints](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md#91-preparing-a-package) with
 the following 3 level JSON object structure:
