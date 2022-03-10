@@ -1,5 +1,5 @@
 # CR-001 - Profile Relocation
-Final - Target SPXP 0.4
+Accepted - Target SPXP 0.4
 
 It has always been an early goal of this protocol to avoid user lock-in on specific applications or providers. The
 protocol intentionally gives the profile key precedence over the URI
