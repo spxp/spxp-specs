@@ -1240,7 +1240,7 @@ Example within a connection package:
         }
     },
     "signature" : {
-        "sig": "p5XKQ3uuQW7UwZUy72qLcfNV_jDzFUSdmu5mAsMDn5ju4mPpHx7bJatohbVQEhW8t8CFiN6LT1xZ-g0j9ZXABA",
+        "sig" : "p5XKQ3uuQW7UwZUy72qLcfNV_jDzFUSdmu5mAsMDn5ju4mPpHx7bJatohbVQEhW8t8CFiN6LT1xZ-g0j9ZXABA",
         "key" : "C8xSIBPKRTcXxFix"
     }
 }
