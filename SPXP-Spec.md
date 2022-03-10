@@ -1271,13 +1271,13 @@ Example:
     "type" : "post",
     "ver" : "0.3",
     "post" : {
-        "createts": "2018-09-16T12:23:18.751",
-        "type": "text",
-        "message": "Hello, world!",
-        "signature": {
-            "key": "czlHMPEJcLb7jMUI",
-            "aad": "a0b1c2d3e4f5g6h7i8j9",
-            "sig": "PYXU88UoBpwAh_rp8pB2S5JwQaioeo-fcrZDjI9BMLPe8uZFtTj_dNSHM_ec_cPSy9J-jgr_y_qve7zhEkVTDw"
+        "createts" : "2018-09-16T12:23:18.751",
+        "type" : "text",
+        "message" : "Hello, world!",
+        "signature" : {
+            "key" : "czlHMPEJcLb7jMUI",
+            "aad" : "a0b1c2d3e4f5g6h7i8j9",
+            "sig" : "PYXU88UoBpwAh_rp8pB2S5JwQaioeo-fcrZDjI9BMLPe8uZFtTj_dNSHM_ec_cPSy9J-jgr_y_qve7zhEkVTDw"
         }
     },
     "token" : "a0b1c2d3e4f5g6h7i8j9"
