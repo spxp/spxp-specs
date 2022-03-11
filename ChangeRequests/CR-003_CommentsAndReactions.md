@@ -5,6 +5,33 @@ Draft - Target SPXP 0.4
 
 ## Proposed changes to SPXP Spec
 
+### In section "8.2 Authorized signing keys"
+
+Change the table of grant types as follows:
+
+| Grant | Allows to sign |
+|---|---|
+| `post` | Individual post objects of types other than `comment` and `reaction`. If not combined with `impersonate`, then only in their own name. |
+| `comment` | Individual post objects of type `comment`. If not combined with `impersonate`, then only in their own name. |
+| `react` | Individual post objects of type `reaction`. If not combined with `impersonate`, then only in their own name. |
+
+Change example:
+```json
+{
+    "publicKey" : {
+        "kid" : "czlHMPEJcLb7jMUI",
+        "kty" : "OKP",
+        "crv" : "Ed25519",
+        "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
+    },
+    "grant" : [ "post", "comment", "react" ],
+    "signature" : {
+        "key" : "C8xSIBPKRTcXxFix",
+        "sig" : "HBOSFxl09FpZ5vMJFaoOTPUMwkCDz43pb5cHydj-rxrd0oI7IXCcvTN_JhbZUJ7FR7VT2b0oCWfHRoZ26fzMAQ"
+    }
+}
+```
+
 ### In section "10 Posts endpoint"
 
 Introduce a new sub-section header "10.1 Post object" before "Each single post". Change references to individual post
@@ -42,23 +69,82 @@ Add the following two post types:
 | `emoji` | String | required | Single unicode character text emoji |
 | `ref` | Object | required | [Post reference object](#102-post-reference-object) referencing post this reaction refers to|
 
-Update first post in example:
+Update example:
 ```json
+{
+    "data" : [
         {
             "seqts" : "2018-09-17T14:04:27.373",
             "createts" : "2018-09-16T12:23:18.751",
             "type" : "text",
             "message" : "Hello, world!",
-            "contribute" : {
-                "comment" : true,
-                "react" : true,
-                "group" : "grp-friends"
-            },
             "signature" : {
                 "key" : "C8xSIBPKRTcXxFix",
-                "sig" : ...
+                "sig" : "bDOgcT4uxTKYMTuOJXDbAPc1UA2p-aGdxwplUWNStzyDRIRPu9UxaTU1IoZ1ELjBY5iRf4FEBPV09Uw9TOYuCA"
+            }
+        }, {
+            "seqts" : "2018-09-15T12:35:47.735",
+            "type" : "web",
+            "message" : "Interesting read...",
+            "link" : "https://example.com",
+            "signature" : {
+                "key" : "C8xSIBPKRTcXxFix",
+                "sig" : "skQBzttDURV-N4kqK9fgyWw4Ddixsmld4nnilC_XUqSZhXfeNfw_4PrIlLwaFdHDTO-au4iaZM64oSWLP-z0BA"
+            }
+        }, {
+            "seqts" : "2018-09-16T13:35:47.735",
+            "createts" : "2018-09-16T12:25:13.614",
+            "author" : "https://example.com/ctypto.bob",
+            "type" : "photo",
+            "message" : "Look at this",
+            "full" : "https://example.com/full-image.jpeg",
+            "small" : " https://example.com/small-image.jpeg",
+            "signature" : {
+                "key" : {
+                    "publicKey" : {
+                        "kid" : "czlHMPEJcLb7jMUI",
+                        "kty" : "OKP",
+                        "crv" : "Ed25519",
+                        "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
+                    },
+                    "grant" : [ "post", "comment", "react" ],
+                    "signature" : {
+                        "key" : "C8xSIBPKRTcXxFix",
+                        "sig" : "HBOSFxl09FpZ5vMJFaoOTPUMwkCDz43pb5cHydj-rxrd0oI7IXCcvTN_JhbZUJ7FR7VT2b0oCWfHRoZ26fzMAQ"
+                    }
+                },
+                "sig" : "94dyGxvPcVuueFjVj_RwedWy5m3dasRDYf1iOxnYXUEYDS33LYzn9kqe6aIRMZchxWqlM1K_fX-uHVFDRjzSAg"
+            }
+        }, {
+            "seqts" : "2018-09-19T05:12:18.264",
+            "createts" : "2018-09-19T05:12:17.157",
+            "type" : "reaction",
+            "author" : "https://example.com/ctypto.bob",
+            "emoji" : "❤",
+            "ref" : {
+                "seqts" : "2018-09-17T14:04:27.373",
+                "hash" : "wu-qP3IBAyttD_6QVI1mlypRVMTzxTIpH6jrkFkHEct57bHN2xBj0GYvaniLPiVgLNJxqSwDCMaPMEYYzprVWg"
+            },
+            "signature" : {
+                "key" : {
+                    "publicKey" : {
+                        "kid" : "czlHMPEJcLb7jMUI",
+                        "kty" : "OKP",
+                        "crv" : "Ed25519",
+                        "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
+                    },
+                    "grant" : [ "post", "comment", "react" ],
+                    "signature" : {
+                        "key" : "C8xSIBPKRTcXxFix",
+                        "sig" : "HBOSFxl09FpZ5vMJFaoOTPUMwkCDz43pb5cHydj-rxrd0oI7IXCcvTN_JhbZUJ7FR7VT2b0oCWfHRoZ26fzMAQ"
+                    }
+                },
+                "sig" : "mWLyCJs1QN0ZG8W53QnQNMXqh4059RsFRhLw_LafjrXVRQFnEoioYyG-KfZbyTsiCXmvABiDAberRF8doPyDAA"
             }
         }
+    ],
+    "more" : true
+}
 ```
 
 ### Insert new sub-section "10.2 Post reference object"
