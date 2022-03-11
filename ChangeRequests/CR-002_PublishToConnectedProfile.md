@@ -1,5 +1,5 @@
 # CR-002 - Publish To Connected Profile
-Draft - Target SPXP 0.4
+Accepted - Target SPXP 0.4
 
 Version 0.3 of the SPXP spec already incorporates the possibility for profiles to publish posts on connected peer
 profiles. For this, it defines [authorized signing keys (8.2)](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#82-authorized-signing-keys) and how
