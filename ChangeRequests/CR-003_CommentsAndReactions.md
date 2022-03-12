@@ -1,7 +1,14 @@
 # CR-002 - Publish To Connected Profile
 Draft - Target SPXP 0.4
 
-...
+It has always been the intention of SPXP to enable social engagement through comments and reactions between profile
+owners. Version 0.3 has already introduced the possibility for posts to have a different author signing the post with a
+certificate. The most recent [CR-002](./CR-002_PublishToConnectedProfile.md) then added a mechanism for profiles to
+receive contributions from various sources through a publishing endpoint.
+
+What is yet missing are specialised post types for comments and reactions as well as a mechanism for these to reference
+other posts. This will be combined with more fine-grained grants to enable profile owners to selectively allow posting,
+commenting or reacting. We will also introduce a mechanism to govern these contributions on a per post level.
 
 ## Proposed changes to SPXP Spec
 
@@ -155,10 +162,19 @@ are described by a JSON object with these members:
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `seqts` | timestamp | required | Sequence timestamp of referenced post |
-| `seqts` | String | required | [Profile URI](#12-profile-uri) of referenced profile |
 | `hash` | String | required | Base64Url encoded SHA512 hash value of post object |
 
 To calculate the `hash` value of a post object, the `private` ([11](#11-private-data)) data is processed based on the
-reader keys available to the client. It is then converted into [Canonical JSON](#811-canonical-json) and converted to a
-byte stream using UTF-8 character encoding. The calculated SHA512 hash value is then represented as Base64Url encoded.
+reader keys available to the client. It is then converted into [Canonical JSON](#811-canonical-json) and subsequently to
+a byte stream using UTF-8 character encoding. The calculated SHA512 hash value is then represented as Base64Url encoded.
 In contrast to signatures, no fields are removed from the object before creating the hash value.
+
+### In section "14.5 Connect Message"
+
+Replace the `publish` offering value with these values:
+
+| Offering | Providing                                                                                                                                            |
+|---|---|
+| `post` | When accepting this request, the requestee is given a certificate granting `post` permissions optionally together with a publishing key for private posts |
+| `comment` | When accepting this request, the requestee is given a certificate granting `comment` permissions optionally together with a publishing key for private posts |
+| `react` | When accepting this request, the requestee is given a certificate granting `react` permissions optionally together with a publishing key for private posts |
