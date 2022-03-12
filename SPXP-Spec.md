@@ -868,7 +868,7 @@ following members:
 | `ver` | String | required | Most recent version of SPXP supported by the client |
 | `establishId` | String | required | Unique random connection establishment ID |
 | `readerKey` | Object | optional | JSON object describing a [reader key](#124-reader-keys) as JWK as defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) |
-| `publishing` | Object | optional | Object containing additional information for the publishing process as specified in [chapter 15](#15-publishing) if the peer is authorised to publish on this profile |
+| `publishing` | Object | optional | Object containing additional information for the publishing process as specified in [chapter 15](#15-publishing) if the recipient is authorised to publish on the issuing profile |
 
 Example:
 ```json
@@ -895,9 +895,9 @@ encryption method is direct encryption with 256 bit AES in Galois/Counter Mode, 
 "A265GCM"` by JWE. This requires a new random initialisation vector `iv` for each package.
 
 ### 14.4 Preparing a Connection
-The initiator prepares the connection by sending the reader key and encrypted connection package to their own profile
-server, associating it with the _connection establishment ID_. This preparation must enable the profile server to later
-perform the [connection package exchange](#148-connection-package-exchange).  
+The initiator prepares the connection by sending the reader key, optional publishing key and encrypted connection
+package to their own profile server, associating it with the _connection establishment ID_. This preparation must enable
+the profile server to later perform the [connection package exchange](#148-connection-package-exchange).  
 The management of profile servers, including this operation, is not part of SPXP. See [chapter
 15](#17-profile-extensions) for details.
 
