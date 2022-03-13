@@ -1,4 +1,4 @@
-# CR-002 - Publish To Connected Profile
+# CR-003 - Comments and Reactions
 Draft - Target SPXP 0.4
 
 It has always been the intention of SPXP to enable social engagement through comments and reactions between profile
