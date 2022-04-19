@@ -10,7 +10,7 @@ messages between profiles on behalf of the profile owner.
 This specification defines a setup process that can be driven by an SPXP client to support users in easily setting up
 a relationship with a service provider.
 This specification has been defined to foster a culture of end-to-end encryption. A complex and cumbersome setup process
-could encourage users to delegate the maintainance of encryption keys to the service provider.
+could encourage users to delegate the maintenance of encryption keys to the service provider.
 
 ## Service discovery
 Every domain supporting the SPXP Service Provider Extension has to provide a service discovery document at a well-known

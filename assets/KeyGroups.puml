@@ -24,10 +24,10 @@ family --> friends : Member of
 virt0 --> friends : Member of
 
 Alice --> virt0 : Member of
-virt1 --> closefriends : Memeber of
-virt2 --> closefriends : Memeber of
-Bob --> virt1 : Memeber of
-David --> virt2 : Memeber of
-Charlie --> family : Meember of
+virt1 --> closefriends : Member of
+virt2 --> closefriends : Member of
+Bob --> virt1 : Member of
+David --> virt2 : Member of
+Charlie --> family : Member of
 
 @enduml

@@ -44,7 +44,7 @@ represent date and time information as part of JSON objects:
 
 | Format | Base Type | Description |
 |---|---|---|
-| `timestamp` | String | Instant in time in UTC encoded as “YYYY-MM-DD’T’hh:mm:ss.sss” accoring to [RFC3339](https://tools.ietf.org/html/rfc3339), but with millisecond precision and without a time offset  |
+| `timestamp` | String | Instant in time in UTC encoded as “YYYY-MM-DD’T’hh:mm:ss.sss” according to [RFC3339](https://tools.ietf.org/html/rfc3339), but with millisecond precision and without a time offset  |
 
 ## 4 Protocol versioning
 This protocol uses [Semantic Versioning](https://semver.org/). This document specifies protocol version `0.3`.
@@ -59,7 +59,7 @@ is composed of the following members:
 | `name` | String | required | The display name of this profile |
 | `shortInfo` | String | optional | Additional short description of this profile |
 | `about` | String | optional | Additional long description of this profile, like a resume or bio |
-| `gender` | String | optional | Free text string specifying the gender of this profile. Clients should recognize the english text strings `female` and `male` and display localized text or icons. All other content can be displayed as-is. |
+| `gender` | String | optional | Free text string specifying the gender of this profile. Clients should recognize the English text strings `female` and `male` and display localized text or icons. All other content can be displayed as-is. |
 | `website` | String | optional | URI of the profile’s website |
 | `email` | String | optional | Email address of this profile |
 | `birthDayAndMonth` | String | optional | String of the format `dd-mm` with `dd` being a numeric value 1-31 and `mm` being a numeric value 1-12 specifying the day and month of birth of this profile in the Gregorian calendar |
@@ -586,7 +586,7 @@ validate the message integrity. The ciphertext is then decrypted to
 ```json
     {"website":"https://example.com","signature":{"key":"C8xSIBPKRTcXxFix","sig":"nEd-NXLlBDjcmCJHhzn9CaVYuRBsG4SDDgdHql85xdGtgb_bql2SnZh2oeMf-dk_g-YhT3uRyZHZRTriUEnCBA"}}
 ```
-The signature is validated with the same rules that apply to the object that conatins this private data and the object
+The signature is validated with the same rules that apply to the object that contains this private data and the object
 then gets merged into the profile root document:
 ```json
 {
@@ -978,7 +978,7 @@ To prevent this, profiles can request a unique token to be present on connection
 defines how clients who wish to connect can obtain such a token, for instance by walking the user through a captcha
 process in the browser. This token is available on the unencrypted portion of the message, so that the task of
 gatekeeping can be delegated to the profile server without exposing the actual connection process.  
-To discover if a profile server requests such a token and what methods of token acquestion it supports, a client can
+To discover if a profile server requests such a token and what methods of token acquisition it supports, a client can
 send a HTTP POST request with a JSON object with the following members as HTTP body to the `connectEndpoint` defined in
 the peer's profile root document:
 
@@ -1003,10 +1003,10 @@ Every object in the `acceptedTokens` array must have at least this member:
 |---|---|---|---|
 | `method` | String | required | Text string identifying the token acquisition method described by this object |
 
-Implementors are encouraged to use a naming pattern similar to the [Maven Coordinates](https://maven.apache.org/pom.html#Maven_Coordinates).
+Implementers are encouraged to use a naming pattern similar to the [Maven Coordinates](https://maven.apache.org/pom.html#Maven_Coordinates).
 
 This protocol specification defines the "Web Flow" token acquisition method in [Appendix A. Web Flow token acquisition
-method](#appendix-a-web-flow-token-acquisition-method) and leaves it to implementors to define additional methods.
+method](#appendix-a-web-flow-token-acquisition-method) and leaves it to implementers to define additional methods.
 
 In error situations, the server responds with one of these status codes
 
@@ -1404,7 +1404,7 @@ recent profile location.
 ## 17 Profile Extensions
 This protocol specification intentionally focuses on the communication between client applications and servers hosting
 profiles the client is interested in. It does not define any requirements or make suggestions on how to actually
-implement client or server applications. This leaves implementors maximum flexibility on how to add this protocol to
+implement client or server applications. This leaves implementers maximum flexibility on how to add this protocol to
 existing applications and does not limit them in exploring new ventures.
 
 There are some operations however, especially during the establishment of connections, that require profile owners to
@@ -1413,7 +1413,7 @@ seamless user experience if they are not able to make certain changes to the use
 
 In the sake of compatibility, we decided to provide extensions to SPXP, each in their own specification. You could
 compare this protocol family to POP3, SMTP and IMAP, where different protocols exist for sending and receiving messages.
-Implementors can freely chose if they want to provide these extensions and to what degree they want to support it.
+Implementers can freely chose if they want to provide these extensions and to what degree they want to support it.
 
 #### SPXP - Profile Management Extension
 Defines how profile owners can manage the server hosting their own profile and update the information that gets published.  
