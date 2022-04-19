@@ -3,7 +3,7 @@ Working Draft (Version 0.4)
 
 ## 1 Base URI
 A management server can manage profiles with various profile URIs, not just profiles on the same domain. To give the
-implementors flexibility on the layout of the URI hierarchy on this domain, this spec defines the API relative to
+implementers flexibility on the layout of the URI hierarchy on this domain, this spec defines the API relative to
 a base URI.
 
 ## 2 Authentication
@@ -281,7 +281,7 @@ Clients have to use the normal “posts endpoint” in SPXP to enumerate all pos
 a reader key (or set of keys) that is able to read all posts.
 
 ### 6.1 Publishing
-To pubish a new post, the client POSTs the entire post object to the server.  
+To publish a new post, the client POSTs the entire post object to the server.  
 The server does not need to validate any signatures or availability of decryption keys.  
 Endpoint: `<baseUri>/posts`  
 Method: `POST`  
@@ -438,7 +438,7 @@ Failure response code: `4xx` or `5xx`
 
 ### 8.3 Managing keys in prepared packages
 To add or remove keys that are associated with a prepared package, the client can add the `establishId` of the prepared
-package as suffix to the audience, seperated by the `@` character.
+package as suffix to the audience, separated by the `@` character.
 See [9.3](#93-updating-keys-associated-with-a-prepared-package) for details.
 
 ## 9 Connection packages
