@@ -43,17 +43,17 @@ This cryptographic process is described in detail in [this video](https://www.yo
 
 ## Protocol Family
 
-Latest version: [0.3](https://github.com/spxp/spxp-specs/releases/tag/v0.3)
+* **Social Profile Exchange Protocol - SPXP**  
+  The core protocol defining how clients can retrieve information from protocol servers, validate the information and participate in the connection handshake.  
+  Released version: [0.3](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md), working draft: [0.4](./SPXP-Spec.md)
 
-[Social Profile Exchange Protocol - SPXP](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md)  ([wip](./SPXP-Spec.md))
-The core protocol defining how clients can retrieve information from protocol servers, validate the information and
-participate in the connection handshake.
+* **SPXP Profile Management Extension - SPXP-PME**  
+  Protocol extension defining how clients can manage a protocol server which is hosting their own profile.  
+  Released version: [0.3](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-PME-Spec.md), working draft: [0.4](./SPXP-PME-Spec.md)
 
-[SPXP Profile Management Extension - SPXP-PME](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-PME-Spec.md)  ([wip](./SPXP-PME-Spec.md))
-Protocol extension defining how clients can manage a protocol server which is hosting their own profile.
-
-[SPXP Service Provider Extension - SPXP-SPE](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-SPE-Spec.md)  ([wip](./SPXP-SPE-Spec.md))
-Extension defining a secure setup process for new profiles between a client and a service provider.
+* **SPXP Service Provider Extension - SPXP-SPE**  
+  Extension defining a secure setup process for new profiles between a client and a service provider.  
+  Released version: [0.3](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-SPE-Spec.md), working draft: [0.4](./SPXP-SPE-Spec.md)
 
 ## SDK / Reference implementation
 There are already numerous libraries out there for HTTP communication and JSON handling - the two main foundation
