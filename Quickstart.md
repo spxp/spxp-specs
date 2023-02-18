@@ -2,7 +2,7 @@
 
 ## How it works
 
-A social profile is described by a simple text file in JSON format. You can easily inspect them with your web broweser, like  out official profile:   
+A social profile is described by a simple text file in JSON format. You can easily inspect them with your web broweser, like  our official profile:   
 [https://spxp.org/spxp](https://spxp.org/spxp)
 ```json
 {
@@ -40,8 +40,8 @@ a time series of updates, known as posts. You can inspect them in your browser a
 
 This protocol is intentionally kept as simple as possible, to allow easy adoption.
 
-You can even find a bridge between other social network protocols and SPXP and [bridge.spxp.org](https://bridge.spxp.org). As of today, it only supports
-ActivityPub. But there are already plans to extend this to protocols like Nostr or Diaspora.
+You can even find a bridge between other social network protocols and SPXP at [bridge.spxp.org](https://bridge.spxp.org). As of today, it only supports
+ActivityPub. But there are already plans to extend the bridge for protocols like Nostr or Diaspora.
 
 To follow a Mastodon Profile like the [Austronomy Picture of the Day](https://botsin.space/@APoD) (@APoD@botsin.space), simply use this profile URI:
 
@@ -55,17 +55,19 @@ to discover new interesting profiles.
 
 ## Client App
 
-Opening SPXP profiles in a web browser and hopping through the social graph is possible, but definitely not the most conventient way to explore
-the network. 
+Opening SPXP profiles in a web browser and hopping through the social graph via copy pasting profile URIs is possible. But it's definitely not the most conventient way to explore the network. 
 
-If you want to really get a feeling of this network, you should install a mobile app, like the [HeyFolks App](https://heyfolks.app).
+A more user friendly approach is to install a mobile app, like the [HeyFolks App](https://heyfolks.app). As a starting point, the app suggests a couple of SPXP profiles as well as bridged Mastodon profiles. You can then see the profiles they're following by clickin on the middle tab:
 
-It will even suggest a couple of known SPXP profiles as well as some Mastodon profiles via the bridge on first start.
+![middle-icon](./assets/middle-tab.jpg)
+
+This way you can browse through and get a feeling for the network.  Please note that following profiles is managed by the HeyFolks App and invisible to the profiles you follow. 
+
+
 
 ## Building your own profile (manually)
 
-All  you need to do is to craft such a simple JSON document and make it available through HTTP(S), e.g. by placing it on your web server. You can
-very simply already start with:
+All  you need to do is to craft a simple JSON document and make it available through HTTP(S), e.g. by placing it on your web server. You can very simply already start with:
 
 ```json
 {
@@ -74,19 +76,23 @@ very simply already start with:
 }
 ```
 
-Once published, follow it with the HeyFolks App by adding it to the "List of Profiles I Follow" with the Plus button. I recemmend truning
-on the "Developer mode" in the settings of the HeyFolks App. This gives you a nice "Reload" button so  you can enforce an update after you
-made a change to your profile.
+Once published, follow it with the HeyFolks App with two simple steps:
+1. Click on the middle icon  
+   ![middle-tab](./assets/middle-icon.jpg)  
+2. Click on the round plus icon  
+   ![round-plus](./assets/round-plus.jpg)  
+3. Enter the profile URL from the JSON file on your web server
 
-Take a look at the [Spec](https://github.com/spxp/spxp-specs/blob/master/SPXP-Spec.md) or [this video](https://www.youtube.com/watch?v=C0S0Oa4G1M4)
-to learn more about the format of this file.
+We recommend turning on the "Developer mode" in the settings of the HeyFolks App. This makes a "Refresh" button appear in your profile so you can enforce a reload after you made a change to your profile JSON file.
+
+Take a look at the [Spec](https://github.com/spxp/spxp-specs/blob/master/SPXP-Spec.md) or [this video](https://www.youtube.com/watch?v=C0S0Oa4G1M4) to learn more about the format of the JSON file.
 
 ## Setting up your own profile on a service provider
 
-Writing your own JSON file and putting it on your own web server is super cool, but not the most convenient option for average users. Apps like
-the HeyFolks App additionally speak other auxiliary protocols to allow you to manage a profile directly in the App.
+Writing your own JSON file and putting it on your own web server is a nice start, but not the most convenient option for average users. Apps like the HeyFolks App additionally speak other [auxiliary protocols](https://github.com/spxp/spxp-specs/blob/master/SPXP-SPE-Spec.md) to allow you to manage a profile directly in the app.
 
-On the last Tab, you can setup your own profile. The App will ask you to chose a "Service Provider". These offer to host your profile for you.
+To setup your own profile in the HeyFolks App, click on the right tab.
 
-Don't worry. You won't be locked in to a particular provider. It is always possible to migrate to a different provider seamlessly and without
-any friction as you can see in [this video](https://www.youtube.com/watch?v=kDv0rW8uEwA).
+![right-tab](./assets/right-tab.jpg)  
+
+The app will ask you to chose a service provider that hosts your profile for you, like [SPXP.space](https://spxp.space). Don't worry. You won't be locked in to a particular provider. It is always possible to migrate to a different provider seamlessly and without any friction as you can see in [this video](https://www.youtube.com/watch?v=kDv0rW8uEwA). 
