@@ -16,7 +16,7 @@ A social profile is described by a simple text file in JSON format. You can easi
 }
 ```
 This file then references additional resources, like our profile picture. It also declares additional endpoints, like the `postsEndpoint` which delivers
-a time series of updates, known as posts. You can inspect them in your browser as well:
+a time series of updates, known as posts. You can inspect them in your browser as well:  
 [https://spxp.org/spxp-posts](https://spxp.org/spxp-posts)
 ```json
 {
@@ -30,10 +30,9 @@ a time series of updates, known as posts. You can inspect them in your browser a
             "seqts": "2021-12-02T12:00:00.000",
             "type": "text",
             "message": "Now that we have a mechanism in place to contribute posts to peer profiles, we can build ..."
-        },
-        ...
+        }
     ],
-    "more": false
+    "more": true
 }
 ```
 
