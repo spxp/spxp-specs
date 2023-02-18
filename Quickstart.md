@@ -59,7 +59,7 @@ Opening SPXP profiles in a web browser and hopping through the social graph via 
 
 A more user friendly approach is to install a mobile app, like the [HeyFolks App](https://heyfolks.app). As a starting point, the app suggests a couple of SPXP profiles as well as bridged Mastodon profiles. You can then see the profiles they're following by clickin on the middle tab:
 
-![middle-icon](./assets/middle-tab.jpg)
+![middle-tab icon][middle-tab]
 
 This way you can browse through and get a feeling for the network.  Please note that following profiles is managed by the HeyFolks App and invisible to the profiles you follow. 
 
@@ -76,11 +76,11 @@ All  you need to do is to craft a simple JSON document and make it available thr
 }
 ```
 
-Once published, follow it with the HeyFolks App with two simple steps:
+Once published, follow it with the HeyFolks App with three simple steps:
 1. Click on the middle icon  
-   ![middle-tab](./assets/middle-icon.jpg)  
+   ![middle-tab icon][middle-tab]
 2. Click on the round plus icon  
-   ![round-plus](./assets/round-plus.jpg)  
+   ![round-plus][round-plus]  
 3. Enter the profile URL from the JSON file on your web server
 
 We recommend turning on the "Developer mode" in the settings of the HeyFolks App. This makes a "Refresh" button appear in your profile so you can enforce a reload after you made a change to your profile JSON file.
@@ -91,8 +91,15 @@ Take a look at the [Spec](https://github.com/spxp/spxp-specs/blob/master/SPXP-Sp
 
 Writing your own JSON file and putting it on your own web server is a nice start, but not the most convenient option for average users. Apps like the HeyFolks App additionally speak other [auxiliary protocols](https://github.com/spxp/spxp-specs/blob/master/SPXP-SPE-Spec.md) to allow you to manage a profile directly in the app.
 
-To setup your own profile in the HeyFolks App, click on the right tab.
+To setup your own profile in the HeyFolks App, click on the right tab:
 
-![right-tab](./assets/right-tab.jpg)  
+![right-tab][right-tab]
 
 The app will ask you to chose a service provider that hosts your profile for you, like [SPXP.space](https://spxp.space). Don't worry. You won't be locked in to a particular provider. It is always possible to migrate to a different provider seamlessly and without any friction as you can see in [this video](https://www.youtube.com/watch?v=kDv0rW8uEwA). 
+
+
+
+ 
+[middle-tab]:./assets/middle-tab.jpg?s=50
+[round-plus]:./assets/round-plus.jpg?s=50
+[right-tab]:./assets/right-tab.jpg?s=50
