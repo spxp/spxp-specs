@@ -28,6 +28,18 @@ To participate, use a client like the [HeyFolks app](https://heyfolks.app) to di
 
 ![Our Profile](./assets/SpxpProfileApp.png)
 
+As a **publisher**, you can eliminate the network between you and the reader. Nobody inbetween will alter your content or rate its importance.
+Even more important, your content resides on your server under your control. You do not need to grant anybody a license for your content.
+
+As a **reader**, you can participate immediately without setting up a profile - just like browsing the world wide web. You have fulll control
+*what* you see, and *how* you want to consume it.
+
+To guarantee **authenticity and sovereignty**, a publisher can optionally *sign* all information. The profile is then bound to the *public key*
+rather than the URI, allowing the publisher to move to a different server or provider without friction.
+
+To guarantee **privacy**, individual information can be *encrypted* allowing a profile to restrict individual bits of information to a limited audience. 
+
+This cryptographic process is described in detail in [this video](https://www.youtube.com/watch?v=C0S0Oa4G1M4).
 
 ## Protocol Family
 
