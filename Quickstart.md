@@ -42,7 +42,7 @@ This file then [references additional resources](https://github.com/spxp/spxp-sp
 
 We wrote a bridge between other social network protocols and SPXP at [bridge.spxp.org](https://bridge.spxp.org). As of today, it only supports ActivityPub. But we plan to extend the bridge for protocols like Nostr or Diaspora as well.
 
-SPXP is intentionally kept as simple as possible, to allow easy adoption. For example, to see the SPXP profile JSON of a Mastodon account like the [Spaceflight](https://techhub.social/@spaceflight) (@spaceflight@techhub.social), just use the following URI schema:
+SPXP is intentionally kept as simple as possible, to allow easy adoption. For example, to see the SPXP profile JSON of a Mastodon account like the [Spaceflight](https://techhub.social/@spaceflight) (`@spaceflight@techhub.social`), just use the following URI schema:
 
 [https://bridge.spxp.org/ap/@spaceflight@techhub.social](https://bridge.spxp.org/ap/@spaceflight@techhub.social)  
 
