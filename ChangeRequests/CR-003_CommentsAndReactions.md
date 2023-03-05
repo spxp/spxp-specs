@@ -1,5 +1,5 @@
 # CR-003 - Comments and Reactions
-Draft - Target SPXP 0.4
+Accepted - Target SPXP 0.4
 
 It has always been the intention of SPXP to enable social engagement through comments and reactions between profile
 owners. Version 0.3 has already introduced the possibility for posts to have a different author signing the post with a

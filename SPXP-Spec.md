@@ -182,7 +182,7 @@ to be signed with this key to be considered authentic. A protocol client must no
 the context of this profile that has not been signed by the announced profile key or its authorised delegates.
 
 ### 8.1 Signing JSON objects
-To sign an object, the `private` ([11](#11-private-data)) and `seqts` ([10](#10-posts-endpoint)) member fields are removed, it is converted into [Canonical JSON](#811-canonical-json),
+To sign an object, the `private` ([11](#11-private-data)) and `seqts` ([10.1](#101-post-object)) member fields are removed, it is converted into [Canonical JSON](#811-canonical-json),
 the optional `aad` member is attached, it is converted to a byte stream using UTF-8 character encoding and then signed with the
 profile key pair ([1.1](#11-cryptographic-profile-key-pair)) using the [Ed25519](http://ed25519.cr.yp.to/) signature
 algorithm. The resulting signature is then embedded into the JSON object as `signature` object with the following members:
@@ -242,7 +242,9 @@ Valid `grant` values are (case sensitive):
 
 | Grant | Allows to sign |
 |---|---|
-| `post` | Individual post objects. If not combined with `impersonate`, then only in their own name. |
+| `post` | Individual post objects of types other than `comment` and `reaction`. If not combined with `impersonate`, then only in their own name. |
+| `comment` | Individual post objects of type `comment`. If not combined with `impersonate`, then only in their own name. |
+| `react` | Individual post objects of type `reaction`. If not combined with `impersonate`, then only in their own name. |
 | `friends` | Data published on the friends endpoint |
 | `grant` | Other certificates, if these do not grant permissions that exceed the permissions on this certificate, except the permissions `grant` and `ca` |
 | `ca` | Other certificates, if these do not grant permissions that exceed the permissions on this certificate, including the permissions `grant` and `ca` |
@@ -260,10 +262,10 @@ Example:
         "crv" : "Ed25519",
         "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
     },
-    "grant" : [ "post" ],
+    "grant" : [ "post", "comment", "react" ],
     "signature" : {
         "key" : "C8xSIBPKRTcXxFix",
-        "sig" : "PEekh7oCLQa0O4rCUPrH19yCJCLtEZfnumUlPrH0TPbq66Bj_aO71enf-P6gUttlgJFRRfvD1D7wAAYZaX6PCQ"
+        "sig" : "HBOSFxl09FpZ5vMJFaoOTPUMwkCDz43pb5cHydj-rxrd0oI7IXCcvTN_JhbZUJ7FR7VT2b0oCWfHRoZ26fzMAQ"
     }
 }
 ```
@@ -317,6 +319,8 @@ following JSON object:
 | `data` | Array | required | List of post objects |
 | `more` | Boolean | required | True if and only if there are more posts before the oldest post in the `data` array |
 
+### 10.1 Post object
+
 Each single post in the data array is a JSON object with these members:
 
 | Name | Type | Mandatory | Description |
@@ -324,11 +328,20 @@ Each single post in the data array is a JSON object with these members:
 | `seqts` | timestamp | required | Sequence timestamp of post. Probably assigned by the SPXP server when it received this post object. <br/> The sequence timestamp must be unique across all posts of a profile. <br/> This member is not part of the signature. |
 | `createts` | timestamp | optional | Optional creation timestamp of post. Assigned by the client when this post got created. |
 | `author` | String | optional | Profile URI of post author, if this post has been created by a different profile and then published on this profile. <br/> If set, the client has to resolve the author's profile root document ([5](#5-social-profile-root-document)) and check the signature on this post against the profile key (`publicKey`) of the author's profile. The key of the signature on this post must bring a certificate that grants `post` permission ([8.2](#82-authorized-signing-keys)). |
-| `type` | String | required | Type of post. One of `text`, `web`, `photo` or `video` |
+| `type` | String | required | Type of post. One of `text`, `web`, `photo`, `video`, `comment` or `reaction` |
+| `contribute` | Object | optional | JSON object governing contributions like comments or reactions to this post |
 
 Note:  
 The original author of a post is just referenced by its profile URI and not a [profile reference
 object](#6-profile-reference-object) since the public key of the author can already be found in the signature.
+
+The optional `contribute` object consists of these members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `comment` | Boolean | optional | Flag indicating if comments referencing this post are allowed, `false` by default |
+| `react` | Boolean | optional | Flag indicating if reactions referencing this post are allowed, `false` by default |
+| `group` | String | optional | Publishing group in which comments and reactions to this post must be published |
 
 Depending on the `type`, additional members are defined as follows:
 
@@ -359,6 +372,18 @@ Depending on the `type`, additional members are defined as follows:
 | `preview` | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a preview image. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted preview image resource. (see [chapter 7](#7-encrypted-resources)) |
 | `media` | String <br/> or <br/> Object | required | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to a resource holding a video media file. Clients should at least support MP4 containers with H.264 video and AAC audio codec. <br/> or <br/> JSON object holding decryption details and the location of an encrypted video media resource. (see [chapter 7](#7-encrypted-resources)) |
 | `place` | Object | optional | [Social profile reference](#6-profile-reference-object) of a place linked to the video |
+
+#### Type `comment`:
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `message` | String | required | Text message |
+| `ref` | Object | required | [Post reference object](#102-post-reference-object) referencing post this comment refers to|
+
+#### Type `reaction`:
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `emoji` | String | required | Single unicode character text emoji |
+| `ref` | Object | required | [Post reference object](#102-post-reference-object) referencing post this reaction refers to|
 
 Example:
 ```json
@@ -398,13 +423,39 @@ Example:
                         "crv" : "Ed25519",
                         "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
                     },
-                    "grant" : [ "post" ],
+                    "grant" : [ "post", "comment", "react" ],
                     "signature" : {
                         "key" : "C8xSIBPKRTcXxFix",
-                        "sig" : "PEekh7oCLQa0O4rCUPrH19yCJCLtEZfnumUlPrH0TPbq66Bj_aO71enf-P6gUttlgJFRRfvD1D7wAAYZaX6PCQ"
+                        "sig" : "HBOSFxl09FpZ5vMJFaoOTPUMwkCDz43pb5cHydj-rxrd0oI7IXCcvTN_JhbZUJ7FR7VT2b0oCWfHRoZ26fzMAQ"
                     }
                 },
                 "sig" : "94dyGxvPcVuueFjVj_RwedWy5m3dasRDYf1iOxnYXUEYDS33LYzn9kqe6aIRMZchxWqlM1K_fX-uHVFDRjzSAg"
+            }
+        }, {
+            "seqts" : "2018-09-19T05:12:18.264",
+            "createts" : "2018-09-19T05:12:17.157",
+            "type" : "reaction",
+            "author" : "https://example.com/ctypto.bob",
+            "emoji" : "❤",
+            "ref" : {
+                "seqts" : "2018-09-17T14:04:27.373",
+                "hash" : "wu-qP3IBAyttD_6QVI1mlypRVMTzxTIpH6jrkFkHEct57bHN2xBj0GYvaniLPiVgLNJxqSwDCMaPMEYYzprVWg"
+            },
+            "signature" : {
+                "key" : {
+                    "publicKey" : {
+                        "kid" : "czlHMPEJcLb7jMUI",
+                        "kty" : "OKP",
+                        "crv" : "Ed25519",
+                        "x" : "vg42ogNHigJnwZ0pwwMzUtaXZA49eqcfGYl2u9GR8vg"
+                    },
+                    "grant" : [ "post", "comment", "react" ],
+                    "signature" : {
+                        "key" : "C8xSIBPKRTcXxFix",
+                        "sig" : "HBOSFxl09FpZ5vMJFaoOTPUMwkCDz43pb5cHydj-rxrd0oI7IXCcvTN_JhbZUJ7FR7VT2b0oCWfHRoZ26fzMAQ"
+                    }
+                },
+                "sig" : "mWLyCJs1QN0ZG8W53QnQNMXqh4059RsFRhLw_LafjrXVRQFnEoioYyG-KfZbyTsiCXmvABiDAberRF8doPyDAA"
             }
         }
     ],
@@ -412,13 +463,28 @@ Example:
 }
 ```
 
-### 10.1 Signing and Encrypting Posts
+### 10.2 Post reference object
+Posts in a profile's timeline are referenced by combining the `seqts` of the post with a SHA512 hash of the post. This
+guarantees that referenced post is exactly what has been referenced in a comment or reaction. References to other posts
+are described by a JSON object with these members:
+
+| Name | Type | Mandatory | Description |
+|---|---|---|---|
+| `seqts` | timestamp | required | Sequence timestamp of referenced post |
+| `hash` | String | required | Base64Url encoded SHA512 hash value of post object |
+
+To calculate the `hash` value of a post object, the `private` ([11](#11-private-data)) data is processed based on the
+reader keys available to the client. It is then converted into [Canonical JSON](#811-canonical-json) and subsequently to
+a byte stream using UTF-8 character encoding. The calculated SHA512 hash value is then represented as Base64Url encoded.
+In contrast to signatures, no fields are removed from the object before creating the hash value.
+
+### 10.3 Signing and Encrypting Posts
 Posts can be requested individually from the server. Thus, post messages are signed individually and independent of
 each other. Also, private data is embedded in each post individually instead of the server response as whole.  
 The member `seqts` is not part of the signature. It is a technical field assigned by the server. To authenticate a
 specific creation time, the `createts` member should be used.
 
-### 10.2 Requesting Posts from the Server
+### 10.4 Requesting Posts from the Server
 The `data` array contains a subset of posts known by the server. The number of returned items is chosen by the SPXP
 server, but the client can attach a `max` query parameter to influence this number. The client can further attach
 `before` and `after` query parameters to specify a date range of requested items. The server guarantees that there are
@@ -922,7 +988,9 @@ Valid `offering` values are (case sensitive):
 | Offering | Providing |
 |---|---|
 | `read` | When accepting this request, the requestee is given a [reader key](#124-reader-keys) with extended access to the requesters data |
-| `publish` | When accepting this request, the requestee is given additional information in the `publishing` object of the connection package to publish posts on this profile (only in its own name) |
+| `post` | When accepting this request, the requestee is given a certificate granting `post` permissions optionally together with a publishing key for private posts |
+| `comment` | When accepting this request, the requestee is given a certificate granting `comment` permissions optionally together with a publishing key for private posts |
+| `react` | When accepting this request, the requestee is given a certificate granting `react` permissions optionally together with a publishing key for private posts |
 
 Example:
 ```json
@@ -1254,7 +1322,7 @@ JSON object as HTTP  body. This object is composed of the following members:
 |---|---|---|---|
 | `type` | String | required | Fixed text string `post` |
 | `ver` | String | required | Most recent version of the SPXProtocol supported by the client |
-| `post` | Object | required | The [post object](#10-posts-endpoint) to be published. Can be encrypted. |
+| `post` | Object | required | The [post object](#101-post-object) to be published. Can be encrypted. |
 | `token` | String | required | One time publishing token as specified in [chapter 15.3](#153-publishing-tokens) |
 
 The server responds with one of these status codes.
