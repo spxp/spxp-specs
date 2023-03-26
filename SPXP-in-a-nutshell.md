@@ -49,10 +49,10 @@ Instead it’s meant to provide a quick overview over the protocol and its capab
 That is because a user cannot comment on or react to a post unless their profile is either connected with the author’s profile, or otherwise authorized.
 Again in other words: In general, a user cannot comment on or react to an unknown profile’s post.
 8. A profile owner has full control over comments on and reactions to their posts (see E7)
-9. A profile owner is able to publish all information on their SPXP profile that they are legally allowed to publish on the WWW.
+9. A profile owner is able to publish all information on their SPXP profile that they are legally allowed to publish on the WWW .
 Existing legislation applies. Countries have developed legislative frameworks for content published on the WWW; The same frameworks apply for content published via SPXP.
 10. There is no single, private, company owned, governance board (see A3, D5, E9)
-11. Users can and should make use of existing judicial systems; They are able to take action against published information with the same mechanisms as against information published on the WWW.
+11. Users can and should make use of existing judicial systems; They are able to take action against published information with the same mechanisms as against information published on the WWW .
 12. SPXP transfers control of content creation and consumption to the endpoints (e.g. client apps)
 13. SPXP consciously minimizes the role a server plays with regards to information publishing and profile and content management. This happens to an extent that an SPXP server is hosting encrypted information but does neither know the content nor its author (see D3, D4)
 14. An SPXP server hosts profiles and their content but cannot modify either on its own, as the network endpoints have exclusive control over that (see E12)
