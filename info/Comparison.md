@@ -2,21 +2,26 @@
 Multiple other protocols have been proposed for decentralised social networks. It is worth comparing SPXP against a selection
 of popular alternatives, investigate the differences and discuss why these do not fulfil the design goals we are looking for
 with SPXP:
+* individual sovereignty
 * privacy
 * security
-* individual sovereignty
 * simplicity
 
+To see how SPXP addresses these requirements, see [here](./SPXP-in-a-nutshell.md). There is a list of challenges and features
+NOT supported by SPXP at the bottom of this page.
+
 ### ActivityPub (gnuscial, Mastodon, Pleroma, Pixelfed, etc)
-[ActivityPub](https://www.w3.org/TR/2018/REC-activitypub-20180123/) uses a federated architecture where users need to create an account
-on one of multiple available instances. Data, like profile information or individual posts, is replicated as needed between instances.
-* Your ID is bound to the instances domain
+[ActivityPub](https://www.w3.org/TR/2018/REC-activitypub-20180123/) uses a federated architecture. Users can freely chose their
+"home instance" from multiple available instance. To participate, the user needs to create an account on this home instance. It
+is possible to communicate with users beyond the home instance via federation. Data, like profile information or individual posts,
+is replicated as needed between instances.
+* Your ID is bound to the domain of your home instance
 * You don't have full control over your own profile  
-  Instance owners can close and delete your profile at any time at their sole discretion - and sometimes even close the entire instance.
+  Instance owners can close and delete your profile at any time and at their sole discretion - and sometimes even close the entire instance.
   All your data and connections will be lost, at least until your last manual backup. Profile migrations are an afterthought and only possible
   if the instance owner collaborates.  
   This is a violation of the *individual sovereignty* we are interested in.
-* You don't have full control over your own timeline.   
+* You don't have full control over your own timeline  
   Instance owners block content from other instances at their sole discretion. Accounts on blocked instances will not be able to interact
   with you and you won't even see their content. This content moderation has some positive impacts, e.g. for blocking spam and fighting harassment.  
   However, since you don't have control over this content moderation, it is a violation of the *individual sovereignty* we are interested in.
@@ -26,27 +31,90 @@ on one of multiple available instances. Data, like profile information or indivi
 * Your data is fully accessible by instance owners  
   This includes absolutely everything and is a severe violation of the *privacy* we are interested in.
 * You cannot control how your content is used  
-  As a federated protocol, it requires that your data is replicated between different instances, and you have no control over this mechanism. Other
-  instances in the Fediverse will display your content on their website, under their own terms and under their exclusive control.  
+  As a federated protocol, it requires your data to be replicated between different instances. This also happens outside of your control, e.g. if
+  someone "boosts" (re-tweets) your post. Other instances in the Fediverse will display your content on their website, under their own terms and
+  under their exclusive control.  
   This is a violation of the *individual sovereignty* we are interested in.
 * You cannot limit the visibility of your content  
   There is some content you are happy to share with the whole world. But there might be other content you only want to share with your
   friends or your family. This is not supported in ActivityPub. Everything is publicly visible (except DNs).  
-  This does not provide the level of *privacy* we are interested in.
+  This does not provide the level of *privacy* and *security* we are interested in.
+
+Many of these aspects are caused by the federated architecture. Real privacy can only be guaranteed by end-to-end encryption. But without
+being able to understand the content, the instance would not be able to organise the content for you.
 
 ### AT Protocol (Bluesky)
-The [AT Protocol](https://atproto.com/docs) is very similar to ActivityPub and again using a federated architecture. Although there are
-technical differences, the same findings as above apply here as well:
+The [Authenticated Transfer Protocol](https://atproto.com/docs) is very similar to ActivityPub. It is using a federated architecture consisting
+of Personal Data Servers (PDS). Just like ActivityPub, users freely chose their PDS and create an account. Although there are technical
+differences, very similar findings apply here as well with regards to the design goals we are looking for:
 * The handle is bound to a DNS domain
-* There is no end-to-end message encryption
-* Personal Data Servers (PDS) owners have access to all data and can block interactions
+* Although your profile is defined by a DID document, you cannot easily transfer your handle to a new PDS
+* You don't have full control over your own profile  
+  Just as in ActivityPub, an PDS owner can decide to close your profile or the entire service.
+* You don't have full control over your own timeline  
+  Just as in ActivityPub, your personal feed is generated by your PDS
+* Individual information pieces are not digitally signed
+  There is a mechanism to digitally sign the entire profile as a whole, but not for individual messages
+* Personal Data Servers (PDS) owners have access to all your data (there is no end-to-end message encryption)
+  This includes absolutely everything and is a severe violation of the *privacy* we are interested in.
+* You can probably not control how your content is used  
+  At this point, there is only one instance of a PDS. How federation between different PDS is going to work is not yet fully clear. As a federated
+  protocol, it is very likely that it will have similar characteristics as ActivityPub.
+  This is a violation of the *individual sovereignty* we are interested in.
+* You cannot limit the visibility of your content  
+  This does not provide the level of *privacy* and *security* we are interested in.
+
 The AT protocol is pretty new and is [currently seeing a lot of changes](https://github.com/bluesky-social/atproto/commits/main). It is
 possible that the above analysis is no longer accurate. We will try to keep up with the recent developments and update this section accordingly.
+
+However, as a federated architecture, it suffers from the same generic problem: Real privacy can only be guaranteed by end-to-end encryption,
+which prevents the PDS from managing the profile for you.
 
 ### Nostr
 [Nostr (Notes and Other Stuff Transmitted by Relays)](https://github.com/nostr-protocol/nostr) is an interesting candidate. It solves many
 of our requirements in a quite similar manner. However, it only provides public posts and does not go as far as SPXP in terms for privacy
 and sovereignty matters:
 * Profiles are bound to a cryptographic keypair rather than a domain, making them portable
+* Information is published through relays  
+  You can freely chose an arbitrary set of relays to publish. Other users will receive your updates as long as they listen to at least
+  one of the relays you are publishing on.
 * Events are end-to-end signed, guaranteeing message authenticity
-* All messages are public, except for direct messages.
+* All messages are public, except for direct messages  
+  This does not provide the level of *privacy* and *security* we are interested in.
+* You cannot limit the visibility of your content  
+  This does not provide the level of *privacy* and *security* we are interested in.
+* No guaranteed event durability  
+  Relays can chose to keep events only for a given period of time
+
+In a nutshell: Nostr is inherently open and public (everybody can read messages, everybody can reply to all your posts) while SPXP focuses
+on privacy and sovereignty (fine grained control over the audience, end to end encryption, full control over replies to your posts).
+
+
+## Challenges and requirements for SPXP
+
+By radically pushing power and control from the network into endpoint devices, we face a hard requirement to support this protocol:  
+You need a fat client to fully participate.
+It is possible to display public content read-only with a quite simple client. But to fully participate with your own client in
+connections between profiles, the client needs to implement a fair amount of logic.
+
+With ActivityPub, a simple web browser is laready sufficient. This does not work with SPXP.
+
+## Common features not (yet) provided by SPXP
+
+There are a couple of features commonly provided by social networks which are not available in SPXP:
+
+**Sharing / Re-tweet / Boost**  
+It is quite common in popular social networks to re-post an existing message on your own account. With digitally signed posts, SPXP
+could even provide fully authenticated re-posts by including the entire original message.  
+However, we have not yet made a final decision wether this feature has more good or bad implications. It might be added at a later time.
+
+**Publishing replies on your own feed**  
+In other social networks, it is quite common that your followers can see your replies to other posts on your profile. With SPXP, we
+made the deliberate choice that the entire discussion on a post is "owned" by the author of the original post. It is possible, and quite
+common, that these replies will be encrypted and only visible to a limited audience.  
+If you follow both profiles, you will be able to see these replies and your client can notify you accordingly.
+
+**At mentions**  
+When you mention another profile in a post message, it is a quite common feature that the mentioned profile gets informed. At this point,
+we decided decided against this feature to prevent spam. There are already some ideas how we could give profile owners better control
+over being mentioned.

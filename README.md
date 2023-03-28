@@ -63,12 +63,12 @@ Server:
 
 Clients:
 * [HeyFolks app](https://heyfolks.app) a mobile client for iOS and Android (commercial license)
-* [spxp-cli](https://github.com/spxp-space/spxp-cli) a client to manage your profile implemented as a single plain bash script (supports the [Service Provider](https://github.com/spxp/spxp-specs/blob/master/SPXP-SPE-Spec.md) and the [Profile Management Extension](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md))
+* [spxp-cli](https://github.com/spxp-space/spxp-cli) implemented as a single plain bash script to manage profiles (supports the [Service Provider](https://github.com/spxp/spxp-specs/blob/master/SPXP-SPE-Spec.md) and the [Profile Management Extension](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md))
 * and you can always use `curl` and `jq` manually
 
 Service provider:
 * [spxp.space](https://spxp.space) a commercial SPXP hosting provider supporting the entire protocol family
-* and you can always set up your own hosting service using the simple PHP server above
+* and you can always set up your own hosting service using the [Simple PHP Server](https://github.com/spxp/simple-php-server) mentioned above
 
 ## Get your hands dirty and play with this protocol
 If you want to see it in action and learn more about this protocol, here are some suggestions for next steps:
@@ -79,17 +79,18 @@ If you want to see it in action and learn more about this protocol, here are som
 3. If you want to see more sophisticated profiles using encryption and signing, take a look at some [testbed profiles](http://testbed.spxp.org/0.3/)  
    For example this [profile](http://testbed.spxp.org/0.3/heavyfrog799), it's [posts](http://testbed.spxp.org/0.3/posts/_read-posts.php?profile=heavyfrog799) and [friends](http://testbed.spxp.org/0.3/friends/heavyfrog799)
 4. Install the [HeyFolks app](https://heyfolks.app) and explore some bridge or testbed profiles to see the end user experience
-5. Manually create a simple profile with a plain text editor, put it on your web server and open it with the HeyFolks app
+5. Manually create a simple profile with a plain text editor, put it on your web server and open it in the HeyFolks app
 6. Set up your own profile in the HeyFolks app on spxp.space
-7. Take a deeper look at the cryptographic operations by [manually creating a signed and encrypted profile](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/ManualProfileCreation.md)
+7. Take a deeper look at the cryptographic operations by [exploring and decrypting some testbed profiles](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/ExploreTestbedProfiles.md)
+8. You can then further [manually sign and encrypt](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/ManualProfileCreation.md) your hand crafted profile
 8. Deploy the simple php server and run your own spxp hosting service
 9. Use the spxp-cli to create test profile(s) on your own hosting service or spxp.space
-10. Send a connection request with the spxp-cli to your profile in the HeyFolks app and accept it to see additional content
+10. Send a connection request with the spxp-cli to your profile in the HeyFolks app, accept it and see how you can unlock additional content additional content
 
 ## Why don't you just use...
 A common and very relevant question.
 
-We have prepared a [comparsion with other protocols](./info/Comparison.md) investigate the differences and discuss how these do or do not fulfil our design goals.
+We have prepared a [comparsion with other protocols](./info/Comparison.md) investigating the differences and discussing how these do or do not fulfil our design goals.
 
 ## Development resources
 In addition to the protocol spec in this repository, you might find these additional resources helpful.
