@@ -86,15 +86,21 @@ and sovereignty matters:
 * You cannot limit the visibility of your content  
   This does not provide the level of *privacy* and *security* we are interested in.
 * Relays know too much information about you  
-  This not just (obviously) includes public messages, but also metadata of private messages, all profiles you are following and all
+  This does not just includes public messages (obviously), but also metadata of private messages, all profiles you are following and all
   discussion threads you are reading (via filter conditions).  
   This does not provide the level of *privacy* we are interested in.
 * No guaranteed event durability  
-  Relays can chose to keep events only for a given period of time
+  Relays can chose to keep events only for a limited period of time
+* unproven scalability   
+  While this protocol and it's relay architecture is pretty new, it has not yet proven that it can operate at scale. This includes
+  horizontal scalability where  clients need to deal with a landscape of thousands of relays as well as vertical scalability where
+  relays need to handle millions of clients consurrently.
 
 In a nutshell: Nostr is inherently open and public (everybody can read messages, everybody can reply to all your posts) while SPXP focuses
 on privacy and sovereignty (fine grained control over the audience, end to end encryption, full control over replies to your posts).
 
+One of the main critics with the big established socal networks is the vast collection of user data. There is no difference to Nostr relays.
+The same amount of data is generated at relays and owner can mine, analyse, use and sell this information.
 
 ## Challenges and requirements for SPXP
 
