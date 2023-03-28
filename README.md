@@ -88,6 +88,8 @@ If you want to see it in action and learn more about this protocol, here are som
 10. Send a connection request with the spxp-cli to your profile in the HeyFolks app, accept it and see how you can unlock additional content additional content
 
 ## Why don't you just use...
+...ActivityPub, Nostr, Desosprotocol, AT protocol, Diaspora, ...
+
 A common and very relevant question.
 
 We have prepared a [comparsion with other protocols](./info/Comparison.md) investigating the differences and discussing how these do or do not fulfil our design goals.
