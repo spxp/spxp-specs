@@ -1,57 +1,52 @@
-# SPXP - Feature Idea Collection
-The SPXP is developed in an agile manner, where we define new protocol versions, put them under test, and then evolve
-based on the findings in simulations and real-world tests.  
-Not all aspects of the overall vision are already realised with this version of the protocol. In particular, we are
-aware of the following shortcomings and problems that we want to address in the upcoming versions of this
-protocol.
+# SPXP compared to other protocols
+Multiple other protocols have been proposed for decentralised social networks. It is worth comparing SPXP against a selection
+of popular alternatives, investigate the differences and discuss why these do not fulfil the design goals we are looking for
+with SPXP:
+* privacy
+* security
+* individual sovereignty
+* simplicity
 
-##### Publishing posts, including encrypted posts
-Currently, only the profile owner can publish posts via the Profile Management Extension. We also want other profiles to
-be able to publish posts. This has already been prepared in this version by introducing signing certificates. But we are
-still missing endpoints to publish posts. Also publishing encrypted posts makes this even more challenging.
- 
-##### Comments
-We are aware that comments are a fundamental building block of social networks. Although there have been some
-experiments with this feature, we decided to defer it to the next version.
+### ActivityPub (gnuscial, Mastodon, Pleroma, Pixelfed, etc)
+[ActivityPub](https://www.w3.org/TR/2018/REC-activitypub-20180123/) uses a federated architecture where users need to create an account
+on one of multiple available instances. Data, like profile information or individual posts, is replicated as needed between instances.
+* Your ID is bound to the instances domain
+* You don't have full control over your own profile  
+  Instance owners can close and delete your profile at any time at their sole discretion - and sometimes even close the entire instance.
+  All your data and connections will be lost, at least until your last manual backup. Profile migrations are an afterthought and only possible
+  if the instance owner collaborates.  
+  This is a violation of the *individual sovereignty* we are interested in.
+* You don't have full control over your own timeline.   
+  Instance owners block content from other instances at their sole discretion. Accounts on blocked instances will not be able to interact
+  with you and you won't even see their content. This content moderation has some positive impacts, e.g. for blocking spam and fighting harassment.  
+  However, since you don't have control over this content moderation, it is a violation of the *individual sovereignty* we are interested in.
+* The authenticity of your data is not guaranteed  
+  Without real end-to-end digital signatures, it is possible to tamper with existing messages or completely forge them.  
+  This is a violation of the *security* we are interested in.
+* Your data is fully accessible by instance owners  
+  This includes absolutely everything and is a severe violation of the *privacy* we are interested in.
+* You cannot control how your content is used  
+  As a federated protocol, it requires that your data is replicated between different instances, and you have no control over this mechanism. Other
+  instances in the Fediverse will display your content on their website, under their own terms and under their exclusive control.  
+  This is a violation of the *individual sovereignty* we are interested in.
+* You cannot limit the visibility of your content  
+  There is some content you are happy to share with the whole world. But there might be other content you only want to share with your
+  friends or your family. This is not supported in ActivityPub. Everything is publicly visible (except DNs).  
+  This does not provide the level of *privacy* we are interested in.
 
-##### Re-Publishing posts of other profiles in own profile
-Some social networks allow users to "share" or "re-post" a post in the own profile that has initially been published by
-a different profile. We are looking at this feature and will decide if and how we are going to realise this
-functionality as part of SPXP.
+### AT Protocol (Bluesky)
+The [AT Protocol](https://atproto.com/docs) is very similar to ActivityPub and again using a federated architecture. Although there are
+technical differences, the same findings as above apply here as well:
+* The handle is bound to a DNS domain
+* There is no end-to-end message encryption
+* Personal Data Servers (PDS) owners have access to all data and can block interactions
+The AT protocol is pretty new and is [currently seeing a lot of changes](https://github.com/bluesky-social/atproto/commits/main). It is
+possible that the above analysis is no longer accurate. We will try to keep up with the recent developments and update this section accordingly.
 
-##### Validity period of certificates
-Certificates signed by a profile in this version of the protocol do not have any validity period. Permissions granted by
-a profile never expire. An SPXP server needs to maintain an ever growing CRL (certificate revocation list) to be able to
-reject posts from profile that are no longer allowed to post to this profile.
-
-##### Profile signing key rollover
-It is currently unclear if we need to define a process to rotate the profile key pair. In the case of a  key loss, the
-profile needs to go through the process of key revocation anyway and establish trust in the new signing key. We do not
-know yet if we need a secondary mechanism that performs a key rollover while the key has not been compromised.  
-This also includes the question if the profile key needs to have a validity period.
-
-##### Profile relocation
-We only define that the profile signing key takes precedence over the profile URI, but we do not give any procedures or
-examples how a profile can actually seamlessly move from one URI to another.
-
-##### Approved friendship announcements
-In the current version, a profile simply publishes a list of profile URIs it considers "friends". But there is no
-guarantee that the linked profiles are actually connected with this profile or even know about this.  
-It would be possible to mutually sign some sort of "connection certificate" during the connection process, so that a
-profile can expose these "connection certificates" as proof that it is actually connected with the other profile.  
-It is currently unclear if this is actually required or wanted.
-
-##### Generalise concept of hometown and location
-The `hometown` and `location` links in a profile could be generalised. A profile might also want to link to its current
-or former employer, institute of education or other entities of interest.  
-We could generalise this concept and just expose an arbitrary list of "profile links", each uniquely identified by a
-key. Depending on the above decision, this could also cover the list of friends.
-
-##### Profile root document cannot be signed by delegate
-By design, the profile root document cannot be signed by a delegate. This is required as it contains the profile root
-key itself. There might be use cases where a profile wants to delegate the publishing of the `about` or `shortInfo`
-fields to another entity. This is currently not possible without exposing the profile root key.
-
-##### Profile key revocation / reestablish trust in new key
-The vision of SPXP describes a process where a profile can replace a lost or compromised signing key and re-establish
-trust in the new key via neighborhood assistance through its connected profiles.
+### Nostr
+[Nostr (Notes and Other Stuff Transmitted by Relays)](https://github.com/nostr-protocol/nostr) is an interesting candidate. It solves many
+of our requirements in a quite similar manner. However, it only provides public posts and does not go as far as SPXP in terms for privacy
+and sovereignty matters:
+* Profiles are bound to a cryptographic keypair rather than a domain, making them portable
+* Events are end-to-end signed, guaranteeing message authenticity
+* All messages are public, except for direct messages.
