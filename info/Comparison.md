@@ -37,7 +37,7 @@ is replicated as needed between instances.
   This is a violation of the *individual sovereignty* we are interested in.
 * You cannot limit the visibility of your content  
   There is some content you are happy to share with the whole world. But there might be other content you only want to share with your
-  friends or your family. This is not supported in ActivityPub. Everything is publicly visible (except DNs).  
+  friends or your family. This is not supported in ActivityPub. Everything is publicly visible (except DMs).  
   This does not provide the level of *privacy* and *security* we are interested in.
 
 Many of these aspects are caused by the federated architecture. Real privacy can only be guaranteed by end-to-end encryption. But without
