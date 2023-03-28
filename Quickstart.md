@@ -81,7 +81,7 @@ Opening SPXP profiles in a web browser and hopping through the social graph via 
 A more user friendly approach is to install a mobile app, like the [HeyFolks App](https://heyfolks.app). As a starting point, the app suggests a couple of SPXP profiles as well as bridged
 Mastodon accounts. Follow some of the suggestions and after finishing the setup dialogue, have a look at the profiles you're following by clicking on the middle tab:
 
-![AppProfilesFollowing icon][AppProfilesFollowing]
+![AppProfilesFollowing][AppProfilesFollowing]
 
 Just click on a profile to see their posts. You can also see profiles they're following by clicking on the middle tab again. This way you can browse through the network and get a feeling for which other profiles you might like and want to follow.
 
@@ -125,7 +125,7 @@ The HeyFolks app also automatically creates a public/private key pair for your p
 
 
 
- 
+[AppProfilesFollowing]:./assets/AppProfilesFollowingSmall.png
 [middle-tab]:./assets/middle-tab.jpg?s=50
 [round-plus]:./assets/round-plus.jpg?s=50
 [right-tab]:./assets/right-tab.jpg?s=50
