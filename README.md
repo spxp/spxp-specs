@@ -83,8 +83,8 @@ If you want to see it in action and learn more about this protocol, here are som
 6. Set up your own profile in the HeyFolks app on spxp.space
 7. Take a deeper look at the cryptographic operations by [exploring and decrypting some testbed profiles](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/ExploreTestbedProfiles.md)
 8. You can then further [manually sign and encrypt](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/ManualProfileCreation.md) your hand crafted profile
-8. Deploy the simple php server and run your own spxp hosting service
-9. Use the spxp-cli to create test profile(s) on your own hosting service or spxp.space
+8. Deploy the [Simple PHP Server](https://github.com/spxp/simple-php-server) and run your own spxp hosting service
+9. Use the [spxp-cli](https://github.com/spxp-space/spxp-cli) to create test profile(s) on your own hosting service or spxp.space
 10. Send a connection request with the spxp-cli to your profile in the HeyFolks app, accept it and see how you can unlock additional content additional content
 
 ## Why don't you just use...
@@ -104,8 +104,7 @@ for these profiles is available as well under Apache license.
 
 #### SDK / Reference implementation
 There are already numerous libraries out there for HTTP communication and JSON handling - the two main foundation
-blocks of SPXP. We think providing an SDK that would depend on one of these would interfere too much with most
-projects or developer preferences.
+blocks of SPXP. We think providing an SDK that would depend on one of these would interfere too much with developer preferences.
 The situation however is different for the cryptographic operations in SPXP. The [spxp-crypto](https://github.com/spxp/spxp-crypto)
 library provides a reference implementation in Java as well as a standard library that can be used directly in your
 projects.

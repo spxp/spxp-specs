@@ -40,7 +40,7 @@ This file then [references additional resources](https://github.com/spxp/spxp-sp
 
 ## Bridge to other protocols
 
-With it's simplicity, it is quite easy to convert information from other social network protocols into SPXP.
+With it's simplicity, it is quite easy to convert information from other social network protocols to SPXP.
 
 At [bridge.spxp.org](https://bridge.spxp.org), we provide such a bridge currently supporting:
 * ActivityPub
@@ -55,7 +55,7 @@ Next, let's check out whom the Spaceflight Mastodon accont is following by havin
 
 [https://bridge.spxp.org/ap/@spaceflight@techhub.social/friends](https://bridge.spxp.org/ap/@spaceflight@techhub.social/friends)  
 
-The bridge responds with a list of SPXP profile references to other bridged accounts the Spaceflight account is "Following". When using
+The bridge responds with a list of SPXP profile references to other bridged accounts the Spaceflight Mastodon account is [following](https://techhub.social/@spaceflight/following). When using
 Firefox, you should be able to directy click on the profile links to hop to their profile document.  
 
 We can also take a look at the posts of this account in the SPXP format on the [posts endpont](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#10-posts-endpoint):
@@ -77,12 +77,13 @@ Feel free to continue from here on your own. By now, you should have a good impr
 
 ## Client App
 
-Opening SPXP profiles in a web browser and hopping through the social graph via copy pasting profile URIs is possible. But it's definitely not the most conventient way to explore the network. 
+Opening SPXP profiles in a web browser and hopping through the social graph via copy pasting profile URIs is possible, but it's definitely not the most conventient way to explore the network. 
 
 A more user friendly approach is to install a mobile app, like the [HeyFolks App](https://heyfolks.app). As a starting point, the app suggests a couple of SPXP profiles as well as bridged
 Mastodon accounts. Follow some of the suggestions and after finishing the setup dialogue, have a look at the profiles you're following by clicking on the middle tab:
 
-![AppProfilesFollowing][AppProfilesFollowing]
+![AppProfilesFollowing][AppProfilesFollowing] ![AppSamplePosts][AppSamplePosts] ![AppSampleFriends][AppSampleFriends]
+
 
 Just click on a profile to see their posts. You can also see profiles they're following by clicking on the middle tab again. This way you can browse through the network and get a feeling for which other profiles you might like and want to follow.
 
@@ -100,8 +101,8 @@ All  you need to do is to craft a simple JSON document and make it available thr
 }
 ```
 
-Once published, you can follow it with the HeyFolks App by clicking the blue "plus" button at the bottom right of the profiles list and then enter the URI to
-your new profile JSON document on your web server.
+Once published, you can follow it with the HeyFolks App by clicking the blue "plus" button at the bottom right of the profiles list. Just enter the URI to
+your new profile JSON document on your web server, and it will show up (as long as the JSON is  syntactically correct).
 
 At this point, we recommend turning on the "Profile developer controls" in the settings of the HeyFolks App. This gives you a *Refresh* button in the profile
 view to enforce a reload after making changes to your profile. Otherwise, the app will use a local cache and not load the profile until a quite long timer
@@ -122,7 +123,8 @@ To publish posts, you need to create a second JSON document like this:
         }
     ],
     "more": false
-}```
+}
+```
 
 Upload this file as well to your web server and then reference this new file in your profile document as `postsEndpoint`:
 
@@ -156,4 +158,6 @@ If you want to explore the cryptographic operations in more detail, you can star
 To protect your manually created profile, you can then [manually sign and encrypt](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/ManualProfileCreation.md) your hand crafted profile.
 
 
-[AppProfilesFollowing]:./assets/AppProfilesFollowingSmall.png
+[AppProfilesFollowing]:./assets/AppProfilesFollowing.png
+[AppSamplePosts]:./assets/AppSamplePosts.png
+[AppSampleFriends]:./assets/AppSampleFriends.png
