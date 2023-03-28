@@ -104,7 +104,7 @@ The same amount of data is generated at relays and owner can mine, analyse, use 
 
 ## Challenges and requirements for SPXP
 
-By radically pushing power and control from the network into endpoint devices, we face a hard requirement to support this protocol:  
+By radically pushing power and control from the network into endpoint devices, we face a new hard requirement:  
 You need a fat client to fully participate.
 
 It is possible to read and display public content with a very simple client. In order to fully participate with your own profile in
@@ -124,11 +124,13 @@ However, we have not yet made a final decision wether this feature has more good
 
 **Publishing replies on your own feed**  
 In other social networks, it is quite common that your followers can see your replies to other posts on your profile. With SPXP, we
-made the deliberate choice that the entire discussion on a post is "owned" by the author of the original post. It is possible, and quite
-common, that these replies will be encrypted and only visible to a limited audience.  
+made the deliberate choice that the entire discussion is "owned" by the author of the original post. It is possible, and quite
+common, that these replies will be encrypted and are only visible to a limited audience.  
 If you follow both profiles, you will be able to see these replies and your client can notify you accordingly.
 
 **At mentions**  
-When you mention another profile in a post message, it is a quite common feature that the mentioned profile gets informed. At this point,
-we decided decided against this feature to prevent spam. There are already some ideas how we could give profile owners better control
+When you mention another profile in a post, it is a quite common feature that the mentioned profile gets informed. At this point,
+we decided against this feature to prevent spam. There are already some ideas how we could give profile owners better control
 over being mentioned.
+
+See also our [Feature Idea Collection](./FeatureIdeaCollection.md).

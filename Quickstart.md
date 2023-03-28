@@ -40,25 +40,48 @@ This file then [references additional resources](https://github.com/spxp/spxp-sp
 
 ## Bridge to other protocols
 
-We wrote a bridge between other social network protocols and SPXP at [bridge.spxp.org](https://bridge.spxp.org). As of today, it only supports ActivityPub. But we plan to extend the bridge for protocols like Nostr or Diaspora as well.
+With it's simplicity, it is quite easy to convert information from other social network protocols into SPXP.
 
-SPXP is intentionally kept as simple as possible, to allow easy adoption. For example, to see the SPXP profile JSON of a Mastodon account like the [Spaceflight](https://techhub.social/@spaceflight) (`@spaceflight@techhub.social`), just use the following URI schema:
+At [bridge.spxp.org](https://bridge.spxp.org), we provide such a bridge currently supporting:
+* ActivityPub
+* AT Protocol
+* Nostr
+
+For example, to see the SPXP profile JSON of a Mastodon account like [Spaceflight](https://techhub.social/@spaceflight) (`@spaceflight@techhub.social`), just use the following URI schema:
 
 [https://bridge.spxp.org/ap/@spaceflight@techhub.social](https://bridge.spxp.org/ap/@spaceflight@techhub.social)  
 
-Next, let's check out whom the Mastodon accont is following by having a look at the SPXP profile's [friend endpoint](https://github.com/spxp/spxp-specs/blob/master/SPXP-Spec.md#9-friends-endpoint):
+Next, let's check out whom the Spaceflight Mastodon accont is following by having a look at the SPXP profile's [friend endpoint](https://github.com/spxp/spxp-specs/blob/master/SPXP-Spec.md#9-friends-endpoint):
 
 [https://bridge.spxp.org/ap/@spaceflight@techhub.social/friends](https://bridge.spxp.org/ap/@spaceflight@techhub.social/friends)  
 
-The list of bridged SPXP profiles you see correspond to the "Following" Mastodon accounts. 
+The bridge response with a list of SPXP profile references to other bridged accounts the Spaceflight account is "Following". When using
+Firefox, you should be able to directy click on the profile links to hop to their profile document.  
+We can also take a look at the posts of this account in the SPXP format on the [posts endpont](https://github.com/spxp/spxp-specs/blob/v0.3/SPXP-Spec.md#10-posts-endpoint):
+
+[https://bridge.spxp.org/ap/@spaceflight@techhub.social/friends](https://bridge.spxp.org/ap/@spaceflight@techhub.social/posts)  
+
+The same is possible with accounts on Bluesky via the AT protocol, for example the "Vibes" account (`@vibes.bsky.social`) you see on all the published screenshots:
+
+[https://bridge.spxp.org/at/@vibes.bsky.social](https://bridge.spxp.org/at/@vibes.bsky.social)
+
+I leave it to you as an exercise to explore the posts and followed profiles by yourself. :-)
+
+With a Nostr public key, like the one from [Uncle Bob Martin](https://twitter.com/unclebobmartin/status/1479070661435871234), you can also explore Nostr:
+
+[https://bridge.spxp.org/nostr/2ef93f01cd2493e04235a6b87b10d3c4a74e2a7eb7c3caf168268f6af73314b5](https://bridge.spxp.org/nostr/2ef93f01cd2493e04235a6b87b10d3c4a74e2a7eb7c3caf168268f6af73314b5)  
+
+Feel free to continue from here on your own. By now, you should have a good impression of the simplicity of this basic protocol level.
+
 
 ## Client App
 
 Opening SPXP profiles in a web browser and hopping through the social graph via copy pasting profile URIs is possible. But it's definitely not the most conventient way to explore the network. 
 
-A more user friendly approach is to install a mobile app, like the [HeyFolks App](https://heyfolks.app). As a starting point, the app suggests a couple of SPXP profiles as well as bridged Mastodon accounts. Follow some of the suggestions and after finishing the setup dialogue, have a look at the profiles you're following by clicking on the middle tab:
+A more user friendly approach is to install a mobile app, like the [HeyFolks App](https://heyfolks.app). As a starting point, the app suggests a couple of SPXP profiles as well as bridged
+Mastodon accounts. Follow some of the suggestions and after finishing the setup dialogue, have a look at the profiles you're following by clicking on the middle tab:
 
-![middle-tab icon][middle-tab]
+![AppProfilesFollowing icon][AppProfilesFollowing]
 
 Just click on a profile to see their posts. You can also see profiles they're following by clicking on the middle tab again. This way you can browse through the network and get a feeling for which other profiles you might like and want to follow.
 
