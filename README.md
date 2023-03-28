@@ -57,27 +57,43 @@ This cryptographic process is described in detail in [this video](https://www.yo
 
 ## Implementations
 Server:
-* [Wordpress Plugin](https://wordpress.org/plugins/hfa-spxp-support/) to expoose your blog via SPXP (GPL license)
+* [Wordpress Plugin](https://wordpress.org/plugins/hfa-spxp-support/) to expose your blog via SPXP (GPL license)
 * A [Simple PHP Server](https://github.com/spxp/simple-php-server) supporting the entire protocol family (Apache license)
 * and you can always create a profile manually and throw it on any web server
 
 Clients:
-* [HeyFolks app](https://heyfolks.app) a mobile client for iOS and Android (comercial license)
-* [spxp-cli](https://github.com/spxp-space/spxp-cli) a client for SPXP-PMA and SPXP-SPE to manage your own profile entirely writting in bash
+* [HeyFolks app](https://heyfolks.app) a mobile client for iOS and Android (commercial license)
+* [spxp-cli](https://github.com/spxp-space/spxp-cli) a client to manage your profile as a single plain bash script (supports the [Service Provider](https://github.com/spxp/spxp-specs/blob/master/SPXP-SPE-Spec.md) and the [Profile Management Extension](https://github.com/spxp/spxp-specs/blob/master/SPXP-PME-Spec.md))
 * and you can always use `curl` and `jq` manually
 
 Service provider:
-* [spxp.space] a comercial SPXP hosting provider supporting the entire protocol family
+* [spxp.space](https://spxp.space) a commercial SPXP hosting provider supporting the entire protocol family
 * and you can always set up your own hosting service using the simple PHP server above
 
-## Development resources
+## Get your hands dirty and play with this protocol
+If you want to see it in action and learn more about this protocol, here are some suggestions for next steps:
 
-### Testbed profiles
+1. Take a look at our [Quickstart](./Quickstart.md) guide walking you through the protocol essentials
+2. Visit the [SPXP Bridge](https://bridge.spxp.org) and see how ActivityPub, AT Protocol and Nostr are translated to SPXP  
+   (Best explored with Firefox as it renders json nicely)
+3. If you want to see more sophisticated profiles using encryption and signing, take a look at the [latest testbed profiles}(http://testbed.spxp.org/0.3/)  
+   For example this [profile](http://testbed.spxp.org/0.3/heavyfrog799), it's [posts](http://testbed.spxp.org/0.3/posts/_read-posts.php?profile=heavyfrog799) and [friends](http://testbed.spxp.org/0.3/friends/heavyfrog799)
+4. Install the [HeyFolks app](https://heyfolks.app) and explore some bridge or testbed profiles to see the end user experience
+5. Manually create a simple profile with a plain text editor, put it on your web server and open it with the HeyFolks app
+6. Set up your own profile in the HeyFolks app on spxp.space
+7. Use the crypto tools to manually create a more complex profile applying digital signatures and encryption
+8. Deploy the simple php server and run your own spxp hosting service
+8. Use the spxp-cli to create your profile(s) on your own hosting service or spxp.space
+
+## Development resources
+In addition to the protocol spec in this repository, you might find these additional resources helpful.
+
+#### Testbed profiles
 We provide sets of artificially generated profiles on [http://testbed.spxp.org] for all protocol versions. These can be used to
 develop new client applications and validate your implementation against different test sets. The [generator](https://github.com/spxp/spxp-testbed-generator)
 for these profiles is available as well under Apache license.
 
-### SDK / Reference implementation
+#### SDK / Reference implementation
 There are already numerous libraries out there for HTTP communication and JSON handling - the two main foundation
 blocks of SPXP. We think providing an SDK that would depend on one of these would interfere too much with most
 projects or developer preferences.
@@ -85,7 +101,7 @@ The situation however is different for the cryptographic operations in SPXP. The
 library provides a reference implementation in Java as well as a standard library that can be used directly in your
 projects.
 
-### Commandline tooling
+#### Commandline tooling
 For most operations, `curl` and `jq` are sufficient. For cryptographic operations, we provide the
 [SpxpCryptoTool](https://github.com/spxp/spxp-crypto/blob/master/spxp-crypto-tools/README.md)
 which can be used on the command line or from scripts.
@@ -108,7 +124,7 @@ on one of multiple available instances. Data, like profile information or indivi
   This is a violation of the *individual sovereignty* we are interested in.
 * You don't have full control over your own timeline.   
   Instance owners block content from other instances at their sole discretion. Accounts on blocked instances will not be able to interact
-  with you and you won't even see their content. This content moderation has some positive impacts, e.g. for blocking spam and fighting herassment.  
+  with you and you won't even see their content. This content moderation has some positive impacts, e.g. for blocking spam and fighting harassment.  
   However, since you don't have control over this content moderation, it is a violation of the *individual sovereignty* we are interested in.
 * The authenticity of your data is not guaranteed  
   Without real end-to-end digital signatures, it is possible to tamper with existing messages or completely forge them.  
@@ -131,7 +147,7 @@ technical differences, the same findings as above apply here as well:
 * There is no end-to-end message encryption
 * Personal Data Servers (PDS) owners have access to all data and can block interactions
 The AT protocol is pretty new and is [currently seeing a lot of changes](https://github.com/bluesky-social/atproto/commits/main). It is
-possible that the above analysis is no longer acurate. We will try to keep up with the recent developments and update this section accordingly.
+possible that the above analysis is no longer accurate. We will try to keep up with the recent developments and update this section accordingly.
 
 ### Nostr
 [Nostr (Notes and Other Stuff Transmitted by Relays)](https://github.com/nostr-protocol/nostr) is an interesting candidate. It solves many
