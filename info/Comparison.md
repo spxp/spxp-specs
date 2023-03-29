@@ -120,7 +120,7 @@ There are a couple of features commonly provided by social networks which are ei
 **Sharing / Re-tweet / Boost**  
 It is quite common in popular social networks to re-post an existing message on your own account. With digitally signed posts, SPXP
 could provide fully authenticated re-posts by including the entire original message.  
-However, we have not yet made a final decision wether this feature has more good or bad implications. We are interested in scientific research on this topic and it might be added at a later time. ```
+However, we have not yet made a final decision wether this feature has more good or bad implications. We are interested in scientific research on this topic and it might be added at a later time.
 
 **Publishing replies on your own feed**  
 In other social networks, it is quite common that your followers can see your replies to other posts on your profile. With SPXP, we
