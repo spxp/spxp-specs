@@ -10,15 +10,15 @@ with SPXP:
 To see how SPXP addresses these requirements, see [here](./SPXP-in-a-nutshell.md). There is a list of challenges and features
 NOT supported by SPXP at the bottom of this page.
 
-### ActivityPub (gnuscial, Mastodon, Pleroma, Pixelfed, etc)
+### ActivityPub (gnusocial, Mastodon, Pleroma, Pixelfed, etc)
 [ActivityPub](https://www.w3.org/TR/2018/REC-activitypub-20180123/) uses a federated architecture. Users can freely chose their
-"home instance" from multiple available instance. To participate, the user needs to create an account on this home instance. It
+"home instance" from multiple available instance. To participate, the user needs to create an account on this home instances. It
 is possible to communicate with users beyond the home instance via federation. Data, like profile information or individual posts,
 is replicated as needed between instances.
 * Your ID is bound to the domain of your home instance
 * You don't have full control over your own profile  
   Instance owners can close and delete your profile at any time and at their sole discretion - and sometimes even close the entire instance.
-  All your data and connections will be lost, at least until your last manual backup. Profile migrations are an afterthought and only possible
+  All your data and connections will be lost, at least since your last manual backup. Profile migrations are an afterthought and only possible
   if the instance owner collaborates.  
   This is a violation of the *individual sovereignty* we are interested in.
 * You don't have full control over your own timeline  
@@ -36,7 +36,7 @@ is replicated as needed between instances.
   under their exclusive control.  
   This is a violation of the *individual sovereignty* we are interested in.
 * You cannot limit the visibility of your content  
-  There is some content you are happy to share with the whole world. But there might be other content you only want to share with your
+  Sure, there is content you are happy to share with the whole world. But there might be other content you only want to share with your
   friends or your family. This is not supported in ActivityPub. Everything is publicly visible (except DMs).  
   This does not provide the level of *privacy* and *security* we are interested in.
 
@@ -74,7 +74,7 @@ which prevents the PDS from managing the profile for you.
 
 ### Nostr
 [Nostr (Notes and Other Stuff Transmitted by Relays)](https://github.com/nostr-protocol/nostr) is an interesting candidate. It solves many
-of our requirements in a quite similar manner. However, it only provides public posts and does not go as far as SPXP in terms for privacy
+of our requirements in a quite similar manner. However, it only provides public posts and does not go as far as SPXP in terms of privacy
 and sovereignty matters:
 * Profiles are bound to a cryptographic keypair owned by the user, making them portable
 * Information is published through relays  
@@ -85,7 +85,7 @@ and sovereignty matters:
   This does not provide the level of *privacy* and *security* we are interested in.
 * You cannot limit the visibility of your content  
   This does not provide the level of *privacy* and *security* we are interested in.
-* Relays know too much information about you  
+* Relays have too much information about you  
   This does not just includes public messages (obviously), but also metadata of private messages, all profiles you are following and all
   discussion threads you are reading (via filter conditions).  
   This does not provide the level of *privacy* we are interested in.
@@ -93,14 +93,14 @@ and sovereignty matters:
   Relays can chose to keep events only for a limited period of time
 * unproven scalability   
   While this protocol and it's relay architecture is pretty new, it has not yet proven that it can operate at scale. This includes
-  horizontal scalability where  clients need to deal with a landscape of thousands of relays as well as vertical scalability where
-  relays need to handle millions of clients consurrently.
+  horizontal scalability where clients need to deal with a landscape of thousands of relays as well as vertical scalability where
+  relays need to handle millions of clients concurrently.
 
 In a nutshell: Nostr is inherently open and public (everybody can read messages, everybody can reply to all your posts) while SPXP focuses
 on privacy and sovereignty (fine grained control over the audience, end to end encryption, full control over replies to your posts).
 
-One of the main critics with the big established socal networks is the vast collection of user data. There is no difference to Nostr relays.
-The same amount of data is generated at relays and owner can mine, analyse, use and sell this information.
+One of the main critiques with the big established social networks is their vast collection of user data. The same critique applies to Nostr relays.
+The same amount of data is generated at relays and relay owners can mine, analyse, use and sell this information.
 
 ## Challenges and requirements for SPXP
 
@@ -111,22 +111,22 @@ It is possible to read and display public content with a very simple client. In 
 connections, to read private encrypted posts and to contribute with comments to other profiles, the client needs to implement a fair
 amount of logic.
 
-With ActivityPub, a simple web browser is laready sufficient. This does not work with SPXP.
+With ActivityPub, a simple web browser is already sufficient. This does not work with SPXP where you either need a client app like the [HeyFolks app](https://heyfolks.app) or you need to sacrifice comfort and functionality when viewing JSON objects in a browser.
 
 ## Common features not (yet) provided by SPXP
 
-There are a couple of features commonly provided by social networks which are not available in SPXP:
+There are a couple of features commonly provided by social networks which are either deliberately not available or not available yet in SPXP:
 
 **Sharing / Re-tweet / Boost**  
 It is quite common in popular social networks to re-post an existing message on your own account. With digitally signed posts, SPXP
-could even provide fully authenticated re-posts by including the entire original message.  
-However, we have not yet made a final decision wether this feature has more good or bad implications. It might be added at a later time.
+could provide fully authenticated re-posts by including the entire original message.  
+However, we have not yet made a final decision wether this feature has more good or bad implications. We are interested in scientific research on this topic and it might be added at a later time. ```
 
 **Publishing replies on your own feed**  
 In other social networks, it is quite common that your followers can see your replies to other posts on your profile. With SPXP, we
-made the deliberate choice that the entire discussion is "owned" by the author of the original post. It is possible, and quite
-common, that these replies will be encrypted and are only visible to a limited audience.  
-If you follow both profiles, you will be able to see these replies and your client can notify you accordingly.
+made the deliberate choice that the entire discussion is "owned" by the author of the original post (like in a discussion forum). It is possible, and likely will be quite
+common, that replies to a post are encrypted and only visible to a limited audience.  
+If your profile is connected with both, the authoring and the replying profile, then you will be able to see the original post and the reply and your client can notify you accordingly.
 
 **At mentions**  
 When you mention another profile in a post, it is a quite common feature that the mentioned profile gets informed. At this point,
