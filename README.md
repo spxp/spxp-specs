@@ -7,6 +7,8 @@ power from the network into endpoint devices.
 
 If you want to play with it and see it in action ASAP, take a look at our [Quickstart](./Quickstart.md).
 
+For a conceptual introduction, please take a look at [SPXP in a nutshell](./info/SPXP-in-a-nutshell.md).
+
 ## How it works
 
 Similar to the world wide web, a social profile is described by a simple text file in JSON format:
