@@ -1,61 +1,65 @@
 # New_ Public Submission
 ## What is the Digital Space? Please describe in detail.
-The following is a simplified introduction to the Social Profile Exchange Protocol (SPXP). Its purpose is neither to explain every aspect in detail nor to go too deep into the technical depths of the protocol (for this purpose it’s better to read the ~[protocol specification](https://github.com/spxp/spxp-specs)~ or watch the ~[YouTube videos](https://www.youtube.com/@SocialProfileExchangeProtocol)~). Instead it’s meant to provide a quick overview over the protocol and its capabilities and features for everybody.
+The following is a simplified introduction to the Social Profile Exchange Protocol (SPXP). Its purpose is neither to explain every aspect in detail nor to go too deep into the technical depths of the protocol (for this purpose it’s better to read the [protocol specification](https://github.com/spxp/spxp-specs) or watch the [YouTube videos](https://www.youtube.com/@SocialProfileExchangeProtocol)).  
+Instead it’s meant to provide a quick overview over the protocol and its capabilities and features for everybody.
 
 ### 1 Introduction
-1. SPXP is an open protocol for a decentralized social network
-2. SPXP strives for modeling relationships between humans in the physical world as well as learning from and improving on existing social networks
-3. It’s designed like the WWW and based on a client server model. (i.e. no peer-2-peer, federated, or relay network; no blockchain)
-4. Social profiles are hosted on servers and viewed by client apps
-5. Additionally, SPXP uses strong end-to-end cryptography to ensure authenticity, confidentiality and sovereignty aspects of the protocol.
+* a) SPXP is an open protocol for a decentralized social network
+* b) SPXP strives for modeling relationships between humans in the physical world as well as learning from and improving on existing social networks
+* c) It’s designed like the WWW and based on a client server model. (i.e. no peer-2-peer, federated, or relay network; no blockchain)
+* d) Social profiles are hosted on servers and viewed by client apps
+* e) Additionally, SPXP uses strong end-to-end cryptography to ensure authenticity, confidentiality and sovereignty aspects of the protocol.
 
 ### 2 Cryptography
-1. SPXP profiles can sign and encrypt messages (e.g. posts) and profile information (e.g. the year of birth)
-2. SPXP supports public and private information, e.g. posts.
-3. Public posts can be signed, but are not encrypted. Everybody can view them.
-4. Private posts are always signed and encrypted. Not everybody can view them.
-5. Signatures ensure information authenticity. Taking posts as an example, this guarantees:
-   1. A post’s authoring profile. A third party cannot pretend to be the author of a post.
-   2. A post’s integrity. A third party cannot alter a post.
-6. End-2-end encryption ensures confidentiality and information privacy. Only the sending and receiving client apps are able to view encrypted information.
+* a) SPXP profiles can sign and encrypt messages (e.g. posts) and profile information (e.g. the year of birth)
+* b) SPXP supports public and private information, e.g. posts.
+* c) Public posts can be signed, but are not encrypted. Everybody can view them.
+* d) Private posts are always signed and encrypted. Not everybody can view them.
+* e) Signatures ensure information authenticity. Taking posts as an example, this guarantees:
+  * i) A post’s authoring profile. A third party cannot pretend to be the author of a post.
+  * ii) A post’s integrity. A third party cannot alter a post.
+* f) End-2-end encryption ensures confidentiality and information privacy. Only the sending and receiving client apps are able to view encrypted information.
 
 ### 3 Communication
-1. A profile owner chooses if a post is public or private
-2. Private posts address one or more audiences, e.g. Alice might have “Friends”, “Close Friends” and “Family”.
-3. To view private posts of each other, two profiles need to mutually connect
-4. A profile owner may allow connected profiles to contribute to their own profile, e.g. by posting comments or reactions.
-5. A profile owner decides to which audience a connected profile belongs to
-6. A profile owner can terminate a connection at any time. Going forward, the two disconnected profiles cannot see private posts of each other anymore.
+* a) A profile owner chooses if a post is public or private
+* b) Private posts address one or more audiences, e.g. Alice might have “Friends”, “Close Friends” and “Family”.
+* c) To view private posts of each other, two profiles need to mutually connect
+* d) A profile owner may allow connected profiles to contribute to their own profile, e.g. by posting comments or reactions.
+* e) A profile owner decides to which audience a connected profile belongs to
+* f) A profile owner can terminate a connection at any time. Going forward, the two disconnected profiles cannot see private posts of each other anymore.
 
 ### 4 Privacy
-1. Unlike many social network platforms, SPXP doesn’t require creating an account or setting up a profile to browse the social network. Like a web browser can view websites in the WWW, an SPXP client app can view SPXP profiles.
-2. An SPXP server cannot see the content of private information it hosts, like private posts, comments or reactions (see 2f)
-3. The connection process is designed to use profile servers as a relay, so that both clients do not need to be active at the same time. It is end-to-end encrypted to prevent the server from gaining any knowledge beyond the bare minimum.
-4. Once two profiles established a connection between each other, a server doesn’t know which profile is commenting or reacting to a post
-5. As opposed to current major social network platforms, SPXP’s client server model prevents a single server from gaining absolute knowledge of the whole social network.
+* a) Unlike many social network platforms, SPXP doesn’t require creating an account or setting up a profile to browse the social network. Like a web browser can view websites in the WWW, an SPXP client app can view SPXP profiles.
+* b) An SPXP server cannot see the content of private information it hosts, like private posts, comments or reactions (see 2f)
+* c) The connection process is designed to use profile servers as a relay, so that both clients do not need to be active at the same time. It is end-to-end encrypted to prevent the server from gaining any knowledge beyond the bare minimum.
+* d) Once two profiles established a connection between each other, a server doesn’t know which profile is commenting or reacting to a post
+* e) As opposed to current major social network platforms, SPXP’s client server model prevents a single server from gaining absolute knowledge of the whole social network.
 
 ### 5 Sovereignty
-1. A user doesn’t need to agree to a platform’s Terms of Service (ToS) to view an SPXP profile. An SPXP client and the profile URL are sufficient.
-2. Creating an SPXP profile does not force a profile owner to agree to a platform’s ToS. Instead, they could decide to host their profile on a simple web server or choose from a variety of different hosting solutions and their individual offerings and terms of service.
-3. A profile owner can choose to run their own SPXP server to host their profile
-4. A profile owner can choose to relocate their profile to a different SPXP server, including their own.
-5. A profile owner has full control over their content (see 5a, 5b, 5c, 5d)
-6. A profile owner has full control over defining the recipients of each post (see 3)
-7. In general, only connected profiles can comment on each other’s posts or react to them with an emoji (see 3d). That is because a user cannot comment on or react to a post unless their profile is either connected with the author’s profile, or otherwise authorized. Again in other words: In general, a user cannot comment on or react to an unknown profile’s post.
-8. A profile owner has full control over comments on and reactions to their posts (see 5g)
-9. A profile owner is able to publish all information on their SPXP profile that they are legally allowed to publish on the WWW. Existing legislation applies. Countries have developed legislative frameworks for content published on the WWW; The same frameworks apply for content published via SPXP.
-10. There is no single, private, company owned, governance board (see 1c, 4e, 5i)
-11. Users can and should make use of existing judicial systems; They are able to take action against published information with the same mechanisms as against information published on the WWW.
-12. SPXP transfers control of content creation and consumption to the endpoints (e.g. client apps)
-13. SPXP consciously minimizes the role a server plays with regards to information publishing and profile and content management. This happens to an extent that an SPXP server is hosting encrypted information but does neither know the content nor its author (see 4c, 4d)
-14. An SPXP server hosts profiles and their content but cannot modify either on its own as the network endpoints have exclusive control over that (see 5l)
+1. a) A user doesn’t need to agree to a platform’s Terms of Service (ToS) to view an SPXP profile. An SPXP client and the profile URL are sufficient.
+2. b) Creating an SPXP profile does not force a profile owner to agree to a platform’s ToS. Instead, they could decide to host their profile on a simple web server or choose from a variety of different hosting solutions and their individual offerings and terms of service.
+3. c) A profile owner can choose to run their own SPXP server to host their profile
+4. d) A profile owner can choose to relocate their profile to a different SPXP server, including their own.
+5. e) A profile owner has full control over their content (see 5a, 5b, 5c, 5d)
+6. f) A profile owner has full control over defining the recipients of each post (see 3)
+7. g) In general, only connected profiles can comment on each other’s posts or react to them with an emoji (see 3d).   
+  That is because a user cannot comment on or react to a post unless their profile is either connected with the author’s profile, or otherwise authorized.   
+  Again in other words: In general, a user cannot comment on or react to an unknown profile’s post.
+8. h) A profile owner has full control over comments on and reactions to their posts (see 5g)
+9. i) A profile owner is able to publish all information on their SPXP profile that they are legally allowed to publish on the WWW.  
+   Existing legislation applies. Countries have developed legislative frameworks for content published on the WWW; The same frameworks apply for content published via SPXP.
+10. j) There is no single, private, company owned, governance board (see 1c, 4e, 5i)
+11. k) Users can and should make use of existing judicial systems; They are able to take action against published information with the same mechanisms as against information published on the WWW.
+12. l) SPXP transfers control of content creation and consumption to the endpoints (e.g. client apps)
+13. m) SPXP consciously minimizes the role a server plays with regards to information publishing and profile and content management. This happens to an extent that an SPXP server is hosting encrypted information but does neither know the content nor its author (see 4c, 4d)
+14. n) An SPXP server hosts profiles and their content but cannot modify either on its own as the network endpoints have exclusive control over that (see 5l)
 
 
 ## WELCOME
 ### Signal 1: Invite everyone to participate
 What it is: *The ability and opportunity for all of us to take part in digital society, regardless of background, especially for people who are typically disadvantaged. Also known as “social inclusion.”*
 
-* SPXP has a very low entrance barrier (see 4a). Participating in the SPXP network and community is easy. It’s safe to assume that freemium profile hosters and client apps are available (e.g. ~[HeyFolks App](https://heyfolks.app/)~, ~[spxp.space](https://spxp.space/)~). Thus, the only things required to participate are for example a smartphone, a client app (at no cost) and an internet connection.
+* SPXP has a very low entrance barrier (see 4a). Participating in the SPXP network and community is easy. It’s safe to assume that freemium profile hosters and client apps are available (e.g. [HeyFolks App](https://heyfolks.app/), [spxp.space](https://spxp.space/)). Thus, the only things required to participate are for example a smartphone, a client app (at no cost) and an internet connection.
 * SPXP is inclusive by design. Everybody can consume content without the need to sign terms of services (see 5a 5b) or to create their own account or profile first (see 4a). SPXP can be compared to the WWW which has shown that it’s inclusive (the same low entry barriers)
 * Easy profile and content discovery. Like with the WWW, search engines facilitate searchability and findability of SPXP profiles and public content. Additionally, users can browse the network by jumping along the connections between profiles.
 * SPXP is a protocol, not a product. The potential amount of apps and solutions that implement the protocol and offer their services is unlimited. 
@@ -86,7 +90,8 @@ SPXP focuses on modeling relationships between real humans in the physical world
 
 SPXP’s properties described in section 3 “Communication” implement all of the above. The SPXP network is not big enough yet to draw from world experiences and analysis. However, the idea is that:
 * SPXP allows for and thus encourages a user to address small audiences of mutually connected profiles who want to share private content with each other in a secure way. Humans by nature want to share with their loved ones. Members of these audiences know each other and treat each other like humans.
-* In general, SPXP prevents commenting on a public post without being connected to the author of the post. Remember that a connection needs to be mutually agreed upon. Today’s social media platforms often allow members to comment on a public post. The comments themselves often become a thread of their own that easily and often rather quickly diverts from the topic of the original post. Even worse, the thread may contain insults or defamation. Furthermore, as a friend of someone participating in a commenting thread, the platform may show my friends' comment in my timeline, thereby increasing the visibility of the potential toxic thread. All this is not possible with SPXP.
+* In general, SPXP prevents commenting on a public post without being connected to the author of the post. Remember that a connection needs to be mutually agreed upon.   
+  Today’s social media platforms often allow members to comment on a public post. The comments themselves often become a thread of their own that easily and often rather quickly diverts from the topic of the original post. Even worse, the thread may contain insults or defamation. Furthermore, as a friend of someone participating in a commenting thread, the platform may show my friends' comment in my timeline, thereby increasing the visibility of the potential toxic thread. All this is not possible with SPXP.
 
 Human relationships can also be commercial in nature. For example you might want to consume premium content from your favorite artist.
 * SPXP supports commercial relationships by the exchange of reader keys (paywall). This allows for example an artist to publish premium content to a limited and defined set of profile owners who don’t need to grant access to any private content to the artist. 
@@ -143,7 +148,7 @@ What it is: *The degree to which the public is heard by those in power, whether 
 * Like the WWW: Search engines could aggregate hashtags and generate trends and zeitgeist (think: MeToo movement)
 * In contrast to closed or federated networks, these search engines will be independent and focus on the users needs rather than optimizing search results for their specific business  model
 
-⠀
+
 ## UNDERSTAND
 ### Signal 9: Elevate shared concerns
 What it is: *The extent to which issues that are important can be elevated for consideration by society at large, whether by the news media, legislators, interest groups, or other actors.*
@@ -177,17 +182,23 @@ While SPXP cannot foster a certain type of content, its design can help to promo
 * SPXP does generally not support to comment on public posts of unconnected profiles (see signal 6)
 * Comments are always signed and associated with a profile. It’s not possible to comment anonymously.
 * SPXP fosters communication between real humans that typically know each other (see signal 3 and 6).
-* It’s also possible to comment on a public post of an unconnected profile if this profile grants a one time or time limited authorization to comment. However, commenting this way requires a confirmation on the commenter’s client app which enforces a conscious decision and helps reduce emotional and displacement behavior. Such a comment will still be signed and associated with the commenter’s profile.
+* It’s also possible to comment on a public post of an unconnected profile if this profile grants a one time or time limited authorization to comment. However, commenting this way requires a confirmation on the commenter’s client app which enforces a conscious decision and helps reduce emotional and displacement behavior.  
+   Such a comment will still be signed and associated with the commenter’s profile.
 
 
 ## ACT
 ### Signal 13: Boost community resilience
 What it is: *The ability of a community to recover from significant stress or adversity, such as natural disasters, public health emergencies, or violence.*
 
-The positive effects of the WWW are well  researched and understood. Since SPXP attempts to be a “social network designed like the WWW”, we hope to add a social aspect. For example, information can travel along profile connections and reach a targeted audience.
+The positive effects of the WWW are well  researched and understood. Since SPXP attempts to be a “social network designed like the WWW”, we hope to add a social aspect. For example, information can travel along profile connections and reach a targeted audience.  
 In addition,  the decentralized and distributed nature makes this protocol much more resilient than a centralized or federated service.
 
 ### Signal 14: Support Civic Action
 What it is: *Action to address issues of public concern — from volunteering to attending community meetings to co-creating new spaces and institutions.*
 
 Please see signal 13.
+
+
+## HOW CAN COMMUNITY BY DESIGN BEST SUPPORT YOU?
+
+Increase SPXP’s visibility in general but specifically amongst public institutions that currently need to make use of the big private US platforms due to a lack of alternatives that allow them to have 100% control over their content.
