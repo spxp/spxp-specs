@@ -29,7 +29,9 @@ profiles attest the identity of connected profiles.
 
 ## 2 Communication protocols
 Data is exchanged between participating clients and servers via HTTP, preferably over TLS (i.e. HTTPS). Clients and
-servers are encouraged to use the latest versions of these protocols, e.g. HTTP/2 and HTTP/3, and to prefer IPv6.
+servers are encouraged to use the latest versions of these protocols, e.g. HTTP/2 and HTTP/3, and to prefer IPv6.  
+SPXP servers SHOULD include the HTTP response header `Access-Control-Allow-Origin: *` on all SPXP endpoints. This
+allows browser-based clients to access SPXP profiles and endpoints directly without requiring a server-side proxy.
 
 ## 3 Transport encoding of structured data
 Data is encoded as JSON according to [RFC 7519 “The JavaScript Object Notation (JSON) Data Interchange
