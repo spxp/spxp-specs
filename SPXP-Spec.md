@@ -32,8 +32,8 @@ Data is exchanged between participating clients and servers via HTTP, preferably
 servers are encouraged to use the latest versions of these protocols, e.g. HTTP/2 and HTTP/3, and to prefer IPv6.
 
 ## 3 Transport encoding of structured data
-Data is encoded as JSON according to [RFC 7519 “The JavaScript Object Notation (JSON) Data Interchange
-Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP `Content-Type` header to
+Data is encoded as JSON according to [RFC 7519 "The JavaScript Object Notation (JSON) Data Interchange
+Format"](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP `Content-Type` header to
 be `application/json` with no `charset` parameter. Clients must always use UTF-8 character encoding, irrespective of any
 `charset` incorrectly sent by the server.  
 The term "Base64Url" throughout this specification refers to the URL safe Base 64 Encoding as specified in [RFC 4648
@@ -44,7 +44,7 @@ represent date and time information as part of JSON objects:
 
 | Format | Base Type | Description |
 |---|---|---|
-| `timestamp` | String | Instant in time in UTC encoded as “YYYY-MM-DD’T’hh:mm:ss.sss” according to [RFC3339](https://tools.ietf.org/html/rfc3339), but with millisecond precision and without a time offset  |
+| `timestamp` | String | Instant in time in UTC, encoded exactly as `YYYY-MM-DDThh:mm:ss.sssZ`. The literal `Z` suffix MUST be used. Any numeric UTC offset notation (e.g. `+00:00`, `+01:00`, `-05:00`) MUST NOT be used. Implementations SHOULD avoid standard serialization libraries that may produce numeric offset suffixes instead of `Z`.  |
 
 ## 4 Protocol versioning
 This protocol uses [Semantic Versioning](https://semver.org/). This document specifies protocol version `0.3`.
@@ -60,7 +60,7 @@ is composed of the following members:
 | `shortInfo` | String | optional | Additional short description of this profile |
 | `about` | String | optional | Additional long description of this profile, like a resume or bio |
 | `gender` | String | optional | Free text string specifying the gender of this profile. Clients should recognize the English text strings `female` and `male` and display localized text or icons. All other content can be displayed as-is. |
-| `website` | String | optional | URI of the profile’s website |
+| `website` | String | optional | URI of the profile's website |
 | `email` | String | optional | Email address of this profile |
 | `birthDayAndMonth` | String | optional | String of the format `dd-mm` with `dd` being a numeric value 1-31 and `mm` being a numeric value 1-12 specifying the day and month of birth of this profile in the Gregorian calendar |
 | `birthYear` | String | optional | String containing a positive numeric integer specifying the year of birth of this profile in the Gregorian calendar |
@@ -68,11 +68,11 @@ is composed of the following members:
 | `location` | Object | optional | [Social profile reference](#6-profile-reference-object) of the profile's current location |
 | `coordinates` | Object | optional | JSON Object containing two members `latitude` and `longitude` containing numeric values encoded as Strings specifying the profiles current position in signed degrees format in the WGS84 geodetic system. <br/> Latitude ranges from -90 to +90 and longitude ranges from -180 to +180. |
 | `profilePhoto` | String <br/> or <br/> Object | optional | String containing a _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to a resource holding a profile photo. Clients should at least support images in JPEG and PNG format. <br/> or <br/> JSON object holding decryption details and the location of an encrypted profile photo resource. (see [chapter 7](#7-encrypted-resources)) |
-| `friendsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “friends endpoint” as specified in [chapter 9](#9-friends-endpoint) |
-| `postsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “posts endpoint” as specified in [chapter 10](#10-posts-endpoint) |
-| `keysEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “keys endpoint” as specified in [chapter 12.2](#122-keys-endpoint) |
-| `publishEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “publish endpoint” as specified in [chapter 15](#15-publishing) |
-| `publicKey` | Object | optional | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (“kid”) |
+| `friendsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the "friends endpoint" as specified in [chapter 9](#9-friends-endpoint) |
+| `postsEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the "posts endpoint" as specified in [chapter 10](#10-posts-endpoint) |
+| `keysEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the "keys endpoint" as specified in [chapter 12.2](#122-keys-endpoint) |
+| `publishEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the "publish endpoint" as specified in [chapter 15](#15-publishing) |
+| `publicKey` | Object | optional | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 "JSON Web Key (JWK)"](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id ("kid") |
 | `connect` | Object | optional | Additional details for the connection process, if and only if this object accepts connection requests as specified in [chapter 14](#14-profile-connections) |
 | `timestamp` | timestamp | optional | Timestamp helping clients identifying the most recent version of a profile. Required if `profileLocation` is present. |
 | `profileLocation` | String | optional | _Absolute URI_ as defined in [RFC 3986 Section 4.3](https://tools.ietf.org/html/rfc3986#section-4.3) pointing to the primary location of this profile. Used in the relocation process as specified in [chapter 15](#15-profile-relocation) |
@@ -82,7 +82,7 @@ Note:
 Clients should track the `timestamp` of a profile in their internal data structures and discard profile root documents
 they receive which are older than the state recorded by the client.
 
-Example:
+Example:  
 ```json
 {
     "ver" : "0.3",
@@ -120,7 +120,7 @@ Example:
     "friendsEndpoint" : "friends/alice",
     "postsEndpoint" : "posts?profile=alice",
     "profileLocation" : "https://example.com/spxp/alice",
-    "timestamp" : "2018-09-11T09:42:13.526"
+    "timestamp" : "2018-09-11T09:42:13.526Z"
 }
 ```
 
@@ -133,9 +133,9 @@ object with these members:
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
 | `uri` | String | required | [Profile URI](#12-profile-uri) of referenced profile |
-| `publicKey` | Object | optional | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (“kid”) |
+| `publicKey` | Object | optional | JSON object describing the public key of the profile's key pair as JWK defined in [RFC 7517 "JSON Web Key (JWK)"](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id ("kid") |
 
-Example:
+Example:  
 ```json
 {
     "uri" : "https://example.com/spxp/alice",
@@ -193,7 +193,7 @@ algorithm. The resulting signature is then embedded into the JSON object as `sig
 | `aad` | String | optional | additional authenticated data |
 | `sig` | String | required | Base64Url encoded Ed25519 signature |
 
-Example:
+Example:  
 ```json
 {
     "ver" : "0.3",
@@ -230,7 +230,7 @@ object with the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `publicKey` | Object | required | JSON object describing the public key of the authorized key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (`kid`) |
+| `publicKey` | Object | required | JSON object describing the public key of the authorized key pair as JWK defined in [RFC 7517 "JSON Web Key (JWK)"](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1). <br/> Must have a unique, random key id (`kid`) |
 | `grant` | Array | required | Array of Strings identifying the operations that this key pair is allowed to perform |
 
 This certificate object must be signed as defined in [chapter 8.1](#81-signing-json-objects). Since the key of this
@@ -253,7 +253,7 @@ Valid `grant` values are (case sensitive):
 The profile root document ([5](#5-social-profile-root-document)) must always be signed by the profile key pair
 ([1.1](#11-cryptographic-profile-key-pair)) directly.
 
-Example:
+Example:  
 ```json
 {
     "publicKey" : {
@@ -273,12 +273,12 @@ Example:
 ### 8.3 Self-signed profile key
 The profile root document ([5](#5-social-profile-root-document)) must be signed with the key listed as `publicKey` in
 the same document. It thus constitutes a self-signed certificate.  
-Profile clients have to “lock in” on this key and only present data to the user that has been signed by this key. It is
+Profile clients have to "lock in" on this key and only present data to the user that has been signed by this key. It is
 important to understand that this proves the authenticity of data against this profile, but it does not verify the
 identity of the entity controlling this profile.
 
 ## 9 Friends endpoint
-Social profiles can expose a list of other social profiles as “friends”. If the profile root object declares a
+Social profiles can expose a list of other social profiles as "friends". If the profile root object declares a
 `friendsEndpoint`, then it exposes a JSON object as follows:
 
 | Name | Type | Mandatory | Description |
@@ -286,7 +286,7 @@ Social profiles can expose a list of other social profiles as “friends”. If 
 | `data` | Array | required | Array of [Social profile reference objects](#6-profile-reference-object) |
 | `private` | Array | optional | Array of private data as specified in [chapter 11](#11-private-data) |
 
-Example:
+Example:  
 ```json
 {
     "data" : [ {
@@ -310,7 +310,7 @@ Example:
 ```
 
 ## 10 Posts endpoint
-Social profiles can publish a stream of timestamped messages, named “posts”. If a social profile declares a
+Social profiles can publish a stream of timestamped messages, named "posts". If a social profile declares a
 `postsEndpoint` in the profile root document ([5](#5-social-profile-root-document)), then the server responds with the
 following JSON object:
 
@@ -385,13 +385,13 @@ Depending on the `type`, additional members are defined as follows:
 | `emoji` | String | required | Single unicode character text emoji |
 | `ref` | Object | required | [Post reference object](#102-post-reference-object) referencing post this reaction refers to|
 
-Example:
+Example:  
 ```json
 {
     "data" : [
         {
-            "seqts" : "2018-09-17T14:04:27.373",
-            "createts" : "2018-09-16T12:23:18.751",
+            "seqts" : "2018-09-17T14:04:27.373Z",
+            "createts" : "2018-09-16T12:23:18.751Z",
             "type" : "text",
             "message" : "Hello, world!",
             "signature" : {
@@ -399,7 +399,7 @@ Example:
                 "sig" : "bDOgcT4uxTKYMTuOJXDbAPc1UA2p-aGdxwplUWNStzyDRIRPu9UxaTU1IoZ1ELjBY5iRf4FEBPV09Uw9TOYuCA"
             }
         }, {
-            "seqts" : "2018-09-15T12:35:47.735",
+            "seqts" : "2018-09-15T12:35:47.735Z",
             "type" : "web",
             "message" : "Interesting read...",
             "link" : "https://example.com",
@@ -408,8 +408,8 @@ Example:
                 "sig" : "skQBzttDURV-N4kqK9fgyWw4Ddixsmld4nnilC_XUqSZhXfeNfw_4PrIlLwaFdHDTO-au4iaZM64oSWLP-z0BA"
             }
         }, {
-            "seqts" : "2018-09-16T13:35:47.735",
-            "createts" : "2018-09-16T12:25:13.614",
+            "seqts" : "2018-09-16T13:35:47.735Z",
+            "createts" : "2018-09-16T12:25:13.614Z",
             "author" : "https://example.com/ctypto.bob",
             "type" : "photo",
             "message" : "Look at this",
@@ -432,13 +432,13 @@ Example:
                 "sig" : "94dyGxvPcVuueFjVj_RwedWy5m3dasRDYf1iOxnYXUEYDS33LYzn9kqe6aIRMZchxWqlM1K_fX-uHVFDRjzSAg"
             }
         }, {
-            "seqts" : "2018-09-19T05:12:18.264",
-            "createts" : "2018-09-19T05:12:17.157",
+            "seqts" : "2018-09-19T05:12:18.264Z",
+            "createts" : "2018-09-19T05:12:17.157Z",
             "type" : "reaction",
             "author" : "https://example.com/ctypto.bob",
             "emoji" : "❤",
             "ref" : {
-                "seqts" : "2018-09-17T14:04:27.373",
+                "seqts" : "2018-09-17T14:04:27.373Z",
                 "hash" : "wu-qP3IBAyttD_6QVI1mlypRVMTzxTIpH6jrkFkHEct57bHN2xBj0GYvaniLPiVgLNJxqSwDCMaPMEYYzprVWg"
             },
             "signature" : {
@@ -500,7 +500,7 @@ Supported query parameters:
 | `after` | timestamp | Only include items with a timestamp after this date |
 
 Example:  
-Let’s assume the posts endpoint is specified in the profile root document as  
+Let's assume the posts endpoint is specified in the profile root document as
 ```
 https://spxp.example.com/posts?user=alice
 ```
@@ -513,9 +513,9 @@ The server returns two post items
 {
     "data" : [
         {
-            "seqts" : "2018-09-17T14:04:27.373", "type" : "..."
+            "seqts" : "2018-09-17T14:04:27.373Z", "type" : "..."
         }, {
-            "seqts" : "2018-09-15T12:35:47.735", "type" : "..."
+            "seqts" : "2018-09-15T12:35:47.735Z", "type" : "..."
         }
     ],
     "more" : true
@@ -524,16 +524,16 @@ The server returns two post items
 Since the server indicated that there are more posts available before the oldest item in the data array, the client runs
 another query
 ```
-https://spxp.example.com/posts?user=alice&max=2&before=2018-09-15T12:35:47.735
+https://spxp.example.com/posts?user=alice&max=2&before=2018-09-15T12:35:47.735Z
 ```
 The server then returns another two items
 ```json
 {
     "data" : [
         {
-            "seqts" : "2018-09-13T10:06:17.484", "type" : "..."
+            "seqts" : "2018-09-13T10:06:17.484Z", "type" : "..."
         }, {
-            "seqts" : "2018-09-12T15:16:17.484", "type" : "..."
+            "seqts" : "2018-09-12T15:16:17.484Z", "type" : "..."
         }
     ],
     "more" : true
@@ -544,16 +544,16 @@ limited window of all available posts and continues to load items when the user 
 in an infinite scroll view.  
 After some time, the client checks if new posts have been published
 ```
-https://spxp.example.com/posts?user=alice&max=2&after=2018-09-17T14:04:27.373
+https://spxp.example.com/posts?user=alice&max=2&after=2018-09-17T14:04:27.373Z
 ```
 The server returns these items
 ```json
 {
     "data" : [
         {
-            "seqts" : "2018-09-20T16:05:28.373", "type" : "..."
+            "seqts" : "2018-09-20T16:05:28.373Z", "type" : "..."
         }, {
-            "seqts" : "2018-09-19T15:45:37.735", "type" : "..."
+            "seqts" : "2018-09-19T15:45:37.735Z", "type" : "..."
         }
     ],
     "more" : true
@@ -562,14 +562,14 @@ The server returns these items
 The `more` parameter indicates that there are more items available between the oldest item in the data array and the
 `after` query parameter. So the client tries to close this gap:
 ```
-https://spxp.example.com/posts?user=alice&max=2&after=2018-09-17T14:04:27.373&before=2018-09-19T15:45:37.735
+https://spxp.example.com/posts?user=alice&max=2&after=2018-09-17T14:04:27.373Z&before=2018-09-19T15:45:37.735Z
 ```
 And the server responds with
 ```json
 {
     "data" : [
         {
-            "seqts" : "2018-09-18T09:06:17.484", "type" : "..."
+            "seqts" : "2018-09-18T09:06:17.484Z", "type" : "..."
         }
     ],
     "more" : false
@@ -577,8 +577,8 @@ And the server responds with
 ```
 
 ## 11 Private data
-Specific JSON objects in the SPXP standard, as listed below, can contain encrypted data according to [RFC 7516 “JSON
-Web Encryption (JWE)”](https://tools.ietf.org/html/rfc7516). These objects comprise an additional member named `private`
+Specific JSON objects in the SPXP standard, as listed below, can contain encrypted data according to [RFC 7516 "JSON
+Web Encryption (JWE)"](https://tools.ietf.org/html/rfc7516). These objects comprise an additional member named `private`
 containing an array of either a String containing a JWE object in Compact Serialization or an object containing a JWE
 object in JSON Serialization. The decrypted plaintext contains again a JSON object in UTF-8 charset encoding. The
 decrypted objects are then merged into the main object according to the object merging rules defined in
@@ -612,7 +612,7 @@ If the JWE encrypted object uses Additional Authenticated Data (AAD), clients mu
 encrypted JWE object matches the AAD in the signature of the decrypted plaintext.
 
 ### 11.5 Full example of private data in profile root document
-Example:
+Example:  
 ```json
 {
     "ver" : "0.3",
@@ -646,8 +646,8 @@ It is Base64Url decoded to the JWE header:
     {"kid":"ABCD.1234","enc":"A256GCM","alg":"dir"}
 ```
 It specifies direct encryption with 256 bit AES in Galois/Counter Mode using the key `ABCD.1234` (example). Since we do not use a
-separate content encryption key (`"alg":"dir"`), the second part is empty. The third part `SfT0skkI…` contains the
-Initialization Vector and the forth part `eDnedk0R…` the ciphertext. The last part `zYtiVMmo…` contains the tag to
+separate content encryption key (`"alg":"dir"`), the second part is empty. The third part `SfT0skkI...` contains the
+Initialization Vector and the forth part `eDnedk0R...` the ciphertext. The last part `zYtiVMmo...` contains the tag to
 validate the message integrity. The ciphertext is then decrypted to
 ```json
     {"website":"https://example.com","signature":{"key":"C8xSIBPKRTcXxFix","sig":"nEd-NXLlBDjcmCJHhzn9CaVYuRBsG4SDDgdHql85xdGtgb_bql2SnZh2oeMf-dk_g-YhT3uRyZHZRTriUEnCBA"}}
@@ -675,7 +675,7 @@ then gets merged into the profile root document:
 Private data can only be decrypted by readers who are able to obtain the necessary decryption key. Due to the possibly
 large number of readers and/or large number of data items, we cannot simply encrypt every single data element for all
 possible readers. Instead, readers are organized in a hierarchical structure of groups. Decryption keys are then
-encrypted themselves along a path through this hierarchy (key wrapping). The “keys endpoint” ([12.2](#122-keys-endpoint))
+encrypted themselves along a path through this hierarchy (key wrapping). The "keys endpoint" ([12.2](#122-keys-endpoint))
 allows clients to discover groups relevant to them and to obtain keys required to decrypt dependant keys and data
 elements.
 
@@ -691,7 +691,7 @@ hierarchy of groups and readers:
 
 Each group is uniquely identified by a _group id_. This id should be generated randomly. A stream of _round keys_ is
 associated with each group. The key id of these round keys is generated by concatenating the group id with a dot and a
-random round id. In the example above, the publishing group “Friends” could have the following stream of keys:
+random round id. In the example above, the publishing group "Friends" could have the following stream of keys:
 ```
     grp-friends.key0, grp-friends.key1, grp-friends.key2, ...
 ```
@@ -715,8 +715,8 @@ In the example above, the social profile could maintain the following keys:
 | `grp-virt0.key1` | `key-alice` |
 | `grp-virt0.key2` | `key-alice` |
 
-When a new post is created, the client of this profile would offer the groups “Friends”, “Close Friends” and “Family” as
-possible audience. If the user selects “Friends” as audience, the client would pick the most recent key of this group,
+When a new post is created, the client of this profile would offer the groups "Friends", "Close Friends" and "Family" as
+possible audience. If the user selects "Friends" as audience, the client would pick the most recent key of this group,
 `grp-friends.key2` in this example, and use it to encrypt the private data of this post.  
 When Alice finds this post with the associated private data, she looks at the JWE header of the private data and learns
 the required key id `grp-friends.key2`. If she does not have this key yet, she uses the keys endpoint to obtain the
@@ -787,7 +787,7 @@ The innermost member contains a JWE object in compact serialization that contain
 The JWE headers of the `groupX.key#` entries would define one of the `groupA.key#` keys as the valid decryption key.  
 If the `request` parameter is given, the server returns all round keys given in this list as well as all intermediate
 round keys required to decrypt these keys until the initial key given as `reader`.  
-Example:
+Example:  
 ```
 GET https://example.com/spxp/roger/keys?connectionId=key-alice&request=groupX.key2
 200 OK
@@ -848,7 +848,7 @@ contains the information required by other profiles to craft a connection reques
 server.
 
 ### 14.1 Connection Process
-The connection process between two profiles controlled by “Alice” and “Bob” is as follows:
+The connection process between two profiles controlled by "Alice" and "Bob" is as follows:
 1. Alice creates a new [reader key](#124-reader-keys) and optionally an [authorized signing key](#82-authorized-signing-keys)
    (certificate) for Bob as well as a random _connection establishment ID_ and an _ephemeral connection establishment key_.
 2. Alice creates a connection package for Bob containing this reader key and certificate. She then encrypts this package
@@ -893,10 +893,10 @@ following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `endpoint` | String | required | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the “connect endpoint” as specified in [chapter 14.7](#147-connect-endpoint) |
-| `key` | Object | required | JSON object describing the public key of the connection key pair as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the X25519 key agreement curve specifier as defined in [RFC 8037 Section 3.2](https://tools.ietf.org/html/rfc8037#section-3.2). |
+| `endpoint` | String | required | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) pointing to the "connect endpoint" as specified in [chapter 14.7](#147-connect-endpoint) |
+| `key` | Object | required | JSON object describing the public key of the connection key pair as JWK defined in [RFC 7517 "JSON Web Key (JWK)"](https://tools.ietf.org/html/rfc7517) using the X25519 key agreement curve specifier as defined in [RFC 8037 Section 3.2](https://tools.ietf.org/html/rfc8037#section-3.2). |
 
-Example:
+Example:  
 ```json
 {
     "ver" : "0.3",
@@ -933,10 +933,10 @@ following members:
 | `type` | String | required | Fixed text string `connection_package` |
 | `ver` | String | required | Most recent version of SPXP supported by the client |
 | `establishId` | String | required | Unique random connection establishment ID |
-| `readerKey` | Object | optional | JSON object describing a [reader key](#124-reader-keys) as JWK as defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) |
+| `readerKey` | Object | optional | JSON object describing a [reader key](#124-reader-keys) as JWK as defined in [RFC 7517 "JSON Web Key (JWK)"](https://tools.ietf.org/html/rfc7517) |
 | `publishing` | Object | optional | Object containing additional information for the publishing process as specified in [chapter 15](#15-publishing) if the recipient is authorised to publish on the issuing profile |
 
-Example:
+Example:  
 ```json
 {
     "type" : "connection_package",
@@ -955,8 +955,8 @@ Example:
 }
 ```
 
-The connection package must be signed by the issuer. It is then encrypted according to [RFC 7516 “JSON Web Encryption
-(JWE)”](https://tools.ietf.org/html/rfc7516) using the _ephemeral connection establishment key_. The only supported
+The connection package must be signed by the issuer. It is then encrypted according to [RFC 7516 "JSON Web Encryption
+(JWE)"](https://tools.ietf.org/html/rfc7516) using the _ephemeral connection establishment key_. The only supported
 encryption method is direct encryption with 256 bit AES in Galois/Counter Mode, identified as `"alg": "dir", "enc":
 "A265GCM"` by JWE. This requires a new random initialisation vector `iv` for each package.
 
@@ -981,7 +981,7 @@ To initiate a connection, the client generates a JSON object with the following 
 | `requestee` | Object | required | [Social profile reference](#6-profile-reference-object) of the profile this request is sent to |
 | `responseEndpoint` | String | optional | _URI-reference_ as defined in [RFC 3986 Section 4.1](https://tools.ietf.org/html/rfc3986#section-4.1) relative to the requester profile URI specifying the endpoint to be used by the requestee to [exchange connection packages](#148-connection-package-exchange). If missing, the requesters connection endpoint is used. |
 | `offering` | Array | required | Array of Strings identifying the access that the requester is offering with this connection |
-| `establishKey` | Object | required | JSON object describing the _ephemeral connection establishment key_ as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) |
+| `establishKey` | Object | required | JSON object describing the _ephemeral connection establishment key_ as JWK defined in [RFC 7517 "JSON Web Key (JWK)"](https://tools.ietf.org/html/rfc7517) |
 
 Valid `offering` values are (case sensitive):
 
@@ -992,12 +992,12 @@ Valid `offering` values are (case sensitive):
 | `comment` | When accepting this request, the requestee is given a certificate granting `comment` permissions optionally together with a publishing key for private posts |
 | `react` | When accepting this request, the requestee is given a certificate granting `react` permissions optionally together with a publishing key for private posts |
 
-Example:
+Example:  
 ```json
 {
     "type" : "connection_request",
     "ver" : "0.3",
-    "timestamp" : "2020-01-12T09:40:17.734",
+    "timestamp" : "2020-01-12T09:40:17.734Z",
     "expires" : "2020-07-12T09:40:17.734",
     "establishId" : "K4dwfD4wA67xaD-t",
     "requester" : {
@@ -1034,8 +1034,8 @@ Example:
 }
 ```
 
-The connection request object must always be signed by the requester. It is then encrypted according to [RFC 7516 “JSON
-Web Encryption (JWE)”](https://tools.ietf.org/html/rfc7516) using the Elliptic Curve Diffie-Hellman Ephemeral Static key
+The connection request object must always be signed by the requester. It is then encrypted according to [RFC 7516 "JSON
+Web Encryption (JWE)"](https://tools.ietf.org/html/rfc7516) using the Elliptic Curve Diffie-Hellman Ephemeral Static key
 agreement on the X25519 curve and content encrypted with 256 bit AES in Galois/Counter Mode, identified by
 JWE as `"alg": "ECDH-ES", "enc": "A265GCM"`.
 
@@ -1103,7 +1103,7 @@ Example response:
 ```
 
 ### 14.7 Connect endpoint
-The encrypted [connect message](#145-connect-message) is is sent to the “connect endpoint“ with a HTTP POST request,
+The encrypted [connect message](#145-connect-message) is is sent to the "connect endpoint" with a HTTP POST request,
 optionally combined with a connect token. The requesting client sends a JSON object with the following members as HTTP
 body:
 
@@ -1122,7 +1122,7 @@ The server responds with one of these status codes
 | `403` | The token is not present or invalid |
 | `429` | The client IP address has sent too many connection requests to the profile server in a given time window or this profile has too many connection requests already waiting to be processed |
 
-Example:
+Example:  
 ```json
 {
     "type" : "connection_request",
@@ -1263,7 +1263,7 @@ The optional `postPrivate` JSON objects has the following members:
 
 | Name | Type | Mandatory | Description |
 |---|---|---|---|
-| `publishKey` | Object | required | JSON object describing the signing key pair used in the private publishing process as JWK defined in [RFC 7517 “JSON Web Key (JWK)”](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1) |
+| `publishKey` | Object | required | JSON object describing the signing key pair used in the private publishing process as JWK defined in [RFC 7517 "JSON Web Key (JWK)"](https://tools.ietf.org/html/rfc7517) using the Ed25519 curve specifier as defined in [RFC 8037 Section 3.1](https://tools.ietf.org/html/rfc8037#section-3.1) |
 | `groups` | Object | required | JSON object containing a mapping between end user display names and group ids of publish groups which can be used for encrypted private posts |
 
 Example within a connection package:
@@ -1315,7 +1315,7 @@ Example within a connection package:
 ```
 
 ### 15.2 Publish endpoint
-To publish a post on the peer profile, the protocol client sends an HTTP POST request to the “publish endpoint“ with a
+To publish a post on the peer profile, the protocol client sends an HTTP POST request to the "publish endpoint" with a
 JSON object as HTTP  body. This object is composed of the following members:
 
 | Name | Type | Mandatory | Description |
@@ -1333,13 +1333,13 @@ The server responds with one of these status codes.
 | `403` | The authentication token is not present or invalid |
 | `429` | The client IP address has sent too many requests to the profile server in a given time window |
 
-Example:
+Example:  
 ```json
 {
     "type" : "post",
     "ver" : "0.3",
     "post" : {
-        "createts" : "2018-09-16T12:23:18.751",
+        "createts" : "2018-09-16T12:23:18.751Z",
         "type" : "text",
         "message" : "Hello, world!",
         "signature" : {
@@ -1361,7 +1361,7 @@ encrypted object (see [11.4](#114-private-data-and-signatures)).
 
 ### 15.3 Publishing tokens
 To prepare the publishing process, the protocol client first needs to obtain a one time publishing token by sending
-an HTTP POST request to the “publish  endpoint“  with a JSON object as HTTP body. This object is composed of the
+an HTTP POST request to the "publish  endpoint"  with a JSON object as HTTP body. This object is composed of the
 following members:
 
 | Name | Type | Mandatory | Description |
@@ -1395,7 +1395,7 @@ Example POST request:
 {
     "type" : "prepare_post",
     "ver" : "0.3",
-    "timestamp" : "2021-06-21T14:11:35.621",
+    "timestamp" : "2021-06-21T14:11:35.621Z",
     "group" : "grp-friends",
     "signature" : {
         "key" : "QcUQRaiTiOuchvSy",
@@ -1556,7 +1556,7 @@ events therein. The `return_uri` method is recommended for web applications that
 
 ## Appendix B. Private keys used in examples
 The following cryptographic material has been used in the examples in this document.  
-Profile keypair of “Crypto Alice”:
+Profile keypair of "Crypto Alice":
 ```json
 {
     "kid" : "C8xSIBPKRTcXxFix",
@@ -1566,7 +1566,7 @@ Profile keypair of “Crypto Alice”:
     "d" : "2z_e9iw_JST71w3g2LrKVf38QiCiESlAQLeSRYVwylM"
 }
 ```
-Profile keypair of “Emerald City”:
+Profile keypair of "Emerald City":
 ```json
 {
     "kid" : "DJlPdI5nMAYjDevc",
@@ -1576,7 +1576,7 @@ Profile keypair of “Emerald City”:
     "d" : "RIDTPT21NCvZlhZ6_CrGbLOPs6BI0LRcsOqjs5osdoI"
 }
 ```
-Profile keypair of “Hill Valley”:
+Profile keypair of "Hill Valley":
 ```json
 {
     "kid" : "5N2SCpjuAeRUXNN-",
@@ -1586,7 +1586,7 @@ Profile keypair of “Hill Valley”:
     "d" : "2hmY4h-BIlBh3fW0O1XQhN8vMxA3rMax9tc4CQ9SPm4"
 }
 ```
-Profile keypair of “Crypto Bob” (Certificate in section 7.2):
+Profile keypair of "Crypto Bob" (Certificate in section 7.2):
 ```json
 {
     "kid" : "czlHMPEJcLb7jMUI",
@@ -1596,7 +1596,7 @@ Profile keypair of “Crypto Bob” (Certificate in section 7.2):
     "d" : "2rPwDJQKGDmIeF7iKrDnlJZPFzzQLUOp3Ul687Fc9QY"
 }
 ```
-Symmetric AES key “ABCD.1234” used in chapter 11.5:
+Symmetric AES key "ABCD.1234" used in chapter 11.5:
 ```json
 {
     "kid" : "ABCD.1234",
@@ -1605,7 +1605,7 @@ Symmetric AES key “ABCD.1234” used in chapter 11.5:
     "k" : "Dl3fyz_0lHaSeFl-TJxSTr2NET5H6t2SELmI5tiCFno"
 }
 ```
-Connect keypair of “Crypto Alice”:
+Connect keypair of "Crypto Alice":
 ```json
 {
     "kid" : "L-wsKFPrhxC7aau_",
@@ -1615,7 +1615,7 @@ Connect keypair of “Crypto Alice”:
     "d" : "KJw3lk0cQ87vUaX8FDaE_7fpWXasmplyRv0zEo8K_VQ"
 }
 ```
-Connect keypair of “Crypto Bob”:
+Connect keypair of "Crypto Bob":
 ```json
 {
     "kid" : "-aiWD4qECT28QUyh",
@@ -1625,7 +1625,7 @@ Connect keypair of “Crypto Bob”:
     "d" : "EFNnIBvFGaV_hIq0tznz4b1O1Md0xPLgY_Fam_z0A04"
 }
 ```
-Ephemeral Connection Establishment Key between “Crypto Alice” and “Crypto Bob” used in chapter 14:
+Ephemeral Connection Establishment Key between "Crypto Alice" and "Crypto Bob" used in chapter 14:
 ```json
 {
     "kid" : "T7n_19BqWjU17l1s",
@@ -1634,7 +1634,7 @@ Ephemeral Connection Establishment Key between “Crypto Alice” and “Crypto 
     "k" : "AnkrwD_Et1E0-FB0XYU38hpmdEGr0LOBO8O2HRdzgOw"
 }
 ```
-Publishing Keypair issued by “Crypto Alice” for “Crypto Bob” to used in chapter 15:
+Publishing Keypair issued by "Crypto Alice" for "Crypto Bob" to used in chapter 15:
 ```json
 {
     "kid" : "QcUQRaiTiOuchvSy",
