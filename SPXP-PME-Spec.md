@@ -29,7 +29,7 @@ Example:
 {
     "profile_uri" : "https://example.com/spxp/alice",
     "device_id" : "my-fancy-phone",
-    "timestamp" : "2020-01-15T10:39:15.437",
+    "timestamp" : "2020-01-15T10:39:15.437Z",
     "signature" : {
         "key" : "C8xSIBPKRTcXxFix",
         "sig" : "htQvu861MyGldtDEaDfOBydlijO_FaZYnpgXuvgcO0H5HNCIkQ_VIOWKZL9peZ19PjPjvpWtQbZEOvNh05o6Bw"
@@ -76,7 +76,7 @@ Example:
 ```json
 {
     "device_token" : "MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3",
-    "timestamp" : "2020-01-15T10:39:17.164",
+    "timestamp" : "2020-01-15T10:39:17.164Z",
     "signature" : {
         "key" : "C8xSIBPKRTcXxFix",
         "sig" : "sfdzUrSIjZA2ZTFAQSO8NHqDz1LlhAbRbcmiOlIcEpz9ezlNoxYAhYHIctCpa4eG3NGaVGruMVVzQE0Y6ez6BQ"
@@ -219,19 +219,19 @@ Supported query parameters:
 | `before` | timestamp | Only include items with a timestamp before this date |
 | `after` | timestamp | Only include items with a timestamp after this date |
 
-Example request: `<baseUri>/service/messages?max=5&after=2018-09-17T14:04:27.373&before=2018-09-19T15:45:37.735`  
+Example request: `<baseUri>/service/messages?max=5&after=2018-09-17T14:04:27.373Z&before=2018-09-19T15:45:37.735Z`  
 
 Example:
 ```json
 {
     "data" : [
         {
-            "seqts" : "2018-09-17T14:04:27.373",
+            "seqts" : "2018-09-17T14:04:27.373Z",
             "type" : "provider_message",
             "message" : "Hello, world!",
             "link" : "https://example.com"
         }, {
-            "seqts" : "2018-09-15T12:35:47.735",
+            "seqts" : "2018-09-15T12:35:47.735Z",
             "type" : "connection_request",
             "received" : "2018-09-15T12:35:46.123",
             "ver" : "0.3",
@@ -290,7 +290,7 @@ Body: the entire JSON object of one single post object as specified in the SPXP 
 Example:
 ```json
 {
-    "createts" : "2018-09-16T12:23:18.751",
+    "createts" : "2018-09-16T12:23:18.751Z",
     "type" : "text",
     "message" : "Hello, world!",
     "signature" : {
@@ -311,7 +311,7 @@ Success response body:
 Example:
 ```json
 {
-    "seqts" : "2018-09-17T14:04:27.373"
+    "seqts" : "2018-09-17T14:04:27.373Z"
 }
 ```
 The server will assign a unique seqts, store the post and return the assigned seqts.
