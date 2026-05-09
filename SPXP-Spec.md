@@ -44,7 +44,7 @@ represent date and time information as part of JSON objects:
 
 | Format | Base Type | Description |
 |---|---|---|
-| `timestamp` | String | Instant in time in UTC, encoded exactly as `YYYY-MM-DDThh:mm:ss.sssZ`. The literal `Z` suffix MUST be used. Any numeric UTC offset notation (e.g. `+00:00`, `+01:00`, `-05:00`) MUST NOT be used. Implementations SHOULD avoid standard serialization libraries that may produce numeric offset suffixes instead of `Z`.  |
+| `timestamp` | String | Instant in time in UTC. When **writing**, implementations MUST encode timestamps as `YYYY-MM-DDThh:mm:ss.sssZ` — the literal `Z` suffix is required and any numeric UTC offset notation (e.g. `+00:00`) MUST NOT be used. When **reading**, implementations MUST also accept timestamps without the `Z` suffix (i.e. `YYYY-MM-DDThh:mm:ss.sss`) and treat them as UTC. Implementations SHOULD avoid standard serialization libraries that may produce numeric offset suffixes instead of `Z`. |
 
 ## 4 Protocol versioning
 This protocol uses [Semantic Versioning](https://semver.org/). This document specifies protocol version `0.3`.
