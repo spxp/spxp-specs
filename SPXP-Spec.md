@@ -32,7 +32,7 @@ Data is exchanged between participating clients and servers via HTTP, preferably
 servers are encouraged to use the latest versions of these protocols, e.g. HTTP/2 and HTTP/3, and to prefer IPv6.
 
 ## 3 Transport encoding of structured data
-Data is encoded as JSON according to [RFC 7519 “The JavaScript Object Notation (JSON) Data Interchange
+Data is encoded as JSON according to [RFC 7159 “The JavaScript Object Notation (JSON) Data Interchange
 Format”](https://tools.ietf.org/html/rfc7159). Please note that this standard defines the HTTP `Content-Type` header to
 be `application/json` with no `charset` parameter. Clients must always use UTF-8 character encoding, irrespective of any
 `charset` incorrectly sent by the server.  
@@ -593,7 +593,7 @@ Private data is supported for:
 
 ### 11.2 Supported algorithm and encoding
 The only supported encryption method is direct encryption with 256 bit AES in Galois/Counter Mode, identified as
-`"alg": "dir", "enc": "A265GCM"` by JWE. This requires a new random initialisation vector `iv` for each private block.
+`"alg": "dir", "enc": "A256GCM"` by JWE. This requires a new random initialisation vector `iv` for each private block.
 
 ### 11.3 Object merging rules
 A source object `src` is merged into a target object `dst` as follows:  
@@ -958,7 +958,7 @@ Example:
 The connection package must be signed by the issuer. It is then encrypted according to [RFC 7516 “JSON Web Encryption
 (JWE)”](https://tools.ietf.org/html/rfc7516) using the _ephemeral connection establishment key_. The only supported
 encryption method is direct encryption with 256 bit AES in Galois/Counter Mode, identified as `"alg": "dir", "enc":
-"A265GCM"` by JWE. This requires a new random initialisation vector `iv` for each package.
+"A256GCM"` by JWE. This requires a new random initialisation vector `iv` for each package.
 
 ### 14.4 Preparing a Connection
 The initiator prepares the connection by sending the reader key, optional publishing key and encrypted connection
@@ -1037,7 +1037,7 @@ Example:
 The connection request object must always be signed by the requester. It is then encrypted according to [RFC 7516 “JSON
 Web Encryption (JWE)”](https://tools.ietf.org/html/rfc7516) using the Elliptic Curve Diffie-Hellman Ephemeral Static key
 agreement on the X25519 curve and content encrypted with 256 bit AES in Galois/Counter Mode, identified by
-JWE as `"alg": "ECDH-ES", "enc": "A265GCM"`.
+JWE as `"alg": "ECDH-ES", "enc": "A256GCM"`.
 
 ### 14.6 Token acquisition
 Since the content of the connection request message is not accessible by the profile server, this process can easily be
